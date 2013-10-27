@@ -1,0 +1,14 @@
+{
+    "id": "nodebb-plugin-emoji",
+    "name": "NodeBB Emoji",
+    "description": "Emoji for NodeBB, as seen on http://www.emoji-cheat-sheet.com",
+    "url": "https://github.com/julianlam/nodebb-plugin-emoji",
+    "library": "./index.js",
+    "staticDir": "assets",
+    "css": [
+        "style.css"
+    ],
+    "hooks": [
+        { "hook": "filter:post.parse", "method": "addEmoji" }
+    ]
+}
