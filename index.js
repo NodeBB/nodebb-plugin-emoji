@@ -3,7 +3,7 @@ var	emoji = require('emoji-images'),
 	Emoji = {};
 
 Emoji.addEmoji = function(postContent) {
-	postContent = emoji(postContent, nconf.get('url') + 'plugins/nodebb-plugin-emoji/pngs');
+	postContent = emoji(postContent, nconf.get('url') + '/plugins/nodebb-plugin-emoji/pngs');
 
 	return postContent;
 };
