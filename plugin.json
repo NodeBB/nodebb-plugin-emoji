@@ -12,6 +12,6 @@
         "emoji-css/style.css"
     ],
     "hooks": [
-        { "hook": "filter:post.parse", "method": "addEmoji" }
+        { "hook": "filter:post.parse", "method": "addEmoji", "priority": 11 }
     ]
 }
