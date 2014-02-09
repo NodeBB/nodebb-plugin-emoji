@@ -1,16 +1,11 @@
-nodebb-plugin-emoji
+nodebb-plugin-emoji-extended
 ===================
 
-NodeBB Plugin enabling emoji as seen on http://www.emoji-cheat-sheet.com
+NodeBB Plugin enabling emoji as seen on [Emoji cheat sheet](http://www.emoji-cheat-sheet.com)
+
+Adds mapping of texts like `:)`, `;)`, etc. if [Emoji Skype](https://github.com/julianlam/nodebb-plugin-emoji-skype) isn't enabled.
 
 
 ## Installation
 
-    npm install nodebb-plugin-emoji
-
-
-## Usage
-
-1. Activate the plugin in the administration panel (`/admin`)
-1. Emoji matching the codes found at the [Emoji cheat sheet](http://www.emoji-cheat-sheet.com) will be automatically converted into imaged emoji:
-    * `:sunglasses: This is my text with emoji! :grin:`
+    npm install nodebb-plugin-emoji-extended
