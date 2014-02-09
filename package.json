@@ -1,23 +1,20 @@
 {
-  "name": "nodebb-plugin-emoji",
+  "name": "nodebb-plugin-emoji-extended",
   "version": "0.1.3",
-  "description": "Emoji for NodeBB",
+  "description": "Emoji for NodeBB with emoticon-mapping :)",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/julianlam/nodebb-plugin-emoji"
+    "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended"
   },
   "keywords": [
     "nodebb",
     "emoji",
+    "extended",
     "emoticons",
     "smilies"
   ],
-  "author": "Julian Lam <julian@designcreateplay.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/julianlam/nodebb-plugin-emoji/issues"
-  },
   "dependencies": {
     "emoji-images": "~0.1.1"
   }

@@ -1,8 +1,8 @@
 {
-    "id": "nodebb-plugin-emoji",
-    "name": "NodeBB Emoji",
-    "description": "Emoji for NodeBB, as seen on http://www.emoji-cheat-sheet.com",
-    "url": "https://github.com/julianlam/nodebb-plugin-emoji",
+    "id": "nodebb-plugin-emoji-extended",
+    "name": "NodeBB Emoji Extended",
+    "description": "Emoji for NodeBB, extended with smiley-mapping",
+    "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
     "library": "./index.js",
     "staticDirs": {
         "emoji-images": "node_modules/emoji-images/pngs",
