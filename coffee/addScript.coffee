@@ -1,8 +1,9 @@
 module.exports.addScript = (scripts) ->
   encodedPath = encodeURIComponent emojiPath
-  maxCount = meta.config['emoji:extended:maxCount'] || 8
+  maxCount = getConfigInt 'maxCount'
+  minChars = getConfigInt 'minChars'
   scripts.concat [
-    "plugins/emoji-extended-js/jquery.textcomplete.min.js"
+    "plugins/emoji-extended-js/lib/jquery.textcomplete.min.js"
     "plugins/emoji-extended-js/fetchParameter.js"
-    "plugins/emoji-extended-js/smiley-box.js?path=#{encodedPath}&maxCount=#{maxCount}"
+    "plugins/emoji-extended-js/smiley-box.js?path=#{encodedPath}&maxCount=#{maxCount}&minChars=#{minChars}"
   ]

@@ -166,13 +166,16 @@ $(document).ready ->
 
   parameters = window.fetchParameter('/smiley-box.js?')
   emojiPath = parameters['path']
-  maxCount = parameters['maxCount'] || 8
+  maxCount = parseInt parameters['maxCount'] || 8
+  maxCount = 1 if maxCount < 1
+  minChars = parseInt parameters['minChars'] || 0
+  minChars = 0 if minChars < 0
 
   isSmileyContext = (term) ->
     lines = term.match(/^.*$/gm).reverse()
     return false if lines[0].replace(/[^`]+/g, '').length & 1 # odd amount of '`' in last line
     for line in lines
-      continue if /^\s{4}/.test line # if begins with 4 spaces check previous lines...
+      continue if /^( {4}|\t)/.test line # if begins with 4 spaces check previous lines...
       return /\S/.test line # first line not beginning with 4 spaces => return whether line contains non-space character
     false # all lines begin with 4 spaces
 
@@ -181,7 +184,7 @@ $(document).ready ->
     return if composer.data 'emoji-extended-added'
     composer.data 'emoji-extended-added', 'true'
     composer.textcomplete [
-      match: /(^)(([\s\S]*):\w*)$/, # set everything (including line-breaks) as term
+      match: new RegExp "^(([\\s\\S]*):\\w{#{minChars},})$" # set everything (including line-breaks) as term
       search: (term, callback) ->
         if !isSmileyContext term
           callback []
@@ -191,9 +194,10 @@ $(document).ready ->
         callback $.grep emojies, (emoji) ->
           regexp.test emoji
       replace: (value) ->
-        '$3:' + value + ': '
+        '$2:' + value + ': '
       template: (value) ->
         "<img class='emoji img-responsive' src='#{emojiPath}/#{value}.png' /> #{value}"
       maxCount: maxCount
+      index: 1
     ]
     $('.textcomplete-wrapper').css('height', '100%').find('textarea').css('height', '100%')

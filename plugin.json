@@ -16,7 +16,7 @@
     {
       "hook": "filter:post.parse",
       "method": "parseEmoji",
-      "priority": 11
+      "priority": 9
     },
     {
       "hook": "filter:scripts.get",
