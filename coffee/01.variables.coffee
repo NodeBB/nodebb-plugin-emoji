@@ -10,3 +10,7 @@ getConfig = (key) ->
 
 getConfigInt = (key) ->
   parseInt getConfig key
+
+module.exports.configDefaults = (id) ->
+  if id == 'nodebb-plugin-emoji-extended'
+    meta.configs.setOnEmpty key, defaultConfig[key], (->) for key of defaultConfig

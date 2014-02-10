@@ -4,9 +4,6 @@
 <form>
   <div class="alert alert-info">
     <p>
-      <strong>Note that any changes require a server-restart to take affect.</strong>
-      <div class="clearfix"> </div>
-
       <div class="pull-left" style="line-height:30px">Maximum amount of text-completion entries: &nbsp;</div>
       <input type="number" data-field="emoji:extended:maxCount" title="Maximum entries" class="form-control pull-left" style="width:50px" placeholder="8" value="8">
       <div class="clearfix"> </div>

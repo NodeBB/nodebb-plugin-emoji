@@ -31,6 +31,14 @@
       "hook": "filter:admin.create_routes",
       "method": "adminRoute",
       "callbacked": true
+    },
+    {
+      "hook": "action:plugin.activate",
+      "method": "configDefaults"
+    },
+    {
+      "hook": "action:app.load",
+      "method": "appLoad"
     }
   ]
 }

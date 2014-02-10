@@ -164,40 +164,41 @@ $(document).ready ->
     'yum', 'zap', 'zero', 'zzz'
   ]
 
-  parameters = window.fetchParameter('/smiley-box.js?')
-  emojiPath = parameters['path']
-  maxCount = parseInt parameters['maxCount'] || 8
-  maxCount = 1 if maxCount < 1
-  minChars = parseInt parameters['minChars'] || 0
-  minChars = 0 if minChars < 0
+  socket.emit 'modules.emojiExtended', null, (err, data) ->
+    if err?
+      console.error err
+      return;
+    maxCount = data.maxCount
+    minChars = data.minChars
+    emojiPath = data.path
 
-  isSmileyContext = (term) ->
-    lines = term.match(/^.*$/gm).reverse()
-    return false if lines[0].replace(/[^`]+/g, '').length & 1 # odd amount of '`' in last line
-    for line in lines
-      continue if /^( {4}|\t)/.test line # if begins with 4 spaces check previous lines...
-      return /\S/.test line # first line not beginning with 4 spaces => return whether line contains non-space character
-    false # all lines begin with 4 spaces
+    isSmileyContext = (term) ->
+      lines = term.match(/^.*$/gm).reverse()
+      return false if lines[0].replace(/[^`]+/g, '').length & 1 # odd amount of '`' in last line
+      for line in lines
+        continue if /^( {4}|\t)/.test line # if begins with 4 spaces check previous lines...
+        return /\S/.test line # first line not beginning with 4 spaces => return whether line contains non-space character
+      false # all lines begin with 4 spaces
 
-  $('body').on 'focus', '.composer .title, .composer .write', ->
-    composer = $('.composer .write')
-    return if composer.data 'emoji-extended-added'
-    composer.data 'emoji-extended-added', 'true'
-    composer.textcomplete [
-      match: new RegExp "^(([\\s\\S]*):\\w{#{minChars},})$" # set everything (including line-breaks) as term
-      search: (term, callback) ->
-        if !isSmileyContext term
-          callback []
-          return;
-        smileyPrefix = term.match(/:(\w*)$/)[1]
-        regexp = new RegExp '^' + smileyPrefix
-        callback $.grep emojies, (emoji) ->
-          regexp.test emoji
-      replace: (value) ->
-        '$2:' + value + ': '
-      template: (value) ->
-        "<img class='emoji img-responsive' src='#{emojiPath}/#{value}.png' /> #{value}"
-      maxCount: maxCount
-      index: 1
-    ]
-    $('.textcomplete-wrapper').css('height', '100%').find('textarea').css('height', '100%')
+    $('body').on 'focus', '.composer .title, .composer .write', ->
+      composer = $('.composer .write')
+      return if composer.data 'emoji-extended-added'
+      composer.data 'emoji-extended-added', 'true'
+      composer.textcomplete [
+        match: new RegExp "^(([\\s\\S]*):\\w{#{minChars},})$" # set everything (including line-breaks) as term
+        search: (term, callback) ->
+          if !isSmileyContext term
+            callback []
+            return;
+          smileyPrefix = term.match(/:(\w*)$/)[1]
+          regexp = new RegExp '^' + smileyPrefix
+          callback $.grep emojies, (emoji) ->
+            regexp.test emoji
+        replace: (value) ->
+          '$2:' + value + ': '
+        template: (value) ->
+          "<img class='emoji img-responsive' src='#{emojiPath}/#{value}.png' /> #{value}"
+        maxCount: maxCount
+        index: 1
+      ]
+      $('.textcomplete-wrapper').css('height', '100%').find('textarea').css('height', '100%')
