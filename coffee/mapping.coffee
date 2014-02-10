@@ -1,6 +1,3 @@
-emoji = require 'emoji-images'
-nconf = module.parent.require 'nconf'
-mapTest = /(^|\s|<\/?[\w-]+>)(:[=-]?[\(\)\|\*\$@#\?]|:[=-]?&amp;|;[=-]?[\(\)]|[8b][=-]?[\)\|]|[\|i][-=]?[\(\)]|x[-=]?[\(\)]|:&quot;>|:\^\)|;\/\)|\?{3}|z{3}|o_o)|(^|\s|<(br|p)>)(&lt;3)(<\/?\w+>|\s|$)|(:[=-]?[dopsx])(<\/?[\w-]+>|\s|$)/ig
 mapping = [
   /:[-=]?s/i, ':confounded:'
   /:[-=]?d/i, ':laughing:'
@@ -27,6 +24,7 @@ mapping = [
   /zzz/i, ':zzz:'
   /o_o/i, ':eyes:'
 ]
+mapTest = /(^|\s|<\/?[\w-]+>)(:[=-]?[\(\)\|\*\$@#\?]|:[=-]?&amp;|;[=-]?[\(\)]|[8b][=-]?[\)\|]|[\|i][-=]?[\(\)]|x[-=]?[\(\)]|:&quot;>|:\^\)|;\/\)|\?{3}|z{3}|o_o)|(^|\s|<(br|p)>)(&lt;3)(<\/?\w+>|\s|$)|(:[=-]?[dopsx])(<\/?[\w-]+>|\s|$)/ig
 
 execMapping = (content) ->
   content.replace mapTest, (match) ->
@@ -34,7 +32,3 @@ execMapping = (content) ->
       m = match.replace mapping[_i], mapping[++_i]
       return m if m != match
     match
-
-module.exports.addEmoji = (postContent) ->
-  postContent.replace /(^|<\/code>)([^<]*|<(?!code>))*(<code>|$)/g, (match) ->
-    emoji execMapping(match), nconf.get('url') + '/plugins/emoji-images'

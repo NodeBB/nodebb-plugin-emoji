@@ -1,0 +1,1 @@
+emojiPath = nconf.get('url') + '/plugins/emoji-extended-images'

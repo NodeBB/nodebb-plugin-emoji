@@ -1,0 +1,5 @@
+emoji = require 'emoji-images'
+nconf = module.parent.require 'nconf'
+meta = module.parent.require '../src/meta'
+fs = require 'fs'
+path = require 'path'

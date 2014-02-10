@@ -1,17 +1,36 @@
 {
-    "id": "nodebb-plugin-emoji-extended",
-    "name": "NodeBB Emoji Extended",
-    "description": "Emoji for NodeBB, extended with smiley-mapping",
-    "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
-    "library": "./index.js",
-    "staticDirs": {
-        "emoji-images": "node_modules/emoji-images/pngs",
-        "emoji-css": "assets"
+  "id": "nodebb-plugin-emoji-extended",
+  "name": "NodeBB Emoji Extended",
+  "description": "Emoji for NodeBB, extended with smiley-mapping",
+  "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
+  "library": "./index.js",
+  "staticDirs": {
+    "emoji-extended-images": "node_modules/emoji-images/pngs",
+    "emoji-extended-css": "assets",
+    "emoji-extended-js": "client-scripts"
+  },
+  "css": [
+    "emoji-extended-css/style.css"
+  ],
+  "hooks": [
+    {
+      "hook": "filter:post.parse",
+      "method": "parseEmoji",
+      "priority": 11
     },
-    "css": [
-        "emoji-css/style.css"
-    ],
-    "hooks": [
-        { "hook": "filter:post.parse", "method": "addEmoji", "priority": 11 }
-    ]
+    {
+      "hook": "filter:scripts.get",
+      "method": "addScript",
+      "priority": 11
+    },
+    {
+      "hook": "filter:admin.header.build",
+      "method": "adminBuild"
+    },
+    {
+      "hook": "filter:admin.create_routes",
+      "method": "adminRoute",
+      "callbacked": true
+    }
+  ]
 }
