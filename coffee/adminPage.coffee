@@ -10,6 +10,7 @@ module.exports.adminBuild = (custom_header) ->
     icon: constants.admin.icon
     name: constants.name
   custom_header
+
 module.exports.adminRoute = (custom_routes, cb) ->
   fs.readFile path.resolve(__dirname, './templates/admin.tpl'), (err, tpl) ->
     custom_routes.routes.push
