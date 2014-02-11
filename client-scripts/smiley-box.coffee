@@ -125,10 +125,10 @@ $(document).ready ->
         return /\S/.test line # first line not beginning with 4 spaces => return whether line contains non-space character
       false # all lines begin with 4 spaces
 
-    $('body').on 'focus', '.composer .title, .composer .write', ->
-      composer = $('.composer .write')
+    $(window).on 'action:composer.loaded', (ignored, data) ->
+      composer = $('#cmp-uuid-' + data.post_uuid + ' .write')
       return if composer.data 'emoji-extended-added'
-      composer.data 'emoji-extended-added', 'true'
+      composer.data 'emoji-extended-added', '1'
       composer.textcomplete [
         match: new RegExp "^(([\\s\\S]*):[\\w\\d\\+-]{#{minChars},})$" # set everything (including line-breaks) as term
         search: (term, callback) ->
