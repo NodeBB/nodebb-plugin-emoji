@@ -115,34 +115,73 @@ $(document).ready ->
     minChars = data.minChars
     emojiPath = data.path
 
-    isSmileyContext = (term) ->
-      lines = term.match(/^.*$/gm).reverse()
-      # TODO check for list-scope (code needs 8 spaces indention)
-      # TODO if GitHub Flavored Markdown `` code ``, ``` code ```, etc exist (ignoring inner '`'-occurences for odd amount)
-      return false if lines[0].replace(/[^`]+/g, '').length & 1 # odd amount of '`' in last line
+    # returns zero if the line-end may not be within an inline code-tag whatever may follow. takes O(length)
+    isInlineCodeContext = (line) ->
+      beginSize = 0 # amount of accents that began the current possible code-content
+      currentSize = 0 # amount of accents at current possible code-end
+      escaped = false # last char was backslash
+      begin = true # before or within possible code-begin
+      since = '' # string since last code-begin
+      ignoreSince = /^\s+`*$/ # regex that matches non-code-content (`` `` is not closing)
+      for char in line
+        if char == '`' && !(escaped && begin) && !ignoreSince.test since
+          if begin then beginSize++ else currentSize++; since += char
+        else if currentSize == beginSize && beginSize # found end of code
+          beginSize = currentSize = 0
+          begin = true
+          since = ''
+        else
+          if begin && beginSize
+            begin = false
+          since += char
+          currentSize = 0
+        escaped = (char == '\\')
+      beginSize
+
+    codeInListRegex = (indent) ->
+      #                 space only | tab only      | tab space    | space tab
+      if indent == 3 then /^( {8}\s|( {0,3}\t){2}\s| {0,3}\t {4}\s| {4,7}\t\s)/ else
+        new RegExp "^( {#{indent+6}}|( {0,3}\\t){2}| {0,3}\\t( {0,#{indent+2}})| {4,7}\\t)"
+      #                  space only | tab only     | tab space                 | space tab
+
+    # checks whether the current line is within a code-block (handles lists, doesn't handle quotes)
+    isBlockCodeContext = (lines) ->
+      list = false; code = false; prevEmpty = true;
+      emptyR = /^\s*$/; listR = /^( {0,3})[\+\-*]\s/; codeR = /^ {4,}| {0,3}\t/; codeInList = null
       for line in lines
-        continue if /^( {4}|\t)/.test line # if begins with 4 spaces check previous lines...
-        return /\S/.test line # first line not beginning with 4 spaces => return whether line contains non-space character
-      false # all lines begin with 4 spaces
+        empty = emptyR.test line
+        list = (list && !(prevEmpty && empty))
+        if l = line.match listR
+          list = true
+          codeInList = codeInListRegex l[1].length
+        code = list && codeInList.test(line) || !list && (prevEmpty || code) && codeR.test line
+        prevEmpty = empty
+      code
+
+    # returns whether the end of the term (last line, EOL) cannot be within code-context (no possible suffix)
+    isSmileyContext = (term) ->
+      lines = term.match(/^.*$/gm)
+      return !(isInlineCodeContext(lines[lines.length-1]) || isBlockCodeContext lines)
 
     $(window).on 'action:composer.loaded', (ignored, data) ->
       composer = $('#cmp-uuid-' + data.post_uuid + ' .write')
       return if composer.data 'emoji-extended-added'
       composer.data 'emoji-extended-added', '1'
       composer.textcomplete [
-        match: new RegExp "^(([\\s\\S]*):[\\w\\d\\+-]{#{minChars},})$" # set everything (including line-breaks) as term
+        # anything before not ending with word/number/+/-  : any words/numbers/+/-, count from minChars to any
+        match: new RegExp "^((([\\s\\S]*)(^|[^\\w\\d\\+-])):[\\w\\d\\+-]{#{minChars},})$"
         search: (term, callback) ->
           if !isSmileyContext term
             callback []
             return;
           smileyPrefix = term.match(/:([\w\d\+-]*)$/)[1]
-          regexp = new RegExp '^' + smileyPrefix.replace /\+/g, '\\+'
+          regexp = new RegExp '^' + (smileyPrefix.replace /\+/g, '\\+'), 'i'
           callback $.grep emojies, (emoji) ->
             regexp.test emoji
         replace: (value) ->
-          '$2:' + value + ': '
+          '$2:' + value.toLowerCase() + ': '
         template: (value) ->
-          "<img class='emoji img-responsive' src='#{emojiPath}/#{value}.png' /> #{value}"
+          "<img class='emoji img-responsive' src='#{emojiPath}/#{encodeURIComponent value.toLowerCase()}.png' /> #{value}"
         maxCount: maxCount
         index: 1
       ]
