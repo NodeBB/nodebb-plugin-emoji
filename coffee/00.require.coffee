@@ -1,0 +1,6 @@
+fs = require 'fs'
+path = require 'path'
+meta = module.parent.require '../src/meta'
+nconf = module.parent.require 'nconf'
+ModulesSockets = module.parent.require './socket.io/modules'
+emoji = require 'emoji-images'

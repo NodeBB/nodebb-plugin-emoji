@@ -1,16 +1,19 @@
-nodebb-plugin-emoji
-===================
+# nodebb-plugin-emoji-extended
 
-NodeBB Plugin enabling emoji as seen on http://www.emoji-cheat-sheet.com
+## Features
+
+ + Emoticons as defined at [Emoji cheat sheet](http://www.emoji-cheat-sheet.com)
+ + Mapping of texts like `:)`, `;)`, etc. but doesn't overwrite emoticons of [Emoji Skype](https://github.com/julianlam/nodebb-plugin-emoji-skype)
+ + [Autocomplete for Textarea](https://github.com/yuku-t/jquery-textcomplete) of emoticons (not for mapped ones)
+ + Code-blocks get ignored
 
 
 ## Installation
 
-    npm install nodebb-plugin-emoji
+    npm install nodebb-plugin-emoji-extended
 
+## Credits
 
-## Usage
+[nodebb-plugin-emoji](https://github.com/julianlam/nodebb-plugin-emoji)
 
-1. Activate the plugin in the administration panel (`/admin`)
-1. Emoji matching the codes found at the [Emoji cheat sheet](http://www.emoji-cheat-sheet.com) will be automatically converted into imaged emoji:
-    * `:sunglasses: This is my text with emoji! :grin:`
+[Autocomplete for Textarea](https://github.com/yuku-t/jquery-textcomplete)
