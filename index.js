@@ -3,9 +3,9 @@ var	emoji = require('emoji-images'),
 	Emoji = {};
 
 Emoji.addEmoji = function(postContent) {
-	postContent = emoji(postContent, nconf.get('url') + '/plugins/emoji-images');
-
-	return postContent;
+	return postContent.replace(/(^|<\/code>)([^<]*|<(?!code>))*(<code>|$)/g, function (match) {
+		return emoji(match, nconf.get('url') + '/plugins/emoji-images');
+	});
 };
 
 module.exports = Emoji;
