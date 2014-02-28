@@ -5,11 +5,10 @@
     "url": "https://github.com/julianlam/nodebb-plugin-emoji",
     "library": "./index.js",
     "staticDirs": {
-        "emoji-images": "node_modules/emoji-images/pngs",
-        "emoji-css": "assets"
+        "images": "node_modules/emoji-images/pngs"
     },
-    "css": [
-        "emoji-css/style.css"
+    "less": [
+        "assets/style.less"
     ],
     "hooks": [
         { "hook": "filter:post.parse", "method": "addEmoji" }

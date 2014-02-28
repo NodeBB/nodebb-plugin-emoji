@@ -4,7 +4,7 @@ var	emoji = require('emoji-images'),
 
 Emoji.addEmoji = function(postContent) {
 	return postContent.replace(/(^|<\/code>)([^<]*|<(?!code>))*(<code>|$)/g, function (match) {
-		return emoji(match, nconf.get('url') + '/plugins/emoji-images');
+		return emoji(match, nconf.get('url') + '/plugins/nodebb-plugin-emoji/images');
 	});
 };
 
