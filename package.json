@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji",
-  "version": "0.1.3",
+  "version": "0.1.4-1",
   "description": "Emoji for NodeBB",
   "main": "index.js",
   "repository": {
