@@ -12,5 +12,6 @@
     ],
     "hooks": [
         { "hook": "filter:post.parse", "method": "addEmoji" }
-    ]
+    ],
+    "minver": "0.4.0"
 }
