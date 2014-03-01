@@ -1,4 +1,4 @@
-emojiPath = nconf.get('url') + '/plugins/emoji-extended-images'
+emojiPath = nconf.get('url') + '/plugins/nodebb-plugin-emoji-extended/images'
 
 defaultConfig =
   'maxCount': 8
