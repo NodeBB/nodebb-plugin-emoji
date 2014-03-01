@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji-extended",
-  "version": "0.2.1-1",
+  "version": "0.2.1-2",
   "description": "Emoji for NodeBB with emoticon-mapping :)",
   "main": "index.js",
   "repository": {
