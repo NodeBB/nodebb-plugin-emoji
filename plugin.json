@@ -10,7 +10,7 @@
     "js": "client-scripts"
   },
   "css": [
-    "plugin-emoji-extended/css/style.css"
+    "nodebb-plugin-emoji-extended/css/style.css"
   ],
   "hooks": [
     {
