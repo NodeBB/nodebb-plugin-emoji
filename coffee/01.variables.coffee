@@ -4,6 +4,7 @@ defaultConfig =
   'maxCount': 8
   'minChars': 0
   'killSkype': 1
+  'completePrefix': "^|[^\\w\\d)\\]}+\\-]"
 
 getConfig = (key) ->
   meta.config["emoji:extended:#{key}"] || defaultConfig[key]

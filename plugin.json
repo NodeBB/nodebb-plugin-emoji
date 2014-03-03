@@ -5,22 +5,20 @@
   "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
   "library": "./index.js",
   "staticDirs": {
-    "images": "node_modules/emoji-images/pngs",
-    "css": "styles",
-    "js": "client-scripts"
+    "images": "node_modules/emoji-images/pngs"
   },
-  "css": [
-    "nodebb-plugin-emoji-extended/css/style.css"
+  "less": [
+    "styles/style.less"
+  ],
+  "scripts": [
+    "client-scripts/lib/jquery.textcomplete.min.js",
+    "client-scripts/emoji-textcomplete.js"
   ],
   "hooks": [
     {
       "hook": "filter:post.parse",
       "method": "parseEmoji",
       "priority": 9
-    },
-    {
-      "hook": "filter:scripts.get",
-      "method": "addScripts"
     },
     {
       "hook": "filter:admin.header.build",
@@ -39,5 +37,6 @@
       "hook": "action:app.load",
       "method": "appLoad"
     }
-  ]
+  ],
+  "minver": "0.4.0"
 }

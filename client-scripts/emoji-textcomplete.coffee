@@ -114,6 +114,7 @@ $(document).ready ->
     maxCount = data.maxCount
     minChars = data.minChars
     emojiPath = data.path
+    completePrefix = data.completePrefix
 
     # returns zero if the line-end may not be within an inline code-tag whatever may follow. takes O(length)
     isInlineCodeContext = (line) ->
@@ -168,8 +169,8 @@ $(document).ready ->
       return if composer.data 'emoji-extended-added'
       composer.data 'emoji-extended-added', '1'
       composer.textcomplete [
-        # anything before not ending with word/number/+/-  : any words/numbers/+/-, count from minChars to any
-        match: new RegExp "^((([\\s\\S]*)(^|[^\\w\\d\\+-])):[\\w\\d\\+-]{#{minChars},})$"
+        #  anything before not ending with $completePrefix   : any words/numbers/+/-, count from minChars to any
+        match: new RegExp "^((([\\s\\S]*)(#{completePrefix})):[\\w\\d+-]{#{minChars},})$", "i"
         search: (term, callback) ->
           if !isSmileyContext term
             callback []
