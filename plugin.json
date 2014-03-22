@@ -5,15 +5,16 @@
   "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
   "library": "./index.js",
   "staticDirs": {
-    "images": "node_modules/emoji-images/pngs"
+    "images": "./node_modules/emoji-images/pngs"
   },
   "less": [
-    "styles/style.less"
+    "./styles/style.less"
   ],
   "scripts": [
-    "client-scripts/lib/jquery.textcomplete.min.js",
-    "client-scripts/emoji-textcomplete.js"
+    "./client-scripts/lib/jquery.textcomplete.min.js",
+    "./client-scripts/emoji-textcomplete.js"
   ],
+  "templates": "./templates",
   "hooks": [
     {
       "hook": "filter:post.parse",
@@ -23,11 +24,6 @@
     {
       "hook": "filter:admin.header.build",
       "method": "adminBuild"
-    },
-    {
-      "hook": "filter:admin.create_routes",
-      "method": "adminRoute",
-      "callbacked": true
     },
     {
       "hook": "action:plugin.activate",

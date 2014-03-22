@@ -1,8 +1,14 @@
 constants = Object.freeze
   'name': "Emoji Extended"
   'admin':
-    'route': '/emoji-extended'
+    'route': '/plugins/emojiExtended'
     'icon': 'fa-smile-o'
+
+renderAdminPage = (req, res, ignored) ->
+  res.render 'admin/plugins/emojiExtended', {}
+
+initAdminRoute = (app, middleware) ->
+  appGet app, "/admin#{constants.admin.route}", middleware.admin.buildHeader, renderAdminPage
 
 module.exports.adminBuild = (custom_header) ->
   custom_header.plugins.push
@@ -10,17 +16,3 @@ module.exports.adminBuild = (custom_header) ->
     icon: constants.admin.icon
     name: constants.name
   custom_header
-
-module.exports.adminRoute = (custom_routes, cb) ->
-  fs.readFile path.resolve(__dirname, './templates/admin.tpl'), (err, tpl) ->
-    custom_routes.routes.push
-      route: constants.admin.route
-      method: "get"
-      options: (req, res, cb) ->
-        cb
-          req: req
-          res: res
-          route: constants.admin.route
-          name: constants.name
-          content: tpl
-    cb null, custom_routes

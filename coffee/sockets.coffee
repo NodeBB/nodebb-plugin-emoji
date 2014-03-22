@@ -1,4 +1,4 @@
-module.exports.appLoad = ->
+initSockets = ->
   ModulesSockets.emojiExtended = (socket, data, cb) ->
     cb null,
       completePrefix: getConfig 'completePrefix'
