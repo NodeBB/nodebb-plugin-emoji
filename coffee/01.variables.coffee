@@ -13,7 +13,7 @@ getConfigInt = (key) ->
   parseInt getConfig key
 
 resetConfigIfEmpty = (key) ->
-  meta.configs.setOnEmpty "livereload:#{key}", defaultConfig[key], (->)
+  meta.configs.setOnEmpty "emoji:extended:#{key}", defaultConfig[key], (->)
 
 module.exports.configDefaults = (id) ->
   if id == 'nodebb-plugin-emoji-extended'

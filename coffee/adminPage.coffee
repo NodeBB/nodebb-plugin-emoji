@@ -10,9 +10,9 @@ renderAdminPage = (req, res, ignored) ->
 initAdminRoute = (app, middleware) ->
   appGet app, "/admin#{constants.admin.route}", middleware.admin.buildHeader, renderAdminPage
 
-module.exports.adminBuild = (custom_header) ->
+module.exports.adminBuild = (custom_header, cb) ->
   custom_header.plugins.push
     route: constants.admin.route
     icon: constants.admin.icon
     name: constants.name
-  custom_header
+  cb null, custom_header

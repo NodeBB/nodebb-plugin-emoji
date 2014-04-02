@@ -148,7 +148,7 @@ $(document).ready ->
     # checks whether the current line is within a code-block (handles lists, doesn't handle quotes)
     isBlockCodeContext = (lines) ->
       list = false; code = false; prevEmpty = true;
-      emptyR = /^\s*$/; listR = /^( {0,3})[\+\-*]\s/; codeR = /^ {4,}| {0,3}\t/; codeInList = null
+      emptyR = /^\s*$/; listR = /^( {0,3})[\+*-]\s/; codeR = /^ {4,}| {0,3}\t/; codeInList = null
       for line in lines
         empty = emptyR.test line
         list = (list && !(prevEmpty && empty))
