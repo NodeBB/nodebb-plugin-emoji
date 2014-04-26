@@ -1,11 +1,11 @@
 constants = Object.freeze
   'name': "Emoji Extended"
   'admin':
-    'route': '/plugins/emojiExtended'
+    'route': '/plugins/emoji-extended'
     'icon': 'fa-smile-o'
 
 renderAdminPage = (req, res, ignored) ->
-  res.render 'admin/plugins/emojiExtended', {}
+  res.render 'admin/plugins/emoji-extended', {}
 
 initAdminRoute = (app, middleware) ->
   appGet app, "/admin#{constants.admin.route}", middleware.admin.buildHeader, renderAdminPage

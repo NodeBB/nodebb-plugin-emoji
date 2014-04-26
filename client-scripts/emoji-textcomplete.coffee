@@ -142,13 +142,18 @@ $(document).ready ->
     codeInListRegex = (indent) ->
       #                 space only | tab only      | tab space    | space tab
       if indent == 3 then /^( {8}\s|( {0,3}\t){2}\s| {0,3}\t {4}\s| {4,7}\t\s)/ else
-        new RegExp "^( {#{indent+6}}|( {0,3}\\t){2}| {0,3}\\t( {0,#{indent+2}})| {4,7}\\t)"
-      #                  space only | tab only     | tab space                 | space tab
+        new RegExp "^( {#{indent + 6}}|( {0,3}\\t){2}| {0,3}\\t( {0,#{indent + 2}})| {4,7}\\t)"
+    #                  space only | tab only     | tab space                 | space tab
 
     # checks whether the current line is within a code-block (handles lists, doesn't handle quotes)
     isBlockCodeContext = (lines) ->
-      list = false; code = false; prevEmpty = true;
-      emptyR = /^\s*$/; listR = /^( {0,3})[\+*-]\s/; codeR = /^ {4,}| {0,3}\t/; codeInList = null
+      list = false
+      code = false
+      prevEmpty = true
+      emptyR = /^\s*$/
+      listR = /^( {0,3})[\+*-]\s/
+      codeR = /^ {4,}| {0,3}\t/
+      codeInList = null
       for line in lines
         empty = emptyR.test line
         list = (list && !(prevEmpty && empty))
@@ -162,7 +167,7 @@ $(document).ready ->
     # returns whether the end of the term (last line, EOL) cannot be within code-context (no possible suffix)
     isSmileyContext = (term) ->
       lines = term.match(/^.*$/gm)
-      return !(isInlineCodeContext(lines[lines.length-1]) || isBlockCodeContext lines)
+      return !(isInlineCodeContext(lines[lines.length - 1]) || isBlockCodeContext lines)
 
     $(window).on 'action:composer.loaded', (ignored, data) ->
       composer = $('#cmp-uuid-' + data.post_uuid + ' .write')

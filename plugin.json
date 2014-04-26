@@ -1,38 +1,42 @@
 {
-  "id": "nodebb-plugin-emoji-extended",
-  "name": "NodeBB Emoji Extended",
-  "description": "Emoji for NodeBB, extended with smiley-mapping",
-  "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
-  "library": "./index.js",
-  "staticDirs": {
-    "images": "./node_modules/emoji-images/pngs"
-  },
-  "less": [
-    "./styles/style.less"
-  ],
-  "scripts": [
-    "./client-scripts/lib/jquery.textcomplete.min.js",
-    "./client-scripts/emoji-textcomplete.js"
-  ],
-  "templates": "./templates",
-  "hooks": [
-    {
-      "hook": "filter:post.parse",
-      "method": "parseEmoji",
-      "priority": 9
+    "id": "nodebb-plugin-emoji-extended",
+    "name": "NodeBB Emoji Extended",
+    "description": "Emoji for NodeBB, extended with smiley-mapping",
+    "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
+    "library": "./index.js",
+    "staticDirs": {
+        "images": "./node_modules/emoji-images/pngs"
     },
-    {
-      "hook": "filter:admin.header.build",
-      "method": "adminBuild"
-    },
-    {
-      "hook": "action:plugin.activate",
-      "method": "configDefaults"
-    },
-    {
-      "hook": "action:app.load",
-      "method": "appLoad"
-    }
-  ],
-  "minver": "0.4.0"
+    "less": [
+        "./styles/style.less"
+    ],
+    "scripts": [
+        "./client-scripts/lib/jquery.textcomplete.min.js",
+        "./client-scripts/emoji-textcomplete.js"
+    ],
+    "templates": "./templates",
+    "hooks": [
+        {
+            "hook": "filter:post.parse",
+            "method": "parseEmoji",
+            "priority": 9
+        },
+        {
+            "hook": "filter:admin.header.build",
+            "method": "adminBuild"
+        },
+        {
+            "hook": "filter:composer.help",
+            "method": "composerHelp"
+        },
+        {
+            "hook": "action:plugin.activate",
+            "method": "configDefaults"
+        },
+        {
+            "hook": "action:app.load",
+            "method": "appLoad"
+        }
+    ],
+    "minver": "0.4.0"
 }
