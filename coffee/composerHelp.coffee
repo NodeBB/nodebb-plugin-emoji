@@ -3,7 +3,8 @@ module.exports.composerHelp = (helpMessage, callback) ->
   helpMessage += """
     <h2>Emoji Extended</h2>
     <p>
-      This forum has emoji enabled. For a full list see <a href="http://www.emoji-cheat-sheet.com">Emoji cheat sheet</a>.
+      This forum has emoji enabled.<br>
+      Plugins begin end end with <code>:</code> like <code>:smile:</code>, <code>:wink:</code>, etc. For a full list see <a href="http://www.emoji-cheat-sheet.com">Emoji cheat sheet</a>.
     """
   if mappingEnabled
     helpMessage += """
