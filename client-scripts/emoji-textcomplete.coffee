@@ -115,6 +115,27 @@ $(document).ready ->
     minChars = data.minChars
     emojiPath = data.path
     completePrefix = data.completePrefix
+    zoom = data.zoom
+    emojiSize = 20
+    if zoom > 0
+      zoom = 512 if zoom > 512
+      $('head').append """
+        <style type="text/css">
+          .emoji {
+            transition: z-index,margin,width,height;
+            transition-timing-function: ease-in-out;
+            transition-duration: 0.2s;
+            transition-delay: 0.2s;
+            z-index: 0;
+          }
+          .emoji:hover {
+            width: #{zoom}px;
+            height: #{zoom}px;
+            margin: #{-(zoom-emojiSize)/2}px;
+            z-index: #{zoom};
+          }
+        </style>
+        """
 
     # returns zero if the line-end may not be within an inline code-tag whatever may follow. takes O(length)
     isInlineCodeContext = (line) ->

@@ -4,4 +4,5 @@ initSockets = ->
       completePrefix: getConfig 'completePrefix'
       maxCount: getConfigInt 'maxCount'
       minChars: getConfigInt 'minChars'
+      zoom: getConfigInt 'zoom'
       path: emojiPath

@@ -1,10 +1,11 @@
 emojiPath = nconf.get('url') + '/plugins/nodebb-plugin-emoji-extended/images'
 
 defaultConfig =
-  'maxCount': 8
-  'minChars': 0
-  'killSkype': 1
-  'completePrefix': "^|[^\\w\\d)\\]}+\\-]"
+  maxCount: 8
+  minChars: 0
+  killSkype: 1
+  completePrefix: "^|[^\\w\\d)\\]}+\\-]"
+  zoom: 64
 
 getConfig = (key) ->
   meta.config["emoji:extended:#{key}"] || defaultConfig[key]

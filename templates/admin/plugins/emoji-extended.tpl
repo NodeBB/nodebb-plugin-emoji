@@ -20,6 +20,10 @@
       <input type="number" data-field="emoji:extended:minChars" title="Minimum characters" style="width:50px" placeholder="0" value="0">
       <div class="clearfix"> </div>
 
+      <div class="pull-left" style="line-height:30px">Zoom-size of emoji (0 to disable): &nbsp;</div>
+      <input type="number" max="512" data-field="emoji:extended:zoom" title="Zoom-size (in px)" style="width:60px" placeholder="64" value="64">
+      <div class="clearfix"> </div>
+
       <div class="pull-left">Enable emoticon-mapping, overwrites specific emoji-skype emoticons if enabled &nbsp; </div>
       <input type="checkbox" data-field="emoji:extended:killSkype" title="Enable Mapping">
 
