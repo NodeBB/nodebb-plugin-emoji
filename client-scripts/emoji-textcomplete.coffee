@@ -113,7 +113,7 @@ $(document).ready ->
       return;
     maxCount = data.maxCount
     minChars = data.minChars
-    emojiPath = data.path
+    emojiPath = RELATIVE_PATH + '/plugins/nodebb-plugin-emoji-extended/images'
     completePrefix = data.completePrefix
     zoom = data.zoom
     emojiSize = 20

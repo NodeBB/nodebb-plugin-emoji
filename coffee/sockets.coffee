@@ -1,8 +1,7 @@
 initSockets = ->
-  ModulesSockets.emojiExtended = (socket, data, cb) ->
-    cb null,
-      completePrefix: getConfig 'completePrefix'
-      maxCount: getConfigInt 'maxCount'
-      minChars: getConfigInt 'minChars'
-      zoom: getConfigInt 'zoom'
-      path: emojiPath
+  SocketModules.emojiExtended = (socket, data, cb) ->
+    cb null, settings.get()
+  SocketAdmin.settings.syncEmojiExtended = -> settings.sync()
+
+  SocketAdmin.settings.getEmojiExtendedDefaults = (socket, data, callback) ->
+    callback null, settings.createDefaultWrapper()

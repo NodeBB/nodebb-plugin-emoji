@@ -1,5 +1,5 @@
 module.exports.composerHelp = (helpMessage, callback) ->
-  mappingEnabled = getConfigInt 'killSkype'
+  mappingEnabled = settings.get 'killSkype'
   helpMessage += """
     <h2>Emoji Extended</h2>
     <p>
