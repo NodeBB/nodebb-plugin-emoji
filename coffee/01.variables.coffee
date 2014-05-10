@@ -7,7 +7,7 @@ defaultConfig =
   completePrefix: "^|[^\\w\\d)\\]}+\\-]"
   zoom: 64
 
-settings = new Settings 'emoji-extended', '0.2.4-1', defaultConfig, null, false, false
+settings = new Settings 'emoji-extended', '0.2.4-2', defaultConfig, null, false, false
 
 appGet = (app, url, mw, cb) ->
   app.get url, mw, cb

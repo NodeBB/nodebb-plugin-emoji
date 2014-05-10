@@ -30,13 +30,9 @@
             "method": "composerHelp"
         },
         {
-            "hook": "action:plugin.activate",
-            "method": "configDefaults"
-        },
-        {
             "hook": "action:app.load",
             "method": "appLoad"
         }
     ],
-    "minver": "0.4.0"
+    "minver": "0.4.2"
 }
