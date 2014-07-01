@@ -1,5 +1,6 @@
 $(document).ready ->
-  emojies = [
+  exports = window.emojiExtended = {}
+  emojies = exports.list = [
     "+1", "-1", "100", "109", "1234", "8ball", "a", "ab", "abc", "abcd", "accept", "aerial_tramway", "airplane",
     "alarm_clock", "alien", "ambulance", "anchor", "angel", "anger", "angry", "anguished", "ant", "apple", "aquarius",
     "aries", "arrow_backward", "arrow_double_down", "arrow_double_up", "arrow_down", "arrow_down_small",
@@ -107,109 +108,122 @@ $(document).ready ->
     "wrench", "x", "yellow_heart", "yen", "yum", "zap", "zero", "zzz"
   ]
 
-  socket.emit 'modules.emojiExtended', null, (err, data) ->
-    if err?
-      console.error err
-      return;
-    maxCount = data.maxCount
-    minChars = data.minChars
-    emojiPath = RELATIVE_PATH + '/plugins/nodebb-plugin-emoji-extended/images'
-    completePrefix = data.completePrefix
-    zoom = data.zoom
-    emojiSize = 20
-    if zoom > 0
-      zoom = 512 if zoom > 512
-      $('head').append """
-        <style type="text/css">
-          .emoji {
-            transition: z-index,margin,width,height;
-            transition-timing-function: ease-in-out;
-            transition-duration: 0.2s;
-            transition-delay: 0.2s;
-            z-index: 0;
-          }
-          .emoji:hover {
-            width: #{zoom}px;
-            height: #{zoom}px;
-            margin: #{-(zoom-emojiSize)/2}px;
-            z-index: #{zoom};
-          }
-        </style>
-        """
+  exports.ready = new Promise (resolve, reject) ->
+    exports.addCompletion = (object, cb) ->
+      exports.ready.then (addTextComplete) ->
+        addTextComplete object, cb
+      , cb
+      null
+    socket.emit 'modules.emojiExtended', null, (err, data) ->
+      if err?
+        console.error "Error while initializing emoji-extended."
+        console.error err
+        return reject err
+      maxCount = data.maxCount
+      minChars = data.minChars
+      path = RELATIVE_PATH + '/plugins/nodebb-plugin-emoji-extended/images/'
+      getPath = exports.path = (name) -> if name? then "#{path}#{encodeURIComponent name.toLowerCase()}.png" else path
+      completePrefix = data.completePrefix
+      zoom = data.zoom
+      emojiSize = 20
+      if zoom > 0
+        zoom = 512 if zoom > 512
+        $('head').append """
+          <style type="text/css">
+            .emoji {
+              transition: z-index,margin,width,height;
+              transition-timing-function: ease-in-out;
+              transition-duration: 0.2s;
+              transition-delay: 0.2s;
+              z-index: 0;
+            }
+            .emoji:hover {
+              width: #{zoom}px;
+              height: #{zoom}px;
+              margin: #{-(zoom-emojiSize)/2}px;
+              z-index: #{zoom};
+            }
+          </style>
+          """
 
-    # returns zero if the line-end may not be within an inline code-tag whatever may follow. takes O(length)
-    isInlineCodeContext = (line) ->
-      beginSize = 0 # amount of accents that began the current possible code-content
-      currentSize = 0 # amount of accents at current possible code-end
-      escaped = false # last char was backslash
-      begin = true # before or within possible code-begin
-      since = '' # string since last code-begin
-      ignoreSince = /^\s+`*$/ # regex that matches non-code-content (`` `` is not closing)
-      for char in line
-        if char == '`' && !(escaped && begin) && !ignoreSince.test since
-          if begin then beginSize++ else currentSize++; since += char
-        else if currentSize == beginSize && beginSize # found end of code
-          beginSize = currentSize = 0
-          begin = true
-          since = ''
-        else
-          if begin && beginSize
-            begin = false
-          since += char
-          currentSize = 0
-        escaped = (char == '\\')
-      beginSize
+      # returns zero if the line-end may not be within an inline code-tag whatever may follow. takes O(length)
+      isInlineCodeContext = (line) ->
+        beginSize = 0 # amount of accents that began the current possible code-content
+        currentSize = 0 # amount of accents at current possible code-end
+        escaped = false # last char was backslash
+        begin = true # before or within possible code-begin
+        since = '' # string since last code-begin
+        ignoreSince = /^\s+`*$/ # regex that matches non-code-content (`` `` is not closing)
+        for char in line
+          if char == '`' && !(escaped && begin) && !ignoreSince.test since
+            if begin then beginSize++ else currentSize++; since += char
+          else if currentSize == beginSize && beginSize # found end of code
+            beginSize = currentSize = 0
+            begin = true
+            since = ''
+          else
+            if begin && beginSize
+              begin = false
+            since += char
+            currentSize = 0
+          escaped = (char == '\\')
+        beginSize
 
-    codeInListRegex = (indent) ->
-      #                 space only | tab only      | tab space    | space tab
-      if indent == 3 then /^( {8}\s|( {0,3}\t){2}\s| {0,3}\t {4}\s| {4,7}\t\s)/ else
-        new RegExp "^( {#{indent + 6}}|( {0,3}\\t){2}| {0,3}\\t( {0,#{indent + 2}})| {4,7}\\t)"
-    #                  space only | tab only     | tab space                 | space tab
+      codeInListRegex = (indent) ->
+        #                 space only | tab only      | tab space    | space tab
+        if indent == 3 then /^( {8}\s|( {0,3}\t){2}\s| {0,3}\t {4}\s| {4,7}\t\s)/ else
+          new RegExp "^( {#{indent + 6}}|( {0,3}\\t){2}| {0,3}\\t( {0,#{indent + 2}})| {4,7}\\t)"
+      #                      space only | tab only     | tab space                   | space tab
 
-    # checks whether the current line is within a code-block (handles lists, doesn't handle quotes)
-    isBlockCodeContext = (lines) ->
-      list = false
-      code = false
-      prevEmpty = true
-      emptyR = /^\s*$/
-      listR = /^( {0,3})[\+*-]\s/
-      codeR = /^ {4,}| {0,3}\t/
-      codeInList = null
-      for line in lines
-        empty = emptyR.test line
-        list = (list && !(prevEmpty && empty))
-        if l = line.match listR
-          list = true
-          codeInList = codeInListRegex l[1].length
-        code = list && codeInList.test(line) || !list && (prevEmpty || code) && codeR.test line
-        prevEmpty = empty
-      code
+      # checks whether the current line is within a code-block (handles lists, doesn't handle quotes)
+      isBlockCodeContext = (lines) ->
+        list = false
+        code = false
+        prevEmpty = true
+        emptyR = /^\s*$/
+        listR = /^( {0,3})[\+*-]\s/
+        codeR = /^ {4,}| {0,3}\t/
+        codeInList = null
+        for line in lines
+          empty = emptyR.test line
+          list = (list && !(prevEmpty && empty))
+          if l = line.match listR
+            list = true
+            codeInList = codeInListRegex l[1].length
+          code = list && codeInList.test(line) || !list && (prevEmpty || code) && codeR.test line
+          prevEmpty = empty
+        code
 
-    # returns whether the end of the term (last line, EOL) cannot be within code-context (no possible suffix)
-    isSmileyContext = (term) ->
-      lines = term.match(/^.*$/gm)
-      return !(isInlineCodeContext(lines[lines.length - 1]) || isBlockCodeContext lines)
+      # returns whether the end of the term (last line, EOL) cannot be within code-context (no possible suffix)
+      isSmileyContext = (term) ->
+        lines = term.match(/^.*$/gm)
+        return !(isInlineCodeContext(lines[lines.length - 1]) || isBlockCodeContext lines)
 
-    $(window).on 'action:composer.loaded', (ignored, data) ->
-      composer = $('#cmp-uuid-' + data.post_uuid + ' .write')
-      return if composer.data 'emoji-extended-added'
-      composer.data 'emoji-extended-added', '1'
-      composer.textcomplete [
-        #  anything before not ending with $completePrefix   : any words/numbers/+/-, count from minChars to any
-        match: new RegExp "^((([\\s\\S]*)(#{completePrefix})):[\\w\\d+-]{#{minChars},})$", "i"
-        search: (term, callback) ->
-          if !isSmileyContext term
-            callback []
-            return;
-          smileyPrefix = term.match(/:([\w\d\+-]*)$/)[1]
-          regexp = new RegExp '^' + (smileyPrefix.replace /\+/g, '\\+'), 'i'
-          callback $.grep emojies, (emoji) ->
-            regexp.test emoji
-        replace: (value) ->
-          '$2:' + value.toLowerCase() + ': '
-        template: (value) ->
-          "<img class='emoji img-responsive' src='#{emojiPath}/#{encodeURIComponent value.toLowerCase()}.png' /> #{value}"
-        maxCount: maxCount
-        index: 1
-      ]
-      $('.textcomplete-wrapper').css('height', '100%').find('textarea').css('height', '100%')
+      addTextComplete = (object, cb) ->
+        object = $ object if !(object instanceof $)
+        if object.data 'emoji-extended-added'
+          cb new Error 'Already added' if typeof cb == 'function'
+          return
+        object.data 'emoji-extended-added', '1'
+        object.textcomplete [
+          #  anything before not ending with $completePrefix   : any words/numbers/+/-, count from minChars to any
+          match: new RegExp "^((([\\s\\S]*)(#{completePrefix})):[\\w\\d+-]{#{minChars},})$", "i"
+          search: (term, callback) ->
+            if !isSmileyContext term
+              callback []
+              return;
+            smileyPrefix = term.match(/:([\w\d\+-]*)$/)[1]
+            regexp = new RegExp '^' + (smileyPrefix.replace /\+/g, '\\+'), 'i'
+            callback $.grep emojies, (emoji) ->
+              regexp.test emoji
+          replace: (value) -> '$2:' + value.toLowerCase() + ': '
+          template: (value) -> "<img class='emoji emoji-extended img-responsive' src='#{getPath value}' /> #{value}"
+          maxCount: maxCount
+          index: 1
+        ]
+        object.closest('.textcomplete-wrapper').css('height', '100%').find('textarea').css 'height', '100%'
+        cb() if typeof cb == 'function'
+
+      $(window).on 'action:composer.loaded', (ignored, data) -> addTextComplete $ "#cmp-uuid-#{data.post_uuid} .write"
+
+      resolve.call exports, addTextComplete
