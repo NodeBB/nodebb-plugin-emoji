@@ -223,3 +223,4 @@ exports = window.emojiExtended =
         cb() if typeof cb == 'function'
 
 $(window).on 'action:composer.loaded', (ignored, data) -> exports.addCompletion $ "#cmp-uuid-#{data.post_uuid} .write"
+$(window).trigger 'emoji-extended:initialized', exports

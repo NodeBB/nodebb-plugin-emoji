@@ -24,6 +24,21 @@ On client-side you have access to the `window.emojiExtended` object that provide
  * `[null] addCompletion(target, callback)` An alias for `ready` with forwarding parameters to resolved
    `addTextComplete` function.
 
+If your script runs before emoji-extended you may listen to the event named `emoji-extended:initialized` triggered on
+the `window`-object.
+
+In conclusion to use the API of emoji-extended the client-side code within your plugin may look like this:
+
+    function doSth(emojiExtended) {
+      // emoji-extended is initialized, you may use the API here
+    }
+    
+    if (typeof window.emojiExtended !== 'undefined')
+      doSth(window.emojiExtended);
+    else
+      $(window).one('emoji-extended:initialized', doSth);
+
+
 ## Credits
 
 [nodebb-plugin-emoji](https://github.com/julianlam/nodebb-plugin-emoji)
