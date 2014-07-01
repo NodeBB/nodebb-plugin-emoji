@@ -1,6 +1,12 @@
-$(document).ready ->
-  exports = window.emojiExtended = {}
-  emojies = exports.list = [
+exports = window.emojiExtended =
+  addCompletion: (object, cb) ->
+    this.ready.then (addTextComplete) ->
+      addTextComplete object, cb
+    , cb
+    null
+  path: "#{RELATIVE_PATH}/plugins/nodebb-plugin-emoji-extended/images/"
+  getPath: (name) -> if name? then "#{this.path}#{encodeURIComponent name.toLowerCase()}.png" else this.path
+  list: [
     "+1", "-1", "100", "109", "1234", "8ball", "a", "ab", "abc", "abcd", "accept", "aerial_tramway", "airplane",
     "alarm_clock", "alien", "ambulance", "anchor", "angel", "anger", "angry", "anguished", "ant", "apple", "aquarius",
     "aries", "arrow_backward", "arrow_double_down", "arrow_double_up", "arrow_down", "arrow_down_small",
@@ -107,44 +113,36 @@ $(document).ready ->
     "wine_glass", "wink", "wink", "wink2", "wolf", "woman", "womans_clothes", "womans_hat", "womens", "worried",
     "wrench", "x", "yellow_heart", "yen", "yum", "zap", "zero", "zzz"
   ]
-
-  exports.ready = new Promise (resolve, reject) ->
-    exports.addCompletion = (object, cb) ->
-      exports.ready.then (addTextComplete) ->
-        addTextComplete object, cb
-      , cb
-      null
-    socket.emit 'modules.emojiExtended', null, (err, data) ->
+  ready: new Promise (resolve, reject) ->
+    $(document).ready -> socket.emit 'modules.emojiExtended', null, (err, data) ->
       if err?
         console.error "Error while initializing emoji-extended."
         console.error err
         return reject err
       maxCount = data.maxCount
       minChars = data.minChars
-      path = RELATIVE_PATH + '/plugins/nodebb-plugin-emoji-extended/images/'
-      getPath = exports.path = (name) -> if name? then "#{path}#{encodeURIComponent name.toLowerCase()}.png" else path
       completePrefix = data.completePrefix
       zoom = data.zoom
       emojiSize = 20
       if zoom > 0
         zoom = 512 if zoom > 512
         $('head').append """
-          <style type="text/css">
-            .emoji {
-              transition: z-index,margin,width,height;
-              transition-timing-function: ease-in-out;
-              transition-duration: 0.2s;
-              transition-delay: 0.2s;
-              z-index: 0;
-            }
-            .emoji:hover {
-              width: #{zoom}px;
-              height: #{zoom}px;
-              margin: #{-(zoom-emojiSize)/2}px;
-              z-index: #{zoom};
-            }
-          </style>
-          """
+            <style type="text/css">
+              .emoji {
+                transition: z-index,margin,width,height;
+                transition-timing-function: ease-in-out;
+                transition-duration: 0.2s;
+                transition-delay: 0.2s;
+                z-index: 0;
+              }
+              .emoji:hover {
+                width: #{zoom}px;
+                height: #{zoom}px;
+                margin: #{-(zoom-emojiSize)/2}px;
+                z-index: #{zoom};
+              }
+            </style>
+            """
 
       # returns zero if the line-end may not be within an inline code-tag whatever may follow. takes O(length)
       isInlineCodeContext = (line) ->
@@ -199,7 +197,7 @@ $(document).ready ->
         lines = term.match(/^.*$/gm)
         return !(isInlineCodeContext(lines[lines.length - 1]) || isBlockCodeContext lines)
 
-      addTextComplete = (object, cb) ->
+      resolve.call exports, (object, cb) ->
         object = $ object if !(object instanceof $)
         if object.data 'emoji-extended-added'
           cb new Error 'Already added' if typeof cb == 'function'
@@ -214,16 +212,14 @@ $(document).ready ->
               return;
             smileyPrefix = term.match(/:([\w\d\+-]*)$/)[1]
             regexp = new RegExp '^' + (smileyPrefix.replace /\+/g, '\\+'), 'i'
-            callback $.grep emojies, (emoji) ->
-              regexp.test emoji
+            callback $.grep exports.list, (emoji) -> regexp.test emoji
           replace: (value) -> '$2:' + value.toLowerCase() + ': '
-          template: (value) -> "<img class='emoji emoji-extended img-responsive' src='#{getPath value}' /> #{value}"
+          template: (value) ->
+            "<img class='emoji emoji-extended img-responsive' src='#{exports.getPath value}' /> #{value}"
           maxCount: maxCount
           index: 1
         ]
         object.closest('.textcomplete-wrapper').css('height', '100%').find('textarea').css 'height', '100%'
         cb() if typeof cb == 'function'
 
-      $(window).on 'action:composer.loaded', (ignored, data) -> addTextComplete $ "#cmp-uuid-#{data.post_uuid} .write"
-
-      resolve.call exports, addTextComplete
+$(window).on 'action:composer.loaded', (ignored, data) -> exports.addCompletion $ "#cmp-uuid-#{data.post_uuid} .write"
