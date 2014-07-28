@@ -3,6 +3,7 @@
 ## Features
 
  + Emoticons as defined at [Emoji cheat sheet](http://www.emoji-cheat-sheet.com)
+ + Emoticons get updated on each server-startup (and each 24d)
  + Mapping of texts like `:)`, `;)`, etc.
  + [Autocomplete for Textarea](https://github.com/yuku-t/jquery-textcomplete) of emoticons (not for mapped ones)
  + Code-blocks get ignored (markdown-syntax)

@@ -5,7 +5,7 @@
     "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
     "library": "./index.js",
     "staticDirs": {
-        "images": "./node_modules/emoji-images/pngs"
+        "images": "./emoji"
     },
     "less": [
         "./styles/style.less"

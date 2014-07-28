@@ -30,11 +30,16 @@
       <div class="clearfix"> </div>
     </p>
   </div>
+  <button class="btn btn-lg btn-warning" id="update">Update Images</button>
   <button class="btn btn-lg btn-warning" id="reset">Reset</button>
   <button class="btn btn-lg btn-primary" id="save">Save</button>
 </form>
 
 <script>
+  $('#update').click(function(event) {
+    event.preventDefault();
+    socket.emit('admin.settings.updateEmoji');
+  });
   require(['settings'], function(settings) {
     var wrapper = $("#emoji-settings");
     settings.sync('emoji-extended', wrapper);
