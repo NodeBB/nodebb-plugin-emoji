@@ -1,3 +1,4 @@
-module.exports.appLoad = (app, middleware, ignored) ->
+module.exports.appLoad = (app, middleware, ignored, callback) ->
   initSockets()
   initAdminRoute app, middleware
+  callback()
