@@ -30,9 +30,9 @@
             "method": "composerHelp"
         },
         {
-            "hook": "action:app.load",
+            "hook": "static:app.load",
             "method": "appLoad"
         }
     ],
-    "minver": "0.4.2"
+    "compatibility": "~0.5.0"
 }
