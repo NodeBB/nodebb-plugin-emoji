@@ -122,7 +122,6 @@ exports = window.emojiExtended =
         cb() if typeof cb == 'function'
 
 $(window).on 'action:composer.loaded', (ignored, data) ->
-  console.log 1
   exports.addCompletion $ "#cmp-uuid-#{data.post_uuid} .write"
 $(window).on 'action:chat.loaded', -> exports.addCompletion $ "#chat-message-input"
 $(window).trigger 'emoji-extended:initialized', exports
