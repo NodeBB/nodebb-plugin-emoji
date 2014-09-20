@@ -1,3 +1,4 @@
+# TODO </3 broken heart
 mappings =
   separatedBefore:
     ':no_mouth[$1]:': /(:[-=]?#)/i
@@ -8,7 +9,8 @@ mappings =
     ':wink[$1]:': /(;[-=]?\))/
     ':relieved[$1]:': /(;[-=]?\()/
     ':expressionless[$1]:': /(:[-=]?\|)/
-    ':blush[$1]:': /(:[-=]?\$|:&quot>)/
+#    ':blush[$1]:': /(:[-=]?\$|:&quot;)/
+    ':blush[$1]:': /(:&quot;)/
     ':smirk[$1]:': /(:\^\))/
     ':sleeping[$1]:': /([\|i][-=]?\))/
     ':pensive[$1]:': /(\|[-=]?\()/
