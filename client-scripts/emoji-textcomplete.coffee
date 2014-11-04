@@ -124,7 +124,7 @@
 
   $(window).on 'action:composer.loaded', (ignored, data) ->
     exports.addCompletion $ "#cmp-uuid-#{data.post_uuid} .write"
-  $(window).on 'action:chat.loaded', -> exports.addCompletion $ "#chat-message-input"
+  $(window).on 'action:chat.loaded', (ignored, modal) -> exports.addCompletion $ "#chat-message-input", modal
   $(window).trigger 'emoji-extended:initialized', exports
 
   exports.ready.then ->
