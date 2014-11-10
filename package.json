@@ -1,24 +1,24 @@
 {
-    "name": "nodebb-plugin-emoji-extended",
-    "version": "0.3.1-6",
-    "description": "Emoji for NodeBB with emoticon-mapping and text-completion:)",
-    "main": "index.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended"
-    },
-    "keywords": [
-        "nodebb",
-        "emoji",
-        "extended",
-        "emoticons",
-        "smilies"
-    ],
-    "license": "MIT",
-    "dependencies": {
-        "emoji-parser": "~0.1.1"
-    },
-    "nbbpm": {
-        "compatibility": "~0.5.0"
-    }
+  "name": "nodebb-plugin-emoji-extended",
+  "version": "0.3.1-7",
+  "description": "Emoji for NodeBB with emoticon-mapping and text-completion:)",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended"
+  },
+  "keywords": [
+    "nodebb",
+    "emoji",
+    "extended",
+    "emoticons",
+    "smilies"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "emoji-parser": "~0.1.1"
+  },
+  "nbbpm": {
+    "compatibility": "~0.5.0"
+  }
 }
