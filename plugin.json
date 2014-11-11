@@ -17,7 +17,7 @@
   "templates": "./templates",
   "hooks": [
     {
-      "hook": "filter:parse.post",
+      "hook": "filter:parse.raw",
       "method": "parseEmoji",
       "priority": 9
     },
