@@ -1,37 +1,37 @@
 {
-    "id": "nodebb-plugin-emoji-extended",
-    "name": "NodeBB Emoji Extended",
-    "description": "Emoji for NodeBB, extended with smiley-mapping",
-    "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
-    "library": "./index.js",
-    "staticDirs": {
-        "images": "./emoji"
+  "id": "nodebb-plugin-emoji-extended",
+  "name": "NodeBB Emoji Extended",
+  "description": "Emoji for NodeBB, extended with smiley-mapping",
+  "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
+  "library": "./index.js",
+  "staticDirs": {
+    "images": "./emoji"
+  },
+  "less": [
+    "./styles/style.less"
+  ],
+  "scripts": [
+    "./client-scripts/lib/jquery.textcomplete.min.js",
+    "./client-scripts/emoji-textcomplete.js"
+  ],
+  "templates": "./templates",
+  "hooks": [
+    {
+      "hook": "filter:parse.post",
+      "method": "parseEmoji",
+      "priority": 9
     },
-    "less": [
-        "./styles/style.less"
-    ],
-    "scripts": [
-        "./client-scripts/lib/jquery.textcomplete.min.js",
-        "./client-scripts/emoji-textcomplete.js"
-    ],
-    "templates": "./templates",
-    "hooks": [
-        {
-            "hook": "filter:post.parse",
-            "method": "parseEmoji",
-            "priority": 9
-        },
-        {
-            "hook": "filter:admin.header.build",
-            "method": "adminBuild"
-        },
-        {
-            "hook": "filter:composer.help",
-            "method": "composerHelp"
-        },
-        {
-            "hook": "static:app.load",
-            "method": "appLoad"
-        }
-    ]
+    {
+      "hook": "filter:admin.header.build",
+      "method": "adminBuild"
+    },
+    {
+      "hook": "filter:composer.help",
+      "method": "composerHelp"
+    },
+    {
+      "hook": "static:app.load",
+      "method": "appLoad"
+    }
+  ]
 }

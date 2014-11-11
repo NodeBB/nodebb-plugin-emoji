@@ -7,6 +7,8 @@ defaultConfig =
   completePrefix: "^|[^\\w\\d)\\]}+\\-]"
   zoom: 64
 
+replaceRegex = /(^|<\/code>)([^<]*|<(?!code[^>]*>))*(<code[^>]*>|$)/g
+
 # ensure the path even if emoji-parser got installed manually on NodeBB-level
 emoji.init path.dirname(module.filename) + '/emoji'
 
