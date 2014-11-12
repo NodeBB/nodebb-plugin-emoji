@@ -22,6 +22,11 @@
       "priority": 9
     },
     {
+      "hook": "filter:parse.post",
+      "method": "parsePost",
+      "priority": 9
+    },
+    {
       "hook": "filter:admin.header.build",
       "method": "adminBuild"
     },
