@@ -27,6 +27,6 @@ setInterval updateEmoji, 2100000000 # each ~24d update emotes without server-res
 
 settings = new Settings 'emoji-extended', '0.3', defaultConfig, null, false, false
 
-appGet = (app, url, mw, cb) ->
-  app.get url, mw, cb
-  app.get "/api#{url}", cb
+appGet = (router, url, mw, cb) ->
+  router.get url, mw, cb
+  router.get "/api#{url}", cb
