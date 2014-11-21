@@ -1,7 +1,7 @@
 {
   "id": "nodebb-plugin-emoji-extended",
   "name": "NodeBB Emoji Extended",
-  "description": "Emoji for NodeBB, extended with smiley-mapping",
+  "description": "Emoji for NodeBB with emoticon-mapping and text-completion :)\nKnown Conflicts: nodebb-plugin-emoji",
   "url": "https://github.com/frissdiegurke/nodebb-plugin-emoji-extended",
   "library": "./index.js",
   "staticDirs": {
@@ -18,12 +18,12 @@
   "hooks": [
     {
       "hook": "filter:parse.raw",
-      "method": "parseEmoji",
+      "method": "parse",
       "priority": 9
     },
     {
       "hook": "filter:parse.post",
-      "method": "parsePost",
+      "method": "parseDataContent",
       "priority": 9
     },
     {

@@ -1,52 +1,53 @@
-# TODO </3 broken heart
-mappings =
-  separatedBefore:
-    ':no_mouth[$1]:': /(:[-=]?#)/i
-    ':stuck_out_tongue_winking_eye[$1]:': /(:[-=]?\*)/i
-    ':grinning[$1]:': /(:[-=]?\))/
-    ':frowning[$1]:': /(:[-=]?\()/
-    ':sunglasses[$1]:': /([8b][-=]?[\|\)])/i
-    ':wink[$1]:': /(;[-=]?\))/
-    ':relieved[$1]:': /(;[-=]?\()/
-    ':expressionless[$1]:': /(:[-=]?\|)/
-    ':blush[$1]:': /(:[-=]?\$|:&quot;)/
-    ':smirk[$1]:': /(:\^\))/
-    ':sleeping[$1]:': /([\|i][-=]?\))/
-    ':pensive[$1]:': /(\|[-=]?\()/
-    ':mask[$1]:': /(:[-=]?&amp;)/
-    ':trollface[$1]:': /(;\/\))/
-    ':rage[$1]:': /(:[-=]?@)/
-    ':rage[$1]:': /(x[-=]?\()/i
-    ':confused[$1]:': /(:[-=]?\?)/
-    ':question[$1]:': /(\?\?\?)/
-  separatedBoth: [
-    [ ':heart[$1]:', /(&lt;3)/ ]
-    [ ':laughing[$1]:', /(x[-=]?d)/i ]
-    [ ':zzz[$1]:', /(zzz)/i ]
-    [ ':eyes[$1]:', /(o_o)/i ]
-    [ ':smiley[$1]:', /(:[-=]?d)/i ]
-    [ ':hushed[$1]:', /(:[-=]?o)/i ]
-    [ ':stuck_out_tongue_winking_eye[$1]:', /(:[-=]?p)/i ]
-    [ ':confounded[$1]:', /(:[-=]?s)/i ]
-    [ ':no_mouth[$1]:', /(:[-=]?x)/i ]
-  ]
+BOUNDARY_BEFORE = "^|\\s|<\\/?[\\w-]+>"
+BOUNDARY_AFTER = "<\\/?[\\w-]+>|\\s|$"
 
-mapTests =
-  separatedBefore: /(^|\s|<\/?[\w-]+>)(:[=-]?[\(\)\|\*\$@#\?]|:[=-]?&amp;|;[=-]?[\(\)]|[8b][=-]?[\)\|]|[\|i][-=]?[\(\)]|x[-=]?[\(\)]|:&quot;>|:\^\)|;\/\)|\?{3})/ig
-  separatedBoth: []
+mapTests = {}
 
-for arr in mappings.separatedBoth
-  mapTests.separatedBoth.push new RegExp "(?:^|\\s|<\\/?[\\w-]+>)(#{arr[1].source})(?:<\\/?[\\w-]+>|\\s|$)", 'ig'
+refreshMappings = ->
+  mapTests.separatedBeforeAny = null
+  mapTests.separatedBefore = []
+  mapTests.separatedBoth = []
 
-getHandler = (mapping) -> (match) ->
-  for replacement, regex of mapping
-    m = match.replace regex, replacement
+  mappings = settings.get "mapping"
+  beforeAny = ""
+
+  addBefore = (key, regexObj) ->
+    options = regexObj.options + if regexObjectToRegExp(regexObj)?.global then '' else 'g'
+    beforeAny += "|" if beforeAny
+    beforeAny += regexObj.source
+    mapTests.separatedBefore.push
+      key: ":#{key}[$1]:"
+      regex: new RegExp "(#{regexObj.source})", options
+
+  addBoth = (key, regexObj) ->
+    options = regexObj.options + if regexObjectToRegExp(regexObj)?.global then '' else 'g'
+    mapTests.separatedBoth.push
+      key: "$1:#{key}[$2]:$3"
+      regex: new RegExp "(#{BOUNDARY_BEFORE})(#{regexObj.source})(#{BOUNDARY_AFTER})", options
+
+  for key, value of mappings.separatedBefore
+    if value instanceof Array
+      addBefore key, val for val in value
+    else
+      addBefore key, value
+
+  mapTests.separatedBeforeAny = new RegExp "(?:#{BOUNDARY_BEFORE})(#{beforeAny})", "ig"
+
+  for key, value of mappings.separatedBoth
+    if value instanceof Array
+      addBoth key, val for val in value
+    else
+      addBoth key, value
+
+refreshMappings()
+
+getHandler = (tests) -> (match) ->
+  for entry in tests
+    m = match.replace entry.regex, entry.key
     return m if m != match
   match
 
 execMapping = (content) ->
-  content = content.replace mapTests.separatedBefore, getHandler mappings.separatedBefore
-  for regex, i in mapTests.separatedBoth
-    arr = mappings.separatedBoth[i]
-    content = content.replace regex, (match) -> match.replace arr[1], arr[0]
+  content = content.replace mapTests.separatedBeforeAny, getHandler mapTests.separatedBefore
+  content = content.replace entry.regex, entry.key for entry in mapTests.separatedBoth
   content

@@ -1,7 +1,7 @@
 {
   "name": "nodebb-plugin-emoji-extended",
-  "version": "0.4.0-4",
-  "description": "Emoji for NodeBB with emoticon-mapping and text-completion:)",
+  "version": "0.4.1-1",
+  "description": "Emoji for NodeBB with emoticon-mapping and text-completion :)\nKnown Conflicts: nodebb-plugin-emoji",
   "main": "index.js",
   "repository": {
     "type": "git",

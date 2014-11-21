@@ -1,59 +1,115 @@
-<h1>Emoji Extended</h1>
-<hr />
-
 <form id="emoji-settings">
-  <div class="alert alert-info">
-    <p>
-      <div class="pull-left" style="line-height:30px">Maximum amount of text-completion entries: &nbsp;</div>
-      <input type="number" data-key="maxCount" title="Maximum entries" style="width:50px">
-      <div class="clearfix"> </div>
+  <div class="row">
+    <div class="col-lg-9">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Emoji Extended Settings
+        </div>
 
-      <div class="pull-left" style="line-height:30px">
-        RegExp to check whether to show completion-box:
-        <code>/^[\s\S]*(</code>
-        <input type="text" data-key="completePrefix" title="RegExp prefix" style="line-height:normal;font-family:'Courier New',monospace;">
-        <code>):/i</code>
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-md-6 form-group">
+              <label>Amount of characters to show text-completion:</label>
+              <input class="form-control" type="number" data-key="completion.minChars" title="Minimum characters">
+            </div>
+
+            <div class="col-xs-6 col-sm-8 col-md-6 form-group">
+              <label>Text-Completion entries:</label>
+              <input class="form-control" type="number" data-key="completion.maxCount" title="Maximum entries">
+            </div>
+
+            <div class="col-xs-6 col-sm-4 col-md-6 form-group">
+              <label>Enable emoji-shortcuts like <code>:-)</code>:</label>
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <input type="checkbox" data-key="mapping.enabled" title="Enable Mapping">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-md-6 form-group">
+              <label>Zoom-size of emoji (0 to disable):</label>
+              <input class="form-control" type="number" max="512" data-key="zoom" title="Zoom-size (in px)">
+            </div>
+
+            <div class="col-xs-12">
+              <label>Regular Expression to show text-completion:</label>
+              <div class="input-group">
+                <div class="row input-group-addon">
+                  <div class="col-xs-4 col-sm-3 col-md-2 col-lg-3">
+                    <code class="text-right form-control" style="border:none;box-shadow:none;">/^[\s\S]*(</code>
+                  </div>
+                  <div class="col-xs-5 col-sm-7 col-md-8 col-lg-7">
+                    <input class="form-control" type="text" data-key="completion.prefix" title="RegExp prefix"
+                           style="font-family:'Courier New',monospace;">
+                  </div>
+                  <div class="col-xs-3 col-sm-2">
+                    <code class="form-control" style="border:none;box-shadow:none;">):/i</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="clearfix"> </div>
+    </div>
 
-      <div class="pull-left" style="line-height:30px">Minimum amount of characters after <code>:</code> for text-completion: &nbsp;</div>
-      <input type="number" data-key="minChars" title="Minimum characters" style="width:50px">
-      <div class="clearfix"> </div>
+    <div class="col-lg-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Action Panel
+        </div>
 
-      <div class="pull-left" style="line-height:30px">Zoom-size of emoji (0 to disable): &nbsp;</div>
-      <input type="number" max="512" data-key="zoom" title="Zoom-size (in px)" style="width:60px">
-      <div class="clearfix"> </div>
-
-      <div class="pull-left">Enable emoticon-mapping, overwrites specific emoji-skype emoticons if enabled &nbsp; </div>
-      <input type="checkbox" data-key="killSkype" title="Enable Mapping">
-
-      <div class="clearfix"> </div>
-    </p>
+        <div class="panel-body">
+          <div class="form-group">
+            <button type="button" class="btn btn-danger form-control" id="reset">
+              <i class="fa fa-fw fa-history"></i> Reset Settings
+            </button>
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-warning form-control" id="update">
+              <i class="fa fa-fw fa-download"></i> Update Images
+            </button>
+          </div>
+          <button type="submit" class="btn btn-primary form-control" accesskey="s" id="save">
+            <i class="fa fa-fw fa-save"></i> Save Settings
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  <button class="btn btn-lg btn-warning" id="update">Update Images</button>
-  <button class="btn btn-lg btn-warning" id="reset">Reset</button>
-  <button class="btn btn-lg btn-primary" id="save">Save</button>
 </form>
 
 <script>
   $('#update').click(function(event) {
     event.preventDefault();
-    socket.emit('admin.settings.updateEmoji');
+    socket.emit('admin.settings.updateEmojiExtended');
   });
   require(['settings'], function(settings) {
+    function settingsChanged () {
+      var s = settings.get();
+      if (s.fileSystemAccess) {
+        $('#update').removeClass('disabled');
+      } else {
+        $('#update').addClass('disabled');
+      }
+    }
     var wrapper = $("#emoji-settings");
-    settings.sync('emoji-extended', wrapper);
+    settings.sync('emoji-extended', wrapper, settingsChanged);
     $('#save').click(function(event) {
       event.preventDefault();
-      settings.persist('emoji-extended', wrapper, function(){
+      settings.persist('emoji-extended', wrapper, function() {
         socket.emit('admin.settings.syncEmojiExtended');
+        settingsChanged();
       });
     });
     $('#reset').click(function(event) {
       event.preventDefault();
       socket.emit('admin.settings.getEmojiExtendedDefaults', null, function (err, data) {
-        settings.set('emoji-extended', data, wrapper, function(){
+        settings.set('emoji-extended', data, wrapper, function() {
           socket.emit('admin.settings.syncEmojiExtended');
+          settingsChanged();
         });
       });
     });
