@@ -156,12 +156,13 @@
         dialogContent = $ '<p></p>'
         first = true
         for key, items of lists
-          dialogContent.append "<hr />" if first
+          dialogContent.append "<hr />" if !first
           dialogContent.append "<h5>#{key}</h5>"
           dialogContent.append getLink item for item in items
           first = false
         dialog = bootbox.dialog
           title: "Emojis"
           message: dialogContent
+          onEscape: (->)
         dialog.addClass 'emoji-dialog'
 )()
