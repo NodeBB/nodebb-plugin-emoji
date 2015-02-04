@@ -37,6 +37,7 @@ defaultConfig =
       rage: [regexObject(/:[-=]?@/), regexObject(/x[-=]?\(/i)]
       confused: regexObject /:[-=]?\?/
       question: regexObject /\?\?\?/
+      exclamation: regexObject /!!!/
     separatedBoth:
       heart: regexObject /&lt;3/
       broken_heart: regexObject /&lt;[\/\\\|!]3/
@@ -65,6 +66,6 @@ updateEmoji = ->
     list = emoji.emoji.sort() if !err?
     updating = false
 
-settings = new Settings 'emoji-extended', '0.4.1', defaultConfig, null, false, false
+settings = new Settings 'emoji-extended', '0.4.1-4', defaultConfig, null, false, false
 
 getRoute = (router, url, mw, cb) ->
