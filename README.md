@@ -1,6 +1,8 @@
 nodebb-plugin-emoji
 ===================
 
+# Note: This plugin has been superseded by [nodebb-plugin-emoji-extended](https://github.com/frissdiegurke/nodebb-plugin-emoji-extended). This plugin is no longer supported.
+
 NodeBB Plugin enabling emoji as seen on http://www.emoji-cheat-sheet.com
 
 

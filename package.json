@@ -20,5 +20,9 @@
   },
   "dependencies": {
     "emoji-images": "~0.1.1"
+  },
+  "nbbpm": {
+    "compatibility": "^0.4.0",
+    "index": false
   }
 }
