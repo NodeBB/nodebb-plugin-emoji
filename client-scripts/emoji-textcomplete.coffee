@@ -143,8 +143,9 @@
 
   exports.ready.then ->
     lists = if defaultUsage then defaultLists else smileys: exports.list
-    require ['composer', 'composer/controls'], (composer, controls) ->
-      composer.addButton 'fa fa-smile-o', (area, sS, sE) ->
+    require ['composer/formatting', 'composer/controls'], (formatting, controls) ->
+      formatting.addButtonDispatch 'emoji-extended', (area, sS, sE) ->
+        activeLink = null
         getLink = (value) ->
           link = $ "<a class='emoji-link' title='#{value}'></a>"
           link.html "<img class='emoji emoji-extended img-responsive' src='#{exports.getPath value}' />&nbsp;:#{value}:"
@@ -153,16 +154,32 @@
             controls.updateTextareaSelection area, sE, sE
             controls.insertIntoTextarea area, ":#{value}: "
             controls.updateTextareaSelection area, (if sS == sE then sE + 3 + value.length else sS), sE + 3 + value.length
-        dialogContent = $ '<p></p>'
-        first = true
+        getTabItem = (value, items) ->
+          firstUpper = value[0].toUpperCase() + value.substring 1
+          link = $ "<a role=\"tab\">#{firstUpper}</a>"
+          li = $("<li class='emoji-tab'></li>").append link
+          link.click -> setActive li, items
+          li
+        setActive = (li, items) ->
+          return if li == activeLink
+          activeLink?.removeClass? 'active'
+          activeLink = li?.addClass? 'active'
+          modalTabPanel.html ''
+          if items?
+            modalTabPanel.append getLink item for item in items
+        modalContent = $ '<div role="tabpanel"></div>'
+        modalTabs = $ '<ul class="nav nav-tabs" role="tablist"></ul>'
+        modalTabContent = $ '<div class="tab-content"></div>'
+        modalTabPanel = $("<div role=\"tabpanel\" class=\"tab-pane active\"></div>").appendTo modalTabContent
         for key, items of lists
-          dialogContent.append "<hr />" if !first
-          dialogContent.append "<h5>#{key}</h5>"
-          dialogContent.append getLink item for item in items
-          first = false
+          currentTabItem = getTabItem key, items
+          modalTabs.append currentTabItem
+          setActive currentTabItem, items if !activeLink?
+        modalContent.append modalTabs
+        modalContent.append modalTabContent
         dialog = bootbox.dialog
-          title: "Emojis"
-          message: dialogContent
+          title: "Emoji Extended #{exports.version || ''}"
+          message: modalContent
           onEscape: (->)
         dialog.addClass 'emoji-dialog'
 )()

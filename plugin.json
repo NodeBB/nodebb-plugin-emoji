@@ -35,6 +35,11 @@
       "method": "composerHelp"
     },
     {
+      "hook": "filter:composer.formatting",
+      "method": "composerFormatting",
+      "priority": 15
+    },
+    {
       "hook": "static:app.load",
       "method": "appLoad"
     }
