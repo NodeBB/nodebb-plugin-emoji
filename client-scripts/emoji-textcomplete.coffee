@@ -126,7 +126,7 @@
         regexp = new RegExp '^' + (smileyPrefix.replace /\+/g, '\\+'), 'i'
         callback $.grep exports.list, (emoji) -> regexp.test emoji
       replace: (value) -> '$2:' + value.toLowerCase() + ': '
-      template: (value) -> "<img class='emoji emoji-extended img-responsive' src='#{exports.getPath value}' /> #{value}"
+      template: (value) -> "<img class='emoji emoji-extended' src='#{exports.getPath value}' /> #{value}"
       maxCount: maxCount
       index: 1
 
@@ -151,7 +151,7 @@
         activeLink = null
         getLink = (value) ->
           link = $ "<a class='emoji-link' title='#{value}'></a>"
-          link.html "<img class='emoji emoji-extended img-responsive' src='#{exports.getPath value}' />&nbsp;:#{value}:"
+          link.html "<img class='emoji emoji-extended' src='#{exports.getPath value}' />&nbsp;:#{value}:"
           link.click ->
             dialog.modal 'hide'
             controls.updateTextareaSelection area, sE, sE
