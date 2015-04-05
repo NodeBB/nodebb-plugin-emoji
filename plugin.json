@@ -39,6 +39,11 @@
       "priority": 15
     },
     {
+      "hook": "action:email.send",
+      "method": "email",
+      "priority": 5
+    },
+    {
       "hook": "static:app.load",
       "method": "appLoad"
     }
