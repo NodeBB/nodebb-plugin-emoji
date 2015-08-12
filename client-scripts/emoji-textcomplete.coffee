@@ -43,7 +43,7 @@
           .emoji {
             width: 20px;
             height: 20px;
-            transition: z-index,margin,width,height;
+            transition: z-index,margin,margin-right,width,height;
             transition-timing-function: ease-in-out;
             transition-duration: 0.2s;
             transition-delay: 0.2s;
@@ -58,6 +58,11 @@
             height: #{zoom}px;
             margin: #{-(zoom-emojiSize)/2}px;
             z-index: #{zoom};
+          }
+          .categories>li .content img.emoji:hover {
+            width: #{zoom}px;
+            height: #{zoom}px;
+            margin-right: #{-(zoom-emojiSize)/2}px;
           }
           """
     $('head').append style + '\n</style>'

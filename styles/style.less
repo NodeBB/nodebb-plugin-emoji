@@ -1,12 +1,16 @@
 @size: 20px;
 
-.emoji {
+.emoji, .categories>li .content img.emoji {
   height: @size;
   width: @size;
   display: inline-block;
   position: relative;
   max-height: 512px;
   max-width: 512px;
+}
+
+.categories>li .content img.emoji {
+  margin-right: 0;
 }
 
 .emoji-link {
