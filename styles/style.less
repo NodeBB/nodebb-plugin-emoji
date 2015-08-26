@@ -22,14 +22,18 @@
   white-space: nowrap;
 }
 
-.emoji-dialog > .modal-dialog {
-  width: auto;
-  max-width: 1048px;
+.emoji-dialog {
+  z-index: 10500;
 
-  .emoji-tab {
-    cursor: pointer;
-    &.active {
-      cursor: default;
+  > .modal-dialog {
+    width: auto;
+    max-width: 1048px;
+
+    .emoji-tab {
+      cursor: pointer;
+      &.active {
+        cursor: default;
+      }
     }
   }
 }
