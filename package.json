@@ -19,6 +19,6 @@
     "emoji-parser": "~0.1.1"
   },
   "nbbpm": {
-    "compatibility": "^0.7.2"
+    "compatibility": "^0.7.2 || ^0.8.0"
   }
 }
