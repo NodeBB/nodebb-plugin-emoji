@@ -6,10 +6,7 @@ const url = nconf.get('url');
 export function images(pack: EmojiDefinition) {
   return `.emoji-${pack.id} {` +
     'display: inline-block;' +
-    'width: 20px;' +
-    'height: 20px;' +
-    'background-size: cover;' +
-    'margin: -1px 0;' +
+    'height: 23px;' +
   '}';
 }
 
@@ -23,11 +20,9 @@ export function sprite(pack: EmojiDefinition): string {
   const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
   return `.emoji-${pack.id} {` +
     'display: inline-block;' +
-    'width: 20px;' +
-    'height: 20px;' +
+    'height: 23px;' +
     `background-image: url(${route}/${basename(pack.sprite.file)});` +
     `background-size: ${pack.sprite.backgroundSize};` +
-    'margin: -1px 0;' +
   '}' +
   '.emoji-${pack.id} > span {' +
     'display: none;' +

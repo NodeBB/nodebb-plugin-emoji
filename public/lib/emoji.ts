@@ -4,7 +4,7 @@ declare type EmojiX = {
   all?: StoredEmoji[],
   fuse?: Fuse<StoredEmoji>,
   init?(): void,
-  buildEmoji?(emoji: StoredEmoji): string,
+  buildEmoji?(emoji: StoredEmoji, defer?: boolean): string,
   strategy?: any,
 };
 
@@ -13,13 +13,14 @@ define('emoji', ['Fuse'], (Fuse: any) => { // tslint:disable-line variable-name
 
   const base = `${window.config.relative_path}/plugins/nodebb-plugin-emoji`;
 
-  emojix.buildEmoji = (emoji: StoredEmoji) => {
+  emojix.buildEmoji = (emoji: StoredEmoji, defer?: boolean) => {
     const whole = `:${emoji.name}:`;
+    const deferClass = defer ? ' defer' : '';
 
     if (emoji.image) {
       return `<img
-        src="${base}/emoji/${emoji.pack}/${emoji.image}"
-        class="not-responsive emoji-${emoji.pack} ${emoji.name}"
+        ${defer ? 'data-' : ''}src="${base}/emoji/${emoji.pack}/${emoji.image}"
+        class="not-responsive emoji-${emoji.pack} ${emoji.name} ${deferClass}"
         title="${whole}"
         alt="${emoji.character}"
       />`;

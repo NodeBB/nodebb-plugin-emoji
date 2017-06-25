@@ -24,7 +24,7 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
         name: category,
         emojis: emojis.map(emoji => ({
           name: emoji.name,
-          html: emojix.buildEmoji(emoji),
+          html: emojix.buildEmoji(emoji, true),
         })),
       };
     });
@@ -39,7 +39,16 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
         dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
           e.preventDefault();
           $(e.target).tab('show');
-        });
+        }).on('show.bs.tab', (e) => {
+          $(e.target.getAttribute('href'))
+            .find('.emoji-link img.defer')
+            .removeClass('defer')
+            .each((i, elem) => {
+              const $elem = $(elem);
+              const src = $elem.attr('data-src');
+              $elem.attr('src', src);
+            });
+        }).first().trigger('show.bs.tab');
 
         dialog.modal({
           backdrop: false,
