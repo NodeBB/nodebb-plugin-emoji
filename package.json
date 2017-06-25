@@ -18,6 +18,21 @@
     "emoji",
     "extended"
   ],
+  "dependencies": {
+    "async": "^2.4.1",
+    "copy": "^0.3.0",
+    "emojione": "^3.0.3",
+    "fs-extra": "^3.0.1",
+    "fuse.js": "^3.0.5",
+    "typed-promisify": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/async": "^2.0.40",
+    "tslint": "^5.4.3",
+    "tslint-config-airbnb": "^5.1.2",
+    "typescript": "^2.3.4",
+    "typings": "^2.1.1"
+  },
   "scripts": {
     "compile": "tsc -p . && tsc -p public",
     "build": "npm run compile && node ../nodebb/nodebb build --dev"
