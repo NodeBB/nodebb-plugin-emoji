@@ -1,0 +1,7 @@
+{
+  "settings": "Settings",
+  "settings.shouldParseAscii": "Replace common ASCII characters like <code>:)</code>, <code>-_-</code>, etc",
+  "settings.shouldBuild": "Re-build emoji assets on the next forum restart",
+  "build": "Build Emoji Assets",
+  "build_description": "Compile the necessary metadata and static assets from all emoji packs. <br> This is usually unnecessary to do yourself, but if emojis aren't showing up, try this first."
+}
