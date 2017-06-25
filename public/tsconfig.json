@@ -1,0 +1,19 @@
+{
+  "include": [
+    "lib/**/*.ts",
+    "../lib/types.d.ts",
+    "typings"
+  ],
+  "compilerOptions": {
+    "outDir": "../build/public/lib",
+    "lib": ["es5", "dom"],
+    "target": "es5",
+    "module": "none",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "types": []
+  },
+  "typeAcquisition": {
+    "enable": false
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "composer.title": "Emoji",
+  "meta-load-failed": "Failed to load emoji metadata",
+  "modal.title": "Available Emoticons",
+  "modal.legal": "Legal Information",
+  "modal.legal.header": "The emojis displayed belong to different <em>emoji sets</em>. <br> Which set an emoji belongs to is stated within the <code>class</code> HTML attribute (<code>class=\"emoji-[pack ID]\"</code>).",
+  "modal.legal.set.header": "<strong>%1</strong> Emoji Set <small>ID: <code>%2</code></small>",
+  "modal.legal.set.attribution": "Attribution",
+  "modal.legal.set.license": "License",
+
+  "categories.symbols": "Symbols",
+  "categories.objects": "Objects",
+  "categories.nature": "Nature",
+  "categories.people": "People",
+  "categories.food": "Food",
+  "categories.travel": "Travel",
+  "categories.activity": "Activity",
+  "categories.flags": "Flags",
+  "categories.regional": "Regional",
+  "categories.modifier": "Modifier",
+  "categories.other": "Other"
+}

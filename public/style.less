@@ -1,0 +1,141 @@
+.emoji-dialog {
+  display: none;
+
+  z-index: 9999;
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  flex-direction: column;
+  justify-content: flex-start;
+
+  padding-bottom: 5vh;
+  border-top: 1px solid @modal-content-border-color;
+  background: @modal-content-bg;
+  overflow: auto;
+
+  button.close {
+    z-index: 2;
+    opacity: 1;
+    display: inline-block;
+
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 42px;
+
+    background: @nav-tabs-active-link-hover-bg;
+    color: @nav-tabs-active-link-hover-color;
+    border: 1px solid @nav-tabs-border-color;
+    border-right: none;
+    border-top: none;
+  }
+}
+
+.emoji-dialog.open {
+  display: flex;
+}
+
+@media (max-width: @screen-sm-max) {
+  html.composing.emoji-insert .composer {
+    bottom: calc(~"40% - 36px");
+    height: auto;
+  }
+
+  .emoji-dialog {
+    z-index: 10001;
+
+    top: 60%;
+    bottom: 0 !important;
+
+    padding-bottom: 0;
+  }
+}
+
+.emoji-tabs {
+  display: flex;
+  flex-direction: column;
+
+  .nav-tabs {
+    overflow: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-right: 30px;
+
+    > li {
+      display: inline-block;
+      float: none;
+    }
+  }
+
+  .tab-content {
+    overflow: auto;
+    flex-shrink: 1;
+    flex-grow: 1;
+  }
+  .tab-pane {
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    flex-wrap: wrap;
+
+    &.active {
+      display: flex;
+    }
+  }
+}
+
+.emoji-link {
+  [class*="emoji"] {
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+  }
+
+  min-width: 40px;
+  text-align: center;
+  margin-bottom: 10px;
+
+  // have to do the following flex-basis thing
+  // because there's no way to line up the icons in columns otherwise
+  // while preventing uneven side margins
+
+  flex-basis: percentage(1 / 7);
+
+  @media (min-width: (10px + 40 * 11)) {
+    flex-basis: percentage(1 / 11);
+  }
+  @media (min-width: (10px + 40 * 15)) {
+    flex-basis: percentage(1 / 15);
+  }
+  @media (min-width: (10px + 40 * 19)) {
+    flex-basis: percentage(1 / 19);
+  }
+  @media (min-width: (10px + 40 * 23)) {
+    flex-basis: percentage(1 / 23);
+  }
+  // @screen-md-min same as above
+  @media (min-width: (@screen-md-min + 40 * 8)) {
+    flex-basis: percentage(1 / 31);
+  }
+  @media (min-width: (@screen-md-min + 40 * 16)) {
+    flex-basis: percentage(1 / 39);
+  }
+  @media (min-width: (@screen-md-min + 40 * 32)) {
+    flex-basis: percentage(1 / 55);
+  }
+  @media (min-width: (@screen-md-min + 40 * 48)) {
+    flex-basis: percentage(1 / 71);
+  }
+  @media (min-width: (@screen-md-min + 40 * 80)) {
+    flex-basis: percentage(1 / 103);
+  }
+  @media (min-width: (@screen-md-min + 40 * 102)) {
+    flex-basis: percentage(1 / 135);
+  }
+}
