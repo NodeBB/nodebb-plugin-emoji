@@ -4,6 +4,7 @@ import { access } from 'fs';
 import * as settings from './settings';
 import * as plugins from './plugins';
 import * as parse from './parse';
+import { tableFile } from './build';
 import { build } from './pubsub';
 import controllers from './controllers';
 
@@ -29,7 +30,7 @@ const init = (
       }
 
       // otherwise, build if never built before
-      access(parse.tableFile, (err) => {
+      access(tableFile, (err) => {
         if (err && err.code !== 'ENOENT') {
           return next(err);
         }

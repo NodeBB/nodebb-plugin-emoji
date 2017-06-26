@@ -12,8 +12,8 @@ export function images(pack: EmojiDefinition) {
 
 export function sprite(pack: EmojiDefinition): string {
   const classes = Object.keys(pack.dictionary).map((name) => {
-    return `.emoji-${pack.id}.${name} {` +
-      `background-position: ${pack.dictionary[name]};` +
+    return `.emoji-${pack.id}.emoji--${name} {` +
+      `background-position: ${pack.dictionary[name].backgroundPosition};` +
     '}';
   });
 

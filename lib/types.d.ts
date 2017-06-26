@@ -74,6 +74,8 @@ declare interface EmojiDefinition {
     [name: string]: {
       /** alternative names for this emoji */
       aliases?: string[],
+      /** keywords to match when searching for emoji */
+      keywords?: string[],
       /** common ascii representations for this emoji */
       ascii?: string[],
       /**
@@ -119,31 +121,33 @@ declare interface StoredEmoji {
   character: string;
   image: string;
   pack: string;
+  aliases: string[],
+  keywords: string[],
 }
 
-declare interface MetaStore {
+declare namespace MetaData {
   /** table of all emoji */
-  table: {
+  type table = {
     [name: string]: StoredEmoji,
   };
 
   /** map of all aliases to the base name */
-  aliases: {
+  type aliases = {
     [alias: string]: string,
   };
 
   /** map of ascii to base names */
-  ascii: {
+  type ascii = {
     [str: string]: string,
   };
 
   /** list of emoji names in each category */
-  categories: {
+  type categories = {
     [category: string]: string[],
   };
 
   /** storing pack information for dialog */
-  packs: {
+  type packs = {
     name: string,
     id: string,
     attribution: string,

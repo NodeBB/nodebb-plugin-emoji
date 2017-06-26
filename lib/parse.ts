@@ -1,32 +1,43 @@
 import { readFile } from 'fs';
 import { join } from 'path';
+import { parallel } from 'async';
+
+import { tableFile, aliasesFile, asciiFile } from './build';
 
 const nconf = require.main.require('nconf');
 const url = nconf.get('url');
 
-const tableFile = join(__dirname, '../emoji/meta.json');
-
-export { tableFile };
-
-let metaCache: MetaStore = null;
+let metaCache: {
+  table: MetaData.table,
+  aliases: MetaData.aliases,
+  ascii: MetaData.ascii,
+} = null;
 export function clearCache() {
   metaCache = null;
 }
 
-const getTable = (callback: NodeBack<MetaStore>) => {
+const getTable = (callback: NodeBack<typeof metaCache>) => {
   if (metaCache) {
     callback(null, metaCache);
     return;
   }
 
-  readFile(tableFile, (err, buffer) => {
+  parallel({
+    table: next => readFile(tableFile, next),
+    aliases: next => readFile(aliasesFile, next),
+    ascii: next => readFile(asciiFile, next),
+  }, (err: Error, results) => {
     if (err) {
       callback(err);
       return;
     }
 
     try {
-      metaCache = JSON.parse(buffer.toString());
+      metaCache = {
+        table: JSON.parse(results.table.toString()),
+        aliases: JSON.parse(results.aliases.toString()),
+        ascii: JSON.parse(results.ascii.toString()),
+      };
       callback(null, metaCache);
     } catch (e) {
       callback(e);
@@ -42,14 +53,14 @@ const buildEmoji = (emoji: StoredEmoji, whole: string) => {
     const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
       src="${route}/${emoji.image}"
-      class="not-responsive emoji-${emoji.pack} ${emoji.name}"
+      class="not-responsive emoji-${emoji.pack} emoji--${emoji.name}"
       title="${whole}"
       alt="${emoji.character}"
     />`;
   }
 
   return `<span
-    class="emoji-${emoji.pack} ${emoji.name}"
+    class="emoji-${emoji.pack} emoji--${emoji.name}"
     title="${whole}"
   ><span>${emoji.character}</span></span>`;
 };
@@ -63,7 +74,7 @@ const options = {
   shouldParseAscii: false,
 };
 
-const replaceAscii = (str: string, { table, ascii, aliases }: MetaStore) => {
+const replaceAscii = (str: string, { table, ascii, aliases }: (typeof metaCache)) => {
   let out = '';
 
   const keys = Object.keys(ascii);
@@ -111,7 +122,7 @@ export function setOptions(newOptions: ParseOptions) {
   Object.assign(options, newOptions);
 }
 
-const parse = (content: string, callback: NodeBack) => {
+const parse = (content: string, callback: NodeBack<string>) => {
   getTable((err, store) => {
     if (err) {
       callback(err);

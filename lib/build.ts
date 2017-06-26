@@ -16,6 +16,12 @@ const linkDirs = (sourceDir: string, destDir: string, callback: NodeBack) => {
   symlink(sourceDir, destDir, type, callback);
 };
 
+export const tableFile = join(assetsDir, 'table.json');
+export const aliasesFile = join(assetsDir, 'aliases.json');
+export const asciiFile = join(assetsDir, 'ascii.json');
+export const categoriesFile = join(assetsDir, 'categories.json');
+export const packsFile = join(assetsDir, 'packs.json');
+
 const pluginData = require.main.require('./src/plugins').data;
 
 export default function build(callback: NodeBack) {
@@ -55,61 +61,65 @@ export default function build(callback: NodeBack) {
         cb => remove(assetsDir, cb),
         cb => mkdirp(assetsDir, cb),
       ], (err: Error) => next(err, packs)),
-    (packs: [string, EmojiDefinition][], next: NodeBack) =>
+    (packs: [string, EmojiDefinition][], next: NodeBack) => {
+      const table: MetaData.table = {};
+      const aliases: MetaData.aliases = {};
+      const ascii: MetaData.ascii = {};
+
+      const categoriesInfo: MetaData.categories = {};
+      const packsInfo: MetaData.packs = packs.map(([, pack]) => ({
+        name: pack.name,
+        id: pack.id,
+        attribution: pack.attribution,
+        license: pack.license,
+      }));
+
+      packs.forEach(([, pack]) => {
+        Object.keys(pack.dictionary).forEach((key) => {
+          const name = key.toLowerCase();
+          const emoji = pack.dictionary[key];
+
+          table[name] = {
+            name,
+            character: emoji.character,
+            image: emoji.image || '',
+            pack: pack.id,
+            aliases: emoji.aliases || [],
+            keywords: emoji.keywords || [],
+          };
+
+          if (emoji.aliases) {
+            emoji.aliases.forEach((alias) => {
+              aliases[alias.toLowerCase()] = name;
+            });
+          }
+
+          if (emoji.ascii) {
+            emoji.ascii.forEach((str) => {
+              ascii[str] = name;
+            });
+          }
+
+          const categories = emoji.categories || ['other'];
+          categories.forEach((category) => {
+            categoriesInfo[category] = categoriesInfo[category] || [];
+            categoriesInfo[category].push(name);
+          });
+        });
+      });
+
       async.parallel([
         // generate CSS styles and store them
         (cb) => {
           const css = packs.map(([, pack]) => cssBuilders[pack.mode](pack)).join('\n');
           writeFile(join(assetsDir, 'styles.css'), css, { encoding: 'utf8' }, cb);
         },
-        // generate a master table
-        (cb) => {
-          const store: MetaStore = {
-            table: {},
-            aliases: {},
-            ascii: {},
-            categories: {},
-            packs: packs.map(([, pack]) => ({
-              name: pack.name,
-              id: pack.id,
-              attribution: pack.attribution,
-              license: pack.license,
-            })),
-          };
-
-          packs.forEach(([, pack]) => {
-            Object.keys(pack.dictionary).forEach((key) => {
-              const name = key.toLowerCase();
-
-              store.table[name] = {
-                name,
-                character: pack.dictionary[key].character,
-                image: pack.dictionary[key].image || '',
-                pack: pack.id,
-              };
-
-              if (pack.dictionary[key].aliases) {
-                pack.dictionary[key].aliases.forEach((alias) => {
-                  store.aliases[alias.toLowerCase()] = name;
-                });
-              }
-
-              if (pack.dictionary[key].ascii) {
-                pack.dictionary[key].ascii.forEach((str) => {
-                  store.ascii[str] = name;
-                });
-              }
-
-              const categories = pack.dictionary[key].categories || ['other'];
-              categories.forEach((category) => {
-                store.categories[category] = store.categories[category] || [];
-                store.categories[category].push(name);
-              });
-            });
-          });
-
-          writeFile(join(assetsDir, 'meta.json'), JSON.stringify(store), cb);
-        },
+        // persist metadata to disk
+        cb => writeFile(tableFile, JSON.stringify(table), cb),
+        cb => writeFile(aliasesFile, JSON.stringify(aliases), cb),
+        cb => writeFile(asciiFile, JSON.stringify(ascii), cb),
+        cb => writeFile(categoriesFile, JSON.stringify(categoriesInfo), cb),
+        cb => writeFile(packsFile, JSON.stringify(packsInfo), cb),
         // handle copying or linking necessary assets
         cb => async.each(packs, ([path, pack]: [string, EmojiDefinition], next) => {
           const dir = join(assetsDir, pack.id);
@@ -140,7 +150,8 @@ export default function build(callback: NodeBack) {
             ], next);
           }
         }, cb),
-      ], next),
+      ], next);
+    },
     (results: any, next: NodeBack) => {
       clearCache();
       next();

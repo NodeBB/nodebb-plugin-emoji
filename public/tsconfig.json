@@ -6,7 +6,7 @@
   ],
   "compilerOptions": {
     "outDir": "../build/public/lib",
-    "lib": ["es5", "dom"],
+    "lib": ["es5", "dom", "es2015.promise"],
     "target": "es5",
     "module": "none",
     "noImplicitAny": true,

@@ -37,7 +37,7 @@
           </p>
         </div>
         <!-- BEGIN packs -->
-        <div class="col-xs-12 col-md-6 col-lg-3">
+        <div class="col-xs-12 col-md-6">
           <h3>[[emoji:modal.legal.set.header, {../name}, {../id}]]</h3>
 
           <!-- IF ../attribution -->

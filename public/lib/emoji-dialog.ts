@@ -2,6 +2,7 @@ declare interface EmojiDialog {
   openForInsert(
     textarea: HTMLTextAreaElement,
   ): void;
+  init(callback: Callback<JQuery>): void;
 }
 
 define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
@@ -12,76 +13,85 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
   },
   emojix: EmojiX,
 ) => {
-  const meta = emojix.meta;
-
   const $html = $('html');
+
+  function dialogify(dialog: JQuery) {
+    dialog.open = function () {
+      $html.addClass('emoji-insert');
+      return this.addClass('open');
+    };
+    dialog.close = function () {
+      $html.removeClass('emoji-insert');
+      return this.removeClass('open');
+    };
+
+    return dialog;
+  }
+
+  const { buster, base, table } = emojix;
 
   // create modal
   function init(callback: Callback<JQuery>) {
-    const categories = Object.keys(meta.categories).map((category) => {
-      const emojis = meta.categories[category].map(name => meta.table[name]);
-      return {
-        name: category,
-        emojis: emojis.map(emoji => ({
-          name: emoji.name,
-          html: emojix.buildEmoji(emoji, true),
-        })),
-      };
-    });
+    Promise.all([
+      $.getJSON(`${base}/emoji/categories.json?${buster}`),
+      $.getJSON(`${base}/emoji/packs.json?${buster}`),
+    ]).then(([categoriesInfo, packs]: [MetaData.categories, MetaData.packs]) => {
+      const categories = Object.keys(categoriesInfo).map((category) => {
+        const emojis = categoriesInfo[category].map(name => table[name]);
+        return {
+          name: category,
+          emojis: emojis.map(emoji => ({
+            name: emoji.name,
+            html: emojix.buildEmoji(emoji, true),
+          })),
+        };
+      });
 
-    window.templates.parse('partials/emoji-dialog', {
-      categories,
-      packs: meta.packs,
-    }, (result) => {
-      translator.translate(result, (html: string) => {
-        const dialog = $(html).appendTo('body');
+      window.templates.parse('partials/emoji-dialog', {
+        categories,
+        packs,
+      }, (result) => {
+        translator.translate(result, (html: string) => {
+          const dialog = dialogify($(html).appendTo('body'));
 
-        dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
-          e.preventDefault();
-          $(e.target).tab('show');
-        }).on('show.bs.tab', (e) => {
-          $(e.target.getAttribute('href'))
-            .find('.emoji-link img.defer')
-            .removeClass('defer')
-            .each((i, elem) => {
-              const $elem = $(elem);
-              const src = $elem.attr('data-src');
-              $elem.attr('src', src);
-            });
-        }).first().trigger('show.bs.tab');
+          dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
+            e.preventDefault();
+            $(e.target).tab('show');
+          }).on('show.bs.tab', (e) => {
+            $(e.target.getAttribute('href'))
+              .find('.emoji-link img.defer')
+              .removeClass('defer')
+              .each((i, elem) => {
+                const $elem = $(elem);
+                const src = $elem.attr('data-src');
+                $elem.attr('src', src);
+              });
+          }).first().trigger('show.bs.tab');
 
-        dialog.modal({
-          backdrop: false,
-          show: false,
+          dialog.modal({
+            backdrop: false,
+            show: false,
+          });
+
+          scrollStop.apply(dialog.find('.tab-content')[0]);
+
+          const adjustDialog = () => {
+            const composer = $('.composer:visible')[0];
+            if (composer) {
+              const top = parseInt(composer.style.top, 10);
+              dialog.css('bottom', `${100 - top - 5}%`);
+            } else {
+              dialog.close();
+            }
+          };
+
+          adjustDialog();
+          $(window).on('action:composer.resize', () => requestAnimationFrame(adjustDialog));
+          $(window).on('action:composer.discard action:composer.submit', () => dialog.close());
+          dialog.find('.close').click(() => dialog.close());
+
+          callback(dialog);
         });
-
-        dialog.open = function () {
-          $html.addClass('emoji-insert');
-          return this.addClass('open');
-        };
-        dialog.close = function () {
-          $html.removeClass('emoji-insert');
-          return this.removeClass('open');
-        };
-
-        scrollStop.apply(dialog.find('.tab-content')[0]);
-
-        const adjustDialog = () => {
-          const composer = $('.composer:visible')[0];
-          if (composer) {
-            const top = parseInt(composer.style.top, 10);
-            dialog.css('bottom', `${100 - top - 5}%`);
-          } else {
-            dialog.close();
-          }
-        };
-
-        adjustDialog();
-        $(window).on('action:composer.resize', () => requestAnimationFrame(adjustDialog));
-        $(window).on('action:composer.discard action:composer.submit', () => dialog.close());
-        dialog.find('.close').click(() => dialog.close());
-
-        callback(dialog);
       });
     });
   }
@@ -105,12 +115,14 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
         dialog.open();
       }
 
-      if ($('#emoji-dialog').length) {
-        after($('#emoji-dialog'));
+      const dialog = $('#emoji-dialog');
+      if (dialog.length) {
+        after(dialogify(dialog));
       } else {
         init(after);
       }
     },
+    init,
   };
 
   return emojiDialog;
