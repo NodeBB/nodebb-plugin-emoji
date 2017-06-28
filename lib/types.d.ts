@@ -146,6 +146,11 @@ declare namespace MetaData {
     [category: string]: string[],
   };
 
+  /** map of characters to emoji names */
+  type characters = {
+    [character: string]: string,
+  };
+
   /** storing pack information for dialog */
   type packs = {
     name: string,

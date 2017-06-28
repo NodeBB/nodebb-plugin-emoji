@@ -19,6 +19,7 @@ const linkDirs = (sourceDir: string, destDir: string, callback: NodeBack) => {
 export const tableFile = join(assetsDir, 'table.json');
 export const aliasesFile = join(assetsDir, 'aliases.json');
 export const asciiFile = join(assetsDir, 'ascii.json');
+export const charactersFile = join(assetsDir, 'characters.json');
 export const categoriesFile = join(assetsDir, 'categories.json');
 export const packsFile = join(assetsDir, 'packs.json');
 
@@ -65,6 +66,7 @@ export default function build(callback: NodeBack) {
       const table: MetaData.table = {};
       const aliases: MetaData.aliases = {};
       const ascii: MetaData.ascii = {};
+      const characters: MetaData.characters = {};
 
       const categoriesInfo: MetaData.categories = {};
       const packsInfo: MetaData.packs = packs.map(([, pack]) => ({
@@ -87,6 +89,8 @@ export default function build(callback: NodeBack) {
             aliases: emoji.aliases || [],
             keywords: emoji.keywords || [],
           };
+
+          characters[emoji.character] = name;
 
           if (emoji.aliases) {
             emoji.aliases.forEach((alias) => {
@@ -118,6 +122,7 @@ export default function build(callback: NodeBack) {
         cb => writeFile(tableFile, JSON.stringify(table), cb),
         cb => writeFile(aliasesFile, JSON.stringify(aliases), cb),
         cb => writeFile(asciiFile, JSON.stringify(ascii), cb),
+        cb => writeFile(charactersFile, JSON.stringify(characters), cb),
         cb => writeFile(categoriesFile, JSON.stringify(categoriesInfo), cb),
         cb => writeFile(packsFile, JSON.stringify(packsInfo), cb),
         // handle copying or linking necessary assets

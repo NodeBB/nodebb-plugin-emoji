@@ -13,17 +13,17 @@ const get = (callback: NodeBack<{ [key: string]: any }>) => {
     }
 
     callback(null, {
-      // shouldBuild: data.shouldBuild == null ||
-      //   !!parseInt(data.shouldBuild, 10),
-      shouldParseAscii: data.shouldParseAscii == null ||
-        !!parseInt(data.shouldParseAscii, 10),
+      parseNative: data.parseNative == null ||
+        !!parseInt(data.parseNative, 10),
+      parseAscii: data.parseAscii == null ||
+        !!parseInt(data.parseAscii, 10),
     });
   });
 };
 const set = (value: any, callback: NodeBack<void>) => {
   settings.set('emoji', {
-    // shouldBuild: value.shouldBuild ? 1 : 0,
-    shouldParseAscii: value.shouldParseAscii ? 1 : 0,
+    parseNative: value.parseNative ? 1 : 0,
+    parseAscii: value.parseAscii ? 1 : 0,
   }, callback);
 };
 const getOne = (field: string, callback: NodeBack<any>) => {
@@ -37,7 +37,7 @@ const getOne = (field: string, callback: NodeBack<any>) => {
   });
 };
 const setOne = (field: string, value: any, callback: NodeBack<void>) => {
-  settings.setOne('emoji', field, value, callback);
+  settings.setOne('emoji', field, value ? 1 : 0, callback);
 };
 
 export {

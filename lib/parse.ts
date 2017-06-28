@@ -2,7 +2,7 @@ import { readFile } from 'fs';
 import { join } from 'path';
 import { parallel } from 'async';
 
-import { tableFile, aliasesFile, asciiFile } from './build';
+import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
 const nconf = require.main.require('nconf');
 const url = nconf.get('url');
@@ -11,10 +11,15 @@ let metaCache: {
   table: MetaData.table,
   aliases: MetaData.aliases,
   ascii: MetaData.ascii,
+  asciiPattern: RegExp,
+  characters: MetaData.characters,
+  charPattern: RegExp,
 } = null;
 export function clearCache() {
   metaCache = null;
 }
+
+const escapeRegExpChars = (text: string) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 
 const getTable = (callback: NodeBack<typeof metaCache>) => {
   if (metaCache) {
@@ -26,6 +31,7 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
     table: next => readFile(tableFile, next),
     aliases: next => readFile(aliasesFile, next),
     ascii: next => readFile(asciiFile, next),
+    characters: next => readFile(charactersFile, next),
   }, (err: Error, results) => {
     if (err) {
       callback(err);
@@ -33,10 +39,25 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
     }
 
     try {
+      const ascii = JSON.parse(results.ascii.toString());
+      const asciiPattern = Object.keys(ascii)
+        .sort((a, b) => b.length - a.length)
+        .map(escapeRegExpChars)
+        .join('|');
+
+      const characters = JSON.parse(results.characters.toString());
+      const charPattern = Object.keys(characters)
+        .sort((a, b) => b.length - a.length)
+        .map(escapeRegExpChars)
+        .join('|');
+
       metaCache = {
+        ascii,
+        characters,
         table: JSON.parse(results.table.toString()),
         aliases: JSON.parse(results.aliases.toString()),
-        ascii: JSON.parse(results.ascii.toString()),
+        asciiPattern: new RegExp(asciiPattern, 'g'),
+        charPattern: new RegExp(charPattern, 'g'),
       };
       callback(null, metaCache);
     } catch (e) {
@@ -65,57 +86,23 @@ const buildEmoji = (emoji: StoredEmoji, whole: string) => {
   ><span>${emoji.character}</span></span>`;
 };
 
-interface ParseOptions {
-  /** whether to parse ascii emoji representations into emoji */
-  shouldParseAscii?: boolean;
-}
-
-const options = {
-  shouldParseAscii: false,
+const replaceAscii = (str: string, { ascii, asciiPattern }: (typeof metaCache)) => {
+  return str.replace(asciiPattern, (text: string) => `:${ascii[text]}:`);
 };
 
-const replaceAscii = (str: string, { table, ascii, aliases }: (typeof metaCache)) => {
-  let out = '';
+const replaceNative = (str: string, { characters, charPattern }: (typeof metaCache)) => {
+  return str.replace(charPattern, (char: string) => `:${characters[char]}:`);
+};
 
-  const keys = Object.keys(ascii);
-  const keysLen = keys.length;
+interface ParseOptions {
+  /** whether to parse ascii emoji representations into emoji */
+  ascii?: boolean;
+  native?: boolean;
+}
 
-  const strLen = str.length;
-  let cursor = 0;
-  let lastBreak = 0;
-
-  while (cursor < strLen) {
-    let found = false;
-
-    for (let j = 0; j < keysLen; j += 1) {
-      const key = keys[j];
-      const len = key.length;
-      const slice = str.slice(cursor, cursor + len);
-
-      if (key === slice) {
-        const name = ascii[key];
-        const emoji = table[name] || table[aliases[name]];
-
-        if (emoji) {
-          out += str.slice(lastBreak, cursor);
-          out += buildEmoji(emoji, slice);
-          cursor += len;
-          lastBreak = cursor;
-
-          found = true;
-          break;
-        }
-      }
-    }
-
-    if (!found) {
-      cursor += 1;
-    }
-  }
-
-  out += str.slice(lastBreak);
-
-  return out;
+const options: ParseOptions = {
+  ascii: false,
+  native: false,
 };
 
 export function setOptions(newOptions: ParseOptions) {
@@ -131,32 +118,41 @@ const parse = (content: string, callback: NodeBack<string>) => {
     const { table, aliases } = store;
 
     const parsed = content.replace(outsideCode, (str: string) => {
-      const replaced = str
-        .replace(emojiPattern, (whole: string, text: string) => {
-          const name = text.toLowerCase();
-          const emoji = table[name] || table[aliases[name]];
+      let output = str;
 
-          if (emoji) {
-            return buildEmoji(emoji, whole);
-          }
+      if (options.native || options.ascii) {
+        // avoid parsing native inside HTML tags
+        output = output.replace(
+          /(<[^>]+>)|(:[a-z\-.+0-9_]+:)|([^<]+)/g,
+          (full: string, tag: string, emoji: string, text: string) => {
+            if (text) {
+              let out: string = text;
 
-          return whole;
-        });
+              if (options.native) {
+                out = replaceNative(out, store);
+              }
+              if (options.ascii) {
+                out = replaceAscii(out, store);
+              }
 
-      if (options.shouldParseAscii) {
-        // avoid parsing text inside HTML tags
-        return replaced.replace(/(<[^>]+>)|([^<]+)/g, (x: string, tag: string, text: string) => {
-          if (tag) {
-            return tag;
-          }
-          if (text) {
-            return replaceAscii(text, store);
-          }
-          return x;
-        });
+              return out;
+            }
+
+            return full;
+          },
+        );
       }
 
-      return replaced;
+      return output.replace(emojiPattern, (whole: string, text: string) => {
+        const name = text.toLowerCase();
+        const emoji = table[name] || table[aliases[name]];
+
+        if (emoji) {
+          return buildEmoji(emoji, whole);
+        }
+
+        return whole;
+      });
     });
 
     callback(null, parsed);

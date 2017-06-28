@@ -19,9 +19,15 @@ const init = (
 
   waterfall([
     settings.get,
-    ({ shouldParseAscii }: { shouldParseAscii: boolean }, next: NodeBack) => {
+    ({ parseAscii, parseNative }: {
+      parseAscii: boolean,
+      parseNative: boolean,
+    }, next: NodeBack) => {
       // initialise ascii flag
-      parse.setOptions({ shouldParseAscii });
+      parse.setOptions({
+        ascii: parseAscii,
+        native: parseNative,
+      });
 
       // always build on startup if in dev mode
       if (global.env === 'development') {
