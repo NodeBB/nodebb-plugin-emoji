@@ -7,8 +7,10 @@ import { build } from './pubsub';
 const nconf = require.main.require('nconf');
 const baseDir = nconf.get('base_dir');
 
+const noop = () => {};
+
 // build when a plugin is (de)activated if that plugin is an emoji pack
-const toggle = ({ id }: { id: string }, cb: NodeBack) => {
+const toggle = ({ id }: { id: string }, cb: NodeBack = noop) => {
   some([
     join(baseDir, 'node_modules', id, 'emoji.json'),
     join(baseDir, 'node_modules', id, 'emoji.js'),
