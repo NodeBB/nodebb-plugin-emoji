@@ -19,13 +19,27 @@ export function sprite(pack: EmojiDefinition): string {
 
   const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
   return `.emoji-${pack.id} {` +
-    'display: inline-block;' +
-    'height: 23px;' +
     `background-image: url(${route}/${basename(pack.sprite.file)});` +
     `background-size: ${pack.sprite.backgroundSize};` +
+    'background-repeat: no-repeat;' +
+    'display: inline-block;' +
+    'height: 23px;' +
+    'width: 23px;' +
+    'overflow: hidden;' +
+    'font-size: 23px;' +
+    'line-height: 23px;' +
+    'text-align: center;' +
+    'vertical-align: bottom;' +
+    'color: transparent;' +
   '}' +
-  '.emoji-${pack.id} > span {' +
-    'display: none;' +
+  `.emoji-link .emoji-${pack.id} {` +
+    'transform: scale(1.304347826086957);' +
+    'position: relative;' +
+    'bottom: -3.5px;' +
+    'height: 23px;' +
+    'width: 23px;' +
+    'font-size: 23px;' +
+    'line-height: 23px;' +
   '}' + classes.join('');
 }
 
@@ -50,8 +64,14 @@ export function font(pack: EmojiDefinition): string {
   '}' +
   `.emoji-${pack.id} {` +
     `font-family: '${pack.font.family}';` +
-    'display: inline-block;' +
-    'font-size: 20px;' +
     'font-style: normal;' +
+    'display: inline-block;' +
+    'height: 23px;' +
+    'width: 23px;' +
+    'overflow: hidden;' +
+    'font-size: 23px;' +
+    'line-height: 23px;' +
+    'text-align: center;' +
+    'vertical-align: bottom;' +
   '}';
 }

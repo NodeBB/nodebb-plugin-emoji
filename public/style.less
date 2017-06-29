@@ -1,4 +1,8 @@
 .emoji-dialog {
+  &.open {
+    display: flex;
+  }
+
   display: none;
 
   z-index: 9999;
@@ -36,9 +40,6 @@
   }
 }
 
-.emoji-dialog.open {
-  display: flex;
-}
 
 @media (max-width: @screen-sm-max) {
   html.composing.emoji-insert .composer {
@@ -91,15 +92,15 @@
 }
 
 .emoji-link {
-  [class*="emoji"] {
+  > span, > img {
     height: 30px;
     font-size: 30px;
     line-height: 30px;
   }
 
   min-width: 40px;
+  min-height: 40px;
   text-align: center;
-  margin-bottom: 10px;
 
   // have to do the following flex-basis thing
   // because there's no way to line up the icons in columns otherwise
