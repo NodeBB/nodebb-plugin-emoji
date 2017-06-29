@@ -1,5 +1,5 @@
 import { access, writeFile, symlink } from 'fs';
-import { join, basename } from 'path';
+import { join, resolve, basename } from 'path';
 import { mkdirp, copy, remove } from 'fs-extra';
 import * as async from 'async';
 
@@ -130,12 +130,12 @@ export default function build(callback: NodeBack) {
           const dir = join(assetsDir, pack.id);
 
           if (pack.mode === 'images') {
-            linkDirs(join(path, pack.images.directory), dir, next);
+            linkDirs(resolve(path, pack.images.directory), dir, next);
           } else if (pack.mode === 'sprite') {
             const filename = basename(pack.sprite.file);
             async.series([
               cb => mkdirp(dir, cb),
-              cb => copy(join(path, pack.sprite.file), join(dir, filename), cb),
+              cb => copy(resolve(path, pack.sprite.file), join(dir, filename), cb),
             ], next);
           } else { // pack.mode === 'font'
             const fontFiles = [
@@ -150,7 +150,7 @@ export default function build(callback: NodeBack) {
               cb => mkdirp(dir, cb),
               cb => async.each(fontFiles, (file, next) => {
                 const filename = basename(file);
-                copy(join(path, file), join(dir, filename), next);
+                copy(resolve(path, file), join(dir, filename), next);
               }, cb),
             ], next);
           }
