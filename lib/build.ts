@@ -90,7 +90,9 @@ export default function build(callback: NodeBack) {
             keywords: emoji.keywords || [],
           };
 
-          characters[emoji.character] = name;
+          if (emoji.character) {
+            characters[emoji.character] = name;
+          }
 
           if (emoji.aliases) {
             emoji.aliases.forEach((alias) => {
