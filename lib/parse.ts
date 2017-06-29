@@ -120,22 +120,14 @@ const parse = (content: string, callback: NodeBack<string>) => {
     const parsed = content.replace(outsideCode, (str: string) => {
       let output = str;
 
-      if (options.native || options.ascii) {
+      if (options.native) {
         // avoid parsing native inside HTML tags
+        // also avoid converting ascii characters
         output = output.replace(
-          /(<[^>]+>)|(:[a-z\-.+0-9_]+:)|([^<]+)/g,
-          (full: string, tag: string, emoji: string, text: string) => {
+          /(<[^>]+>)|([^0-9a-zA-Z`~!@#$%^&*()\-=_+{}|[\]\\:";'<>?,./\s\n]+)/g,
+          (full: string, tag: string, text: string) => {
             if (text) {
-              let out: string = text;
-
-              if (options.native) {
-                out = replaceNative(out, store);
-              }
-              if (options.ascii) {
-                out = replaceAscii(out, store);
-              }
-
-              return out;
+              return replaceNative(text, store);
             }
 
             return full;
@@ -143,7 +135,7 @@ const parse = (content: string, callback: NodeBack<string>) => {
         );
       }
 
-      return output.replace(emojiPattern, (whole: string, text: string) => {
+      output = output.replace(emojiPattern, (whole: string, text: string) => {
         const name = text.toLowerCase();
         const emoji = table[name] || table[aliases[name]];
 
@@ -153,6 +145,22 @@ const parse = (content: string, callback: NodeBack<string>) => {
 
         return whole;
       });
+
+      if (options.ascii) {
+        // avoid parsing native inside HTML tags
+        output = output.replace(
+          /(<[^>]+>)|([^<]+)/g,
+          (full: string, tag: string, text: string) => {
+            if (text) {
+              return replaceAscii(text, store);
+            }
+
+            return full;
+          },
+        );
+      }
+
+      return output;
     });
 
     callback(null, parsed);
