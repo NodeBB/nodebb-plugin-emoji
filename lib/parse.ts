@@ -86,8 +86,15 @@ const buildEmoji = (emoji: StoredEmoji, whole: string) => {
   ><span>${emoji.character}</span></span>`;
 };
 
-const replaceAscii = (str: string, { ascii, asciiPattern }: (typeof metaCache)) => {
-  return str.replace(asciiPattern, (text: string) => `:${ascii[text]}:`);
+const replaceAscii = (str: string, { ascii, asciiPattern, table }: (typeof metaCache)) => {
+  return str.replace(asciiPattern, (text: string) => {
+    const emoji = ascii[text] && table[ascii[text]];
+    if (emoji) {
+      return buildEmoji(emoji, text);
+    }
+
+    return text;
+  });
 };
 
 const replaceNative = (str: string, { characters, charPattern }: (typeof metaCache)) => {
