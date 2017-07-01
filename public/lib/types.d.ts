@@ -23,6 +23,5 @@ interface Window {
   templates: {
     parse(template: string, data: any, callback: Callback<string>): void,
   };
-  requestIdleCallback(callback: Callback): string;
 }
 

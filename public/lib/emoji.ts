@@ -62,14 +62,6 @@ define('emoji', [], () => {
             maxPatternLength: 32,
             keys: ['name', 'aliases', 'keywords'],
           });
-
-          if (window.requestIdleCallback) {
-            window.requestIdleCallback(() => {
-              require(['emoji-dialog'], (dialog: EmojiDialog) => {
-                dialog.init(() => {});
-              });
-            });
-          }
         }).fail((err) => {
           const e = Error('[[emoji:meta-load-failed]]');
           console.error(e);
