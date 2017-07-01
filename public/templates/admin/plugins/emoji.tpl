@@ -18,7 +18,7 @@
 
     <div class="panel-footer">
       <div class="form-group">
-        <button type="button" id="build" class="btn btn-primary" aria-describedby="emoji-build_description">[[admin/plugins/emoji-extended:build]]</button>
+        <button type="button" id="build" class="btn btn-primary" aria-describedby="emoji-build_description">[[admin/plugins/emoji:build]]</button>
         <p id="emoji-build_description" class="help-block">
         [[admin/plugins/emoji:build_description]]
         </p>

@@ -92,13 +92,13 @@ declare interface EmojiDefinition {
        * categories this emoji fits in (default: `['other']`)
        *
        * known categories:
-       * `'symbols'`,
-       * `'objects'`,
-       * `'nature'`,
        * `'people'`,
+       * `'nature'`,
        * `'food'`,
-       * `'travel'`,
        * `'activity'`,
+       * `'travel'`,
+       * `'objects'`,
+       * `'symbols'`,
        * `'flags'`,
        * `'regional'`,
        * `'modifier'`,

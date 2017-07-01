@@ -30,6 +30,22 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
 
   const { buster, base, table } = emojix;
 
+  const priorities: {
+    [name: string]: number,
+  } = {
+    people: 10,
+    nature: 9,
+    food: 8,
+    activity: 7,
+    travel: 6,
+    objects: 5,
+    symbols: 4,
+    flags: 3,
+    regional: 2,
+    modifier: 1,
+    other: 0,
+  };
+
   // create modal
   function init(callback: Callback<JQuery>) {
     Promise.all([
@@ -45,6 +61,11 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
             html: emojix.buildEmoji(emoji, true),
           })),
         };
+      }).sort((a, b) => {
+        const aPriority = priorities[a.name] || 0;
+        const bPriority = priorities[b.name] || 0;
+
+        return bPriority - aPriority;
       });
 
       window.templates.parse('partials/emoji-dialog', {
