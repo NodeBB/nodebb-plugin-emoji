@@ -120,6 +120,11 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
   const emojiDialog: EmojiDialog = {
     openForInsert(textarea: HTMLTextAreaElement) {
       function after(dialog: JQuery) {
+        if (dialog.hasClass('open')) {
+          dialog.close();
+          return;
+        }
+
         dialog.off('click').on('click', '.emoji-link', (e) => {
           e.preventDefault();
           const name = (<HTMLAnchorElement>e.currentTarget).name;
