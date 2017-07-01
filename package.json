@@ -19,11 +19,13 @@
     "extended"
   ],
   "dependencies": {
+    "@types/lodash": "^4.14.68",
     "async": "^2.4.1",
     "copy": "^0.3.0",
     "emojione": "^3.0.3",
     "fs-extra": "^3.0.1",
-    "fuse.js": "^3.0.5"
+    "fuse.js": "^3.0.5",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "@types/async": "^2.0.40",

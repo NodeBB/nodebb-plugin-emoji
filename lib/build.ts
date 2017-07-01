@@ -1,6 +1,7 @@
 import { access, writeFile, symlink } from 'fs';
 import { join, resolve, basename } from 'path';
 import { mkdirp, copy, remove } from 'fs-extra';
+import { uniq } from 'lodash';
 import * as async from 'async';
 
 import * as cssBuilders from './css-builders';
@@ -69,40 +70,49 @@ export default function build(callback: NodeBack) {
       const characters: MetaData.characters = {};
 
       const categoriesInfo: MetaData.categories = {};
-      const packsInfo: MetaData.packs = packs.map(([, pack]) => ({
-        name: pack.name,
-        id: pack.id,
-        attribution: pack.attribution,
-        license: pack.license,
-      }));
+      const packsInfo: MetaData.packs = [];
 
       packs.forEach(([, pack]) => {
+        packsInfo.push({
+          name: pack.name,
+          id: pack.id,
+          attribution: pack.attribution,
+          license: pack.license,
+        });
+
         Object.keys(pack.dictionary).forEach((key) => {
           const name = key.toLowerCase();
           const emoji = pack.dictionary[key];
 
-          table[name] = {
-            name,
-            character: emoji.character,
-            image: emoji.image || '',
-            pack: pack.id,
-            aliases: emoji.aliases || [],
-            keywords: emoji.keywords || [],
-          };
+          if (!table[name]) {
+            table[name] = {
+              name,
+              character: emoji.character,
+              image: emoji.image || '',
+              pack: pack.id,
+              aliases: emoji.aliases || [],
+              keywords: emoji.keywords || [],
+            };
+          }
 
-          if (emoji.character) {
+          if (emoji.character && !characters[emoji.character]) {
             characters[emoji.character] = name;
           }
 
           if (emoji.aliases) {
             emoji.aliases.forEach((alias) => {
-              aliases[alias.toLowerCase()] = name;
+              const a = alias.toLowerCase();
+              if (!aliases[a]) {
+                aliases[a] = name;
+              }
             });
           }
 
           if (emoji.ascii) {
             emoji.ascii.forEach((str) => {
-              ascii[str] = name;
+              if (!ascii[str]) {
+                ascii[str] = name;
+              }
             });
           }
 
@@ -112,6 +122,10 @@ export default function build(callback: NodeBack) {
             categoriesInfo[category].push(name);
           });
         });
+      });
+
+      Object.keys(categoriesInfo).forEach((category) => {
+        categoriesInfo[category] = uniq(categoriesInfo[category]);
       });
 
       async.parallel([
