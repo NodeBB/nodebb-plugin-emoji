@@ -5,6 +5,11 @@ declare interface EmojiDialog {
   init(callback: Callback<JQuery>): void;
 }
 
+interface JQuery {
+  open(): JQuery;
+  close(): JQuery;
+}
+
 define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
   translator: any,
   controls: any,

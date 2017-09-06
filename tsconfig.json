@@ -1,7 +1,6 @@
 {
   "include": [
-    "lib/**/*.ts",
-    "typings"
+    "lib/**/*.ts"
   ],
   "compilerOptions": {
     "outDir": "build/lib",
@@ -11,7 +10,8 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "alwaysStrict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": []
   },
   "typeAcquisition": {
     "enable": false

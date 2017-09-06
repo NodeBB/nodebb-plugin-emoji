@@ -2,11 +2,13 @@
   "include": [
     "lib/**/*.ts",
     "../lib/types.d.ts",
-    "typings"
+    "../node_modules/@types/jquery",
+    "../node_modules/@types/bootstrap",
+    "../node_modules/@types/requirejs"
   ],
   "compilerOptions": {
     "outDir": "../build/public/lib",
-    "lib": ["es5", "dom", "es2015.promise"],
+    "lib": ["es5", "dom", "es2015.promise", "es2015.iterable"],
     "target": "es5",
     "module": "none",
     "noImplicitAny": true,

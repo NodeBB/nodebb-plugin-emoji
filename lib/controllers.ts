@@ -1,4 +1,4 @@
-import { Router, Request, Response, RequestHandler, ErrorHandler } from 'express';
+import { Router, Request, Response, RequestHandler } from 'express';
 import { join } from 'path';
 
 import * as settings from './settings';
@@ -8,7 +8,7 @@ const version: string = require(join(__dirname, '../../package.json')).version;
 
 export default function controllers({ router, middleware }: {
   router: Router,
-  middleware: { admin: { [key: string]: RequestHandler | ErrorHandler } },
+  middleware: { admin: { [key: string]: RequestHandler } },
 }) {
   const renderAdmin: RequestHandler = (req, res, next) => {
     settings.get((err, sets) => {

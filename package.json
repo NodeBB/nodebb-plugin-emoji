@@ -19,20 +19,23 @@
     "extended"
   ],
   "dependencies": {
-    "@types/lodash": "^4.14.68",
-    "async": "^2.4.1",
-    "copy": "^0.3.0",
-    "emojione": "^3.0.3",
-    "fs-extra": "^3.0.1",
-    "fuse.js": "^3.0.5",
+    "async": "^2.5.0",
+    "fs-extra": "^4.0.1",
+    "fuse.js": "^3.1.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "@types/async": "^2.0.40",
-    "tslint": "^5.4.3",
-    "tslint-config-airbnb": "^5.1.2",
-    "typescript": "^2.3.4",
-    "typings": "^2.1.1"
+    "@types/async": "^2.0.42",
+    "@types/bootstrap": "^3.3.36",
+    "@types/express": "^4.0.37",
+    "@types/fs-extra": "^4.0.2",
+    "@types/lodash": "^4.14.74",
+    "@types/nconf": "^0.0.34",
+    "@types/node": "^8.0.26",
+    "@types/requirejs": "^2.1.31",
+    "tslint": "^5.7.0",
+    "tslint-config-airbnb": "^5.2.1",
+    "typescript": "^2.5.2"
   },
   "scripts": {
     "compile": "tsc -p . && tsc -p public",

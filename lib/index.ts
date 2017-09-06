@@ -76,15 +76,17 @@ const composerFormatting = (data: {
   callback(null, data);
 };
 
-const addStylesheet = (links: {
-  rel: string, type?: string, href: string,
-}[], callback: NodeBack) => {
-  links.push({
+const addStylesheet = (data: {
+  links: {
+    rel: string, type?: string, href: string,
+  }[],
+}, callback: NodeBack) => {
+  data.links.push({
     rel: 'stylesheet',
     href: nconf.get('relative_path') + '/plugins/nodebb-plugin-emoji/emoji/styles.css',
   });
 
-  callback(null, links);
+  callback(null, data);
 };
 
 export {
