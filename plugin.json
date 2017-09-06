@@ -1,0 +1,33 @@
+{
+  "library": "build/lib",
+  "less": [
+    "public/style.less"
+  ],
+  "modules": {
+    "emoji-dialog.js": "build/public/lib/emoji-dialog.js",
+    "Fuse.js": "node_modules/fuse.js/dist/fuse.js"
+  },
+  "staticDirs": {
+    "emoji": "build/emoji"
+  },
+  "scripts": [
+    "build/public/lib/emoji.js"
+  ],
+  "acpScripts": [
+    "public/admin.js"
+  ],
+  "languages": "public/language",
+  "defaultLang": "en-US",
+  "templates": "public/templates",
+  "hooks": [
+    { "hook": "static:app.load", "method": "init" },
+    { "hook": "filter:admin.header.build", "method": "adminMenu" },
+    { "hook": "filter:composer.formatting", "method": "composerFormatting", "priority": 19 },
+    { "hook": "filter:parse.raw", "method": "parse.raw", "priority": 9 },
+    { "hook": "filter:parse.post", "method": "parse.post", "priority": 9 },
+    { "hook": "filter:email.modify", "method": "modifyEmail" },
+    { "hook": "action:plugin.activate", "method": "plugins.activation" },
+    { "hook": "action:plugin.deactivate", "method": "plugins.deactivation" },
+    { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" }
+  ]
+}

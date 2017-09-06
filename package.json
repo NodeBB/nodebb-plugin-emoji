@@ -1,0 +1,25 @@
+{
+  "name": "nodebb-plugin-emoji",
+  "version": "2.0.0",
+  "description": "Adds extensible emoji functionality to NodeBB",
+  "main": "build/lib",
+  "author": "Peter Jaszkowiak <p.jaszkow@gmail.com> (https://github.com/pitaj)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NodeBB/nodebb-plugin-emoji.git"
+  },
+  "nbbpm": {
+    "compatibility": "^1.6.0"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "emoji",
+    "extended"
+  ],
+  "scripts": {
+    "compile": "tsc -p . && tsc -p public",
+    "build": "npm run compile && node ../nodebb/nodebb build --dev"
+  }
+}
