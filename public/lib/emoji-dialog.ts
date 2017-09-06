@@ -5,11 +5,6 @@ declare interface EmojiDialog {
   init(callback: Callback<JQuery>): void;
 }
 
-interface JQuery {
-  open(): JQuery;
-  close(): JQuery;
-}
-
 define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
   translator: any,
   controls: any,
@@ -20,18 +15,16 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
 ) => {
   const $html = $('html');
 
-  function dialogify(dialog: JQuery) {
-    dialog.open = function () {
+  const dialogActions = {
+    open(dialog: JQuery) {
       $html.addClass('emoji-insert');
-      return this.addClass('open');
-    };
-    dialog.close = function () {
+      return dialog.addClass('open');
+    },
+    close(dialog: JQuery) {
       $html.removeClass('emoji-insert');
-      return this.removeClass('open');
-    };
-
-    return dialog;
-  }
+      return dialog.removeClass('open');
+    },
+  };
 
   const { buster, base, table } = emojix;
 
@@ -78,7 +71,7 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
         packs,
       }, (result) => {
         translator.translate(result, (html: string) => {
-          const dialog = dialogify($(html).appendTo('body'));
+          const dialog = $(html).appendTo('body');
 
           dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
             e.preventDefault();
@@ -101,20 +94,22 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
 
           scrollStop.apply(dialog.find('.tab-content')[0]);
 
+          const close = () => dialogActions.close(dialog);
+
           const adjustDialog = () => {
             const composer = $('.composer:visible')[0];
             if (composer) {
               const top = parseInt(composer.style.top, 10);
               dialog.css('bottom', `${100 - top - 5}%`);
             } else {
-              dialog.close();
+              close();
             }
           };
 
           adjustDialog();
           $(window).on('action:composer.resize', () => requestAnimationFrame(adjustDialog));
-          $(window).on('action:composer.discard action:composer.submit', () => dialog.close());
-          dialog.find('.close').click(() => dialog.close());
+          $(window).on('action:composer.discard action:composer.submit', close);
+          dialog.find('.close').click(close);
 
           callback(dialog);
         });
@@ -126,7 +121,7 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
     openForInsert(textarea: HTMLTextAreaElement) {
       function after(dialog: JQuery) {
         if (dialog.hasClass('open')) {
-          dialog.close();
+          dialogActions.close(dialog);
           return;
         }
 
@@ -143,12 +138,12 @@ define(['translator', 'composer/controls', 'scrollStop', 'emoji'], (
           $(textarea).trigger('input');
         });
 
-        dialog.open();
+        dialogActions.open(dialog);
       }
 
       const dialog = $('#emoji-dialog');
       if (dialog.length) {
-        after(dialogify(dialog));
+        after(dialog);
       } else {
         init(after);
       }
