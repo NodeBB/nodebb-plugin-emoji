@@ -8,6 +8,7 @@ import * as cssBuilders from './css-builders';
 import { clearCache } from './parse';
 import { setOne as setSetting } from './settings';
 
+const winston = require.main.require('winston');
 const db = require.main.require('./src/database');
 
 const assetsDir = join(__dirname, `../emoji`);
@@ -49,20 +50,36 @@ export default function build(callback: NodeBack) {
     // evaluate the emoji definitions
     (paths: string[], next: NodeBack) =>
       async.map(paths, (path, next) => {
-        const pack: EmojiDefinition | AsyncEmojiDefinition = require(join(path, 'emoji'));
-
-        if (typeof pack === 'function') {
-          pack((err, pack) => next(err, [path, pack]));
-        } else {
-          next(null, [path, pack]);
+        try {
+          const pack: EmojiDefinition | AsyncEmojiDefinition = require(join(path, 'emoji'));
+          
+          if (typeof pack === 'function') {
+            pack((err, pack) => next(err, [path, pack]));
+          } else {
+            next(null, [path, pack]);
+          }
+        } catch (e) {
+          winston.warn('[emoji] error occurred while loading pack', path, e.stack);
+          next();
         }
       }, next),
-    // clear dirs
-    (packs: [string, EmojiDefinition][], next: NodeBack) =>
+      // clear dirs
+    (packs: [string, EmojiDefinition][], next: NodeBack) => {
+      // filter out invalid ones
+      const filtered = packs.filter(Boolean).filter(([path, pack]) => {
+        if (pack && pack.id && pack.name && pack.mode && pack.dictionary) {
+          return true;
+        }
+
+        winston.warn('[emoji] pack invalid', path);
+        return false;
+      });
+
       async.series([
         cb => remove(assetsDir, cb),
         cb => mkdirp(assetsDir, cb),
-      ], (err: Error) => next(err, packs)),
+      ], (err: Error) => next(err, filtered));
+    },
     (packs: [string, EmojiDefinition][], next: NodeBack) => {
       const table: MetaData.table = {};
       const aliases: MetaData.aliases = {};
