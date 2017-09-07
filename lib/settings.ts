@@ -5,6 +5,15 @@ const settings: {
   setOne(key: string, field: string, value: any, cb: NodeBack<void>): void,
 } = require.main.require('./src/meta').settings;
 
+interface map {
+  [key: string]: any;
+}
+
+const defaults: map = {
+  parseNative: true,
+  parseAscii: true,
+};
+
 const get = (callback: NodeBack<{ [key: string]: any }>) => {
   settings.get('emoji', (err, data) => {
     if (err) {
@@ -12,19 +21,25 @@ const get = (callback: NodeBack<{ [key: string]: any }>) => {
       return;
     }
 
-    callback(null, {
-      parseNative: data.parseNative == null ||
-        !!parseInt(data.parseNative, 10),
-      parseAscii: data.parseAscii == null ||
-        !!parseInt(data.parseAscii, 10),
+    const sets: map = {};
+
+    Object.keys(data).forEach((key) => {
+      const val = JSON.parse(data[key]);
+      sets[key] = val == null ? defaults[key] : val;
     });
+
+    callback(null, sets);
   });
 };
-const set = (value: any, callback: NodeBack<void>) => {
-  settings.set('emoji', {
-    parseNative: value.parseNative ? 1 : 0,
-    parseAscii: value.parseAscii ? 1 : 0,
-  }, callback);
+const set = (data: {
+  [key: string]: any,
+}, callback: NodeBack<void>) => {
+  const sets: map = {};
+  Object.keys(data).forEach((key) => {
+    sets[key] = JSON.stringify(data[key]);
+  });
+
+  settings.set('emoji', sets, callback);
 };
 const getOne = (field: string, callback: NodeBack<any>) => {
   settings.getOne('emoji', field, (err, val) => {
@@ -33,11 +48,11 @@ const getOne = (field: string, callback: NodeBack<any>) => {
       return;
     }
 
-    callback(null, val == null || !!parseInt(val, 10));
+    callback(null, JSON.parse(val));
   });
 };
 const setOne = (field: string, value: any, callback: NodeBack<void>) => {
-  settings.setOne('emoji', field, value ? 1 : 0, callback);
+  settings.setOne('emoji', field, JSON.stringify(value), callback);
 };
 
 export {
