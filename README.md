@@ -35,6 +35,6 @@ On an emoji build, initiated either on first install of the plugin or through th
 
 ### Manual installation
 
-If `nodebb-plugin-emoji` is not available through the ACp, you can install it manually with NPM
+If `nodebb-plugin-emoji` is not available through the ACP, you can install it manually with NPM
 
     npm install nodebb-plugin-emoji
