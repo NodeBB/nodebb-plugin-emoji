@@ -5,13 +5,15 @@
   ],
   "modules": {
     "emoji-dialog.js": "build/public/lib/emoji-dialog.js",
-    "Fuse.js": "node_modules/fuse.js/dist/fuse.js"
+    "Fuse.js": "node_modules/fuse.js/dist/fuse.js",
+    "preact.js": "node_modules/preact/dist/preact.js"
   },
   "staticDirs": {
     "emoji": "build/emoji"
   },
   "scripts": [
-    "build/public/lib/emoji.js"
+    "build/public/lib/emoji.js",
+    "public/emoji-setup.js"
   ],
   "acpScripts": [
     "public/admin.js"

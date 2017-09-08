@@ -1,19 +1,31 @@
 {
   "include": [
     "lib/**/*.ts",
-    "../lib/types.d.ts",
-    "../node_modules/@types/jquery",
-    "../node_modules/@types/bootstrap",
-    "../node_modules/@types/requirejs"
+    "lib/**/*.tsx",
+    "../lib/types.d.ts"
   ],
   "compilerOptions": {
     "outDir": "../build/public/lib",
     "lib": ["es5", "dom", "es2015.promise", "es2015.iterable"],
     "target": "es5",
-    "module": "none",
+    "module": "amd",
     "noImplicitAny": true,
     "sourceMap": true,
-    "types": []
+    "types": [
+      "jquery",
+      "bootstrap",
+      "preact"
+    ],
+
+    "jsx": "react",
+    "jsxFactory": "h",
+
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "emoji-dialog": ["lib/emoji-dialog"],
+      "emoji": ["lib/emoji"]
+    }
   },
   "typeAcquisition": {
     "enable": false
