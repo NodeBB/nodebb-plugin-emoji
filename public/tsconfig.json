@@ -4,6 +4,9 @@
     "lib/**/*.tsx",
     "../lib/types.d.ts"
   ],
+  "exclude": [
+    "lib/admin/extension.tsx"
+  ],
   "compilerOptions": {
     "outDir": "../build/public/lib",
     "lib": ["es5", "dom", "es2015.promise", "es2015.iterable"],
@@ -14,7 +17,8 @@
     "types": [
       "jquery",
       "bootstrap",
-      "preact"
+      "preact",
+      "socket.io"
     ],
 
     "jsx": "react",

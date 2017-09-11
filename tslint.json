@@ -3,7 +3,11 @@
     "tslint-config-airbnb"
   ],
   "rules": {
-    "align": ["statements"],
-    "import-name": false
+    "align": [true, "statements"],
+    "import-name": false,
+    "variable-name": [
+      true,
+      "allow-pascal-case"
+    ]
   }
 }

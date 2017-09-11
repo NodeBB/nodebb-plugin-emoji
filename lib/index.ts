@@ -7,6 +7,7 @@ import * as parse from './parse';
 import { tableFile } from './build';
 import { build } from './pubsub';
 import controllers from './controllers';
+import './customizations';
 
 const nconf = require.main.require('nconf');
 const db = require.main.require('./src/database');

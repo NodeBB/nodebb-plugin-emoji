@@ -4,9 +4,12 @@
     "public/style.less"
   ],
   "modules": {
-    "emoji-dialog.js": "build/public/lib/emoji-dialog.js",
     "Fuse.js": "node_modules/fuse.js/dist/fuse.js",
-    "preact.js": "node_modules/preact/dist/preact.js"
+    "emoji.js": "build/public/lib/emoji.js",
+    "emoji-dialog.js": "build/public/lib/emoji-dialog.js",
+    "preact.js": "node_modules/preact/dist/preact.js",
+    "preact/devtools.js": "node_modules/preact/devtools.js",
+    "custom-emoji.js": "build/public/lib/admin/custom-emoji.js"
   },
   "staticDirs": {
     "emoji": "build/emoji"

@@ -18,5 +18,6 @@
   "categories.flags": "Flags",
   "categories.regional": "Regional",
   "categories.modifier": "Modifier",
-  "categories.other": "Other"
+  "categories.other": "Other",
+  "categories.custom": "Custom"
 }

@@ -13,6 +13,16 @@ interface Window {
   templates: {
     parse(template: string, data: any, callback: Callback<string>): void,
   };
+  utils: {
+    generateUUID(): string;
+  };
+}
+
+declare const socket: SocketIO.Server;
+
+interface JQuery {
+  textcomplete: any;
+  ajaxSubmit: any;
 }
 
 declare module 'translator' {

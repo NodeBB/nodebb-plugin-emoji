@@ -30,3 +30,25 @@
 <button id="save" class="floating-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
 	<i class="material-icons">save</i>
 </button>
+
+<button id="edit" class="floating-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" style="
+    left: 30px;
+    margin-left: 0;
+    background: rgb(255,64,129) !important;
+">
+	<i class="material-icons">edit</i>
+</button>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="editModalLabel">Customize Emoji</h4>
+      </div>
+      <div class="modal-body" id="editModalBody">
+        
+      </div>
+    </div>
+  </div>
+</div>

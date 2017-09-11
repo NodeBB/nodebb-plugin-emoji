@@ -23,7 +23,9 @@
     "fs-extra": "^4.0.1",
     "fuse.js": "^3.1.0",
     "lodash": "^4.17.4",
-    "preact": "^8.2.5"
+    "multer": "^1.3.0",
+    "preact": "^8.2.5",
+    "string-hash": "^1.1.3"
   },
   "devDependencies": {
     "@types/async": "^2.0.42",
@@ -32,14 +34,16 @@
     "@types/fs-extra": "^4.0.2",
     "@types/fuse": "^2.5.2",
     "@types/lodash": "^4.14.74",
+    "@types/multer": "^1.3.3",
     "@types/nconf": "^0.0.34",
     "@types/node": "^8.0.26",
+    "@types/socket.io": "^1.4.30",
     "tslint": "^5.7.0",
     "tslint-config-airbnb": "^5.2.1",
     "typescript": "^2.5.2"
   },
   "scripts": {
     "compile": "tsc -p . && tsc -p public",
-    "build": "npm run compile && node ../nodebb/nodebb build --dev"
+    "build": "npm run compile && node ../nodebb/nodebb build js --dev"
   }
 }

@@ -47,7 +47,14 @@ export const strategy = {
   cache: true,
 };
 
-export function init() {
+let initialized = false;
+
+export function init(callback?: Callback) {
+  if (initialized) {
+    return;
+  }
+  initialized = true;
+
   Promise.all([
     import('Fuse'),
     import('composer/formatting'),
@@ -73,6 +80,8 @@ export function init() {
         });
       },
     );
+
+    if (callback) { setTimeout(callback, 0); }
   }).catch((err) => {
     const e = Error('[[emoji:meta-load-failed]]');
     console.error(e);

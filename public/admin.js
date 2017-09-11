@@ -14,4 +14,30 @@ define('admin/plugins/emoji', [], function () {
       window.app.alertSuccess();
     });
   });
+
+  require.config({
+    shim: {
+      preact: {
+        exports: 'preact',
+      },
+    },
+  });
+
+  var addedStyle = false;
+  $('#edit').click(function () {
+    require(['custom-emoji'], function (customEmoji) {
+      customEmoji.init(document.getElementById('editModalBody'), function () {
+        $('#editModal').modal({
+          backdrop: false,
+          show: true,
+        });
+      });
+    });
+    if (!addedStyle) {
+      addedStyle = true;
+      $('head').append(
+        '<style>@import "' + window.config.relative_path + '/plugins/nodebb-plugin-emoji/emoji/styles.css";</style>'
+      );
+    }
+  });
 });

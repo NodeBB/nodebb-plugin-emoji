@@ -11,7 +11,9 @@
     "noImplicitAny": true,
     "alwaysStrict": true,
     "sourceMap": true,
-    "types": []
+    "types": [
+      "socket.io"
+    ]
   },
   "typeAcquisition": {
     "enable": false

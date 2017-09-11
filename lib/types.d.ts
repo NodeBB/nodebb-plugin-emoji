@@ -1,6 +1,45 @@
 /**
  * Schema for defining an emoji
  */
+declare interface Emoji {
+  /** alternative names for this emoji */
+  aliases?: string[],
+  /** keywords to match when searching for emoji */
+  keywords?: string[],
+  /** common ascii representations for this emoji */
+  ascii?: string[],
+  /**
+   * **`images` mode** image file name [`grinning-face.png`]
+   */
+  image?: string,
+  /**
+   * **`sprite` mode** CSS `background-position`
+   */
+  backgroundPosition?: string,
+  /** unicode text character */
+  character: string,
+  /**
+   * categories this emoji fits in (default: `['other']`)
+   *
+   * known categories:
+   * `'people'`,
+   * `'nature'`,
+   * `'food'`,
+   * `'activity'`,
+   * `'travel'`,
+   * `'objects'`,
+   * `'symbols'`,
+   * `'flags'`,
+   * `'regional'`,
+   * `'modifier'`,
+   * `'other'`
+   *
+   * if adding other categories, add translations for them like
+   * `"categories.people": "People"` under `emoji.json`
+   */
+  categories?: string[],
+}
+
 declare interface EmojiDefinition {
   /**
    * human-friendly name of this emoji pack
@@ -71,50 +110,13 @@ declare interface EmojiDefinition {
    * A map of emoji names to one of the following
    */
   dictionary: {
-    [name: string]: {
-      /** alternative names for this emoji */
-      aliases?: string[],
-      /** keywords to match when searching for emoji */
-      keywords?: string[],
-      /** common ascii representations for this emoji */
-      ascii?: string[],
-      /**
-       * **`images` mode** image file name [`grinning-face.png`]
-       */
-      image?: string,
-      /**
-       * **`sprite` mode** CSS `background-position`
-       */
-      backgroundPosition?: string,
-      /** unicode text character */
-      character: string,
-      /**
-       * categories this emoji fits in (default: `['other']`)
-       *
-       * known categories:
-       * `'people'`,
-       * `'nature'`,
-       * `'food'`,
-       * `'activity'`,
-       * `'travel'`,
-       * `'objects'`,
-       * `'symbols'`,
-       * `'flags'`,
-       * `'regional'`,
-       * `'modifier'`,
-       * `'other'`
-       *
-       * if adding other categories, add translations for them like
-       * `"categories.people": "People"` under `emoji.json`
-       */
-      categories?: string[],
-    },
+    [name: string]: Emoji;
   };
 }
 
 declare type AsyncEmojiDefinition = (cb: NodeBack<EmojiDefinition>) => void;
 
-declare type NodeBack<T = any> = (err?: Error, data?: T) => void;
+declare type NodeBack<T = any> = (err?: Error, ...args: T[]) => void;
 
 declare interface StoredEmoji {
   name: string;
@@ -164,4 +166,27 @@ declare module NodeJS  {
   export interface Global {
     env: 'development' | 'production'
   }
+}
+
+interface CustomEmoji {
+  /** name of custom emoji */
+  name: string;
+  /** custom image for emoji */
+  image: string;
+  aliases: string[];
+  ascii: string[];
+}
+
+interface CustomAdjunct {
+  /** Name of original emoji */
+  name: string;
+  /** Additional aliases for the emoji */
+  aliases: string[];
+  /** Additional ascii patterns for this emoji */
+  ascii: string[];
+}
+
+interface Customizations {
+  emojis: CustomEmoji[];
+  adjuncts: CustomAdjunct[];
 }
