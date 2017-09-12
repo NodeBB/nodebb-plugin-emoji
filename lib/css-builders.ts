@@ -7,6 +7,8 @@ export function images(pack: EmojiDefinition) {
   return `.emoji-${pack.id} {` +
     'display: inline-block;' +
     'height: 23px;' +
+    'margin-top: -1px;' +
+    'margin-bottom: -1px;' +
   '}';
 }
 
@@ -31,6 +33,8 @@ export function sprite(pack: EmojiDefinition): string {
     'text-align: center;' +
     'vertical-align: bottom;' +
     'color: transparent;' +
+    'margin-top: -1px;' +
+    'margin-bottom: -1px;' +
   '}' +
   `.emoji-link .emoji-${pack.id} {` +
     'transform: scale(1.304347826086957);' +
@@ -73,5 +77,7 @@ export function font(pack: EmojiDefinition): string {
     'line-height: 23px;' +
     'text-align: center;' +
     'vertical-align: bottom;' +
+    'margin-top: -1px;' +
+    'margin-bottom: -1px;' +
   '}';
 }
