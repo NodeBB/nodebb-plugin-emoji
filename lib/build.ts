@@ -197,7 +197,12 @@ export default function build(callback: NodeBack) {
           const css = packs.map(([, pack]) => cssBuilders[pack.mode](pack)).join('\n');
           writeFile(
             join(assetsDir, 'styles.css'), 
-            `${css}\n.emoji-customizations { display: inline-block; height: 23px; }`,
+            `${css}\n.emoji-customizations {` + 
+              'display: inline-block;' + 
+              'height: 23px;' + 
+              'margin-top: -1px;' +
+              'margin-bottom: -1px;' +
+            '}',
             { encoding: 'utf8' }, 
             cb,
           );
