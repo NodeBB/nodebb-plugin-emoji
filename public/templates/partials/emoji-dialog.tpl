@@ -4,6 +4,7 @@
   </button>
 
   <div class="emoji-tabs">
+    <div class="top-bar"></div>
     <ul class="nav nav-tabs" role="tablist">
       <!-- BEGIN categories -->
       <li role="presentation" class="<!-- IF @first -->active<!-- ENDIF @first -->">
@@ -37,7 +38,7 @@
           </p>
         </div>
         <!-- BEGIN packs -->
-        <div class="col-xs-12 col-md-6">
+        <div class="col-xs-12">
           <h3>[[emoji:modal.legal.set.header, {../name}, {../id}]]</h3>
 
           <!-- IF ../attribution -->

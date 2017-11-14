@@ -86,18 +86,6 @@ export function init(callback: Callback<JQuery>) {
 
         const close = () => dialogActions.close(dialog);
 
-        const adjustDialog = () => {
-          const composer = $('.composer:visible')[0];
-          if (composer) {
-            const top = parseInt(composer.style.top, 10);
-            dialog.css('bottom', `${100 - top - 5}%`);
-          } else {
-            close();
-          }
-        };
-
-        adjustDialog();
-        $(window).on('action:composer.resize', () => requestAnimationFrame(adjustDialog));
         $(window).on('action:composer.discard action:composer.submit', close);
         dialog.find('.close').click(close);
 
@@ -126,6 +114,27 @@ export function openForInsert(textarea: HTMLTextAreaElement) {
       updateTextareaSelection(textarea, start, end);
       $(textarea).trigger('input');
     });
+
+    const buttonRect = $('[data-format="emoji-add-emoji"]')[0].getBoundingClientRect();
+    const position = {
+      bottom: 'auto',
+      top: 'auto',
+      right: 'auto',
+      left: 'auto',
+    };
+    if (buttonRect.top > 500) {
+      position.top = `${buttonRect.top - 400}px`;
+    } else {
+      position.top = `${buttonRect.top + 40}px`;
+    }
+    if (buttonRect.left > buttonRect.right) {
+      position.left = `${buttonRect.left - 400}px`;
+    } else {
+      position.left = `${buttonRect.left + 40}px`;
+    }
+
+    // @ts-ignore
+    dialog.css(position).draggable();
 
     dialogActions.open(dialog);
   }
