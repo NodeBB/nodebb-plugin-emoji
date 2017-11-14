@@ -10,7 +10,7 @@
     "url": "https://github.com/NodeBB/nodebb-plugin-emoji.git"
   },
   "nbbpm": {
-    "compatibility": "^1.6.0"
+    "compatibility": "^1.6.0 || ^1.7.0"
   },
   "keywords": [
     "nodebb",
@@ -44,6 +44,6 @@
   },
   "scripts": {
     "compile": "tsc -p . && tsc -p public",
-    "build": "npm run compile && node ../nodebb/nodebb build js --dev"
+    "build": "npm run compile && node ../nodebb/nodebb build js,less --dev"
   }
 }

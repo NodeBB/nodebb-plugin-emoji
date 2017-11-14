@@ -1,4 +1,4 @@
-import { access, writeFile, symlink } from 'fs';
+import { access, writeFile, symlink, readFile } from 'fs';
 import { join, resolve, basename } from 'path';
 import { mkdirp, copy, remove } from 'fs-extra';
 import { uniq } from 'lodash';
@@ -12,6 +12,7 @@ import { getCustomizations } from './customizations';
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
 const db = require.main.require('./src/database');
+const plugins = require.main.require('./src/plugins');
 
 export const assetsDir = join(__dirname, `../emoji`);
 
@@ -27,53 +28,22 @@ export const charactersFile = join(assetsDir, 'characters.json');
 export const categoriesFile = join(assetsDir, 'categories.json');
 export const packsFile = join(assetsDir, 'packs.json');
 
-const pluginData = require.main.require('./src/plugins').data;
-
 export default function build(callback: NodeBack) {
+  winston.verbose('[emoji] Building emoji assets');
+
   async.waterfall([
-    // get all active plugin paths
-    pluginData.getPluginPaths,
-    // filter to only emoji packs
-    (paths: string[], next: NodeBack) =>
-      async.filter(paths, (path, next) => {
-        async.some([
-          join(path, 'emoji.json'),
-          join(path, 'emoji.js'),
-        ], (path, next) => {
-          access(path, (err) => {
-            if (err && err.code !== 'ENOENT') {
-              next(err);
-            } else {
-              next(null, !err);
-            }
-          });
-        }, next);
-      }, next),
-    // evaluate the emoji definitions
-    (paths: string[], next: NodeBack) =>
-      async.map(paths, (path, next) => {
-        try {
-          const pack: EmojiDefinition | AsyncEmojiDefinition = require(join(path, 'emoji'));
-          
-          if (typeof pack === 'function') {
-            pack((err, pack) => next(err, [path, pack]));
-          } else {
-            next(null, [path, pack]);
-          }
-        } catch (e) {
-          winston.warn('[emoji] error occurred while loading pack', path, e.stack);
-          next();
-        }
-      }, next),
-      // clear dirs
-    (packs: [string, EmojiDefinition][], next: NodeBack) => {
-      // filter out invalid ones
-      const filtered = packs.filter(Boolean).filter(([path, pack]) => {
-        if (pack && pack.id && pack.name && pack.mode && pack.dictionary) {
+    // fetch the emoji definitions
+    (next: NodeBack) => plugins.fireHook('filter:emoji.packs', { packs: [] }, next),
+    // filter out invalid ones
+    ({ packs }: { packs: EmojiDefinition[] }, next: NodeBack) => {
+      winston.verbose('[emoji] Loaded packs', packs.map(pack => pack.id).join(', '));
+
+      const filtered = packs.filter(Boolean).filter((pack) => {
+        if (pack && pack.id && pack.name && pack.mode && pack.dictionary && pack.path) {
           return true;
         }
 
-        winston.warn('[emoji] pack invalid', path);
+        winston.warn('[emoji] pack invalid', pack.path || pack.id);
         return false;
       });
 
@@ -82,10 +52,10 @@ export default function build(callback: NodeBack) {
         cb => mkdirp(assetsDir, cb),
       ], (err: Error) => next(err, filtered));
     },
-    (packs: [string, EmojiDefinition][], next: NodeBack) => {
+    (packs: EmojiDefinition[], next: NodeBack) => {
       getCustomizations((err, custs) => next(err, packs, custs));
     },
-    (packs: [string, EmojiDefinition][], customizations: Customizations, next: NodeBack) => {
+    (packs: EmojiDefinition[], customizations: Customizations, next: NodeBack) => {
       const table: MetaData.table = {};
       const aliases: MetaData.aliases = {};
       const ascii: MetaData.ascii = {};
@@ -94,7 +64,7 @@ export default function build(callback: NodeBack) {
       const categoriesInfo: MetaData.categories = {};
       const packsInfo: MetaData.packs = [];
 
-      packs.forEach(([, pack]) => {
+      packs.forEach((pack) => {
         packsInfo.push({
           name: pack.name,
           id: pack.id,
@@ -194,7 +164,7 @@ export default function build(callback: NodeBack) {
       async.parallel([
         // generate CSS styles and store them
         (cb) => {
-          const css = packs.map(([, pack]) => cssBuilders[pack.mode](pack)).join('\n');
+          const css = packs.map(pack => cssBuilders[pack.mode](pack)).join('\n');
           writeFile(
             join(assetsDir, 'styles.css'), 
             `${css}\n.emoji-customizations {` + 
@@ -203,7 +173,7 @@ export default function build(callback: NodeBack) {
               'margin-top: -1px;' +
               'margin-bottom: -1px;' +
             '}',
-            { encoding: 'utf8' }, 
+            { encoding: 'utf8' },
             cb,
           );
         },
@@ -215,16 +185,16 @@ export default function build(callback: NodeBack) {
         cb => writeFile(categoriesFile, JSON.stringify(categoriesInfo), cb),
         cb => writeFile(packsFile, JSON.stringify(packsInfo), cb),
         // handle copying or linking necessary assets
-        cb => async.each(packs, ([path, pack]: [string, EmojiDefinition], next) => {
+        cb => async.each(packs, (pack, next) => {
           const dir = join(assetsDir, pack.id);
 
           if (pack.mode === 'images') {
-            linkDirs(resolve(path, pack.images.directory), dir, next);
+            linkDirs(resolve(pack.path, pack.images.directory), dir, next);
           } else if (pack.mode === 'sprite') {
             const filename = basename(pack.sprite.file);
             async.series([
               cb => mkdirp(dir, cb),
-              cb => copy(resolve(path, pack.sprite.file), join(dir, filename), cb),
+              cb => copy(resolve(pack.path, pack.sprite.file), join(dir, filename), cb),
             ], next);
           } else { // pack.mode === 'font'
             const fontFiles = [
@@ -239,7 +209,7 @@ export default function build(callback: NodeBack) {
               cb => mkdirp(dir, cb),
               cb => async.each(fontFiles, (file, next) => {
                 const filename = basename(file);
-                copy(resolve(path, file), join(dir, filename), next);
+                copy(resolve(pack.path, file), join(dir, filename), next);
               }, cb),
             ], next);
           }

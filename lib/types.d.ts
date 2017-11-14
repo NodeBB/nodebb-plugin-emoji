@@ -53,6 +53,12 @@ declare interface EmojiDefinition {
   id: string;
 
   /**
+   * The absolute base path of the emoji pack. Other paths are relative to this one
+   * Usually `__dirname` works well for this
+   */
+  path: string;
+
+  /**
    * Legal attribution for using these emoji, if applicable
    */
   attribution?: string;
@@ -113,8 +119,6 @@ declare interface EmojiDefinition {
     [name: string]: Emoji;
   };
 }
-
-declare type AsyncEmojiDefinition = (cb: NodeBack<EmojiDefinition>) => void;
 
 declare type NodeBack<T = any> = (err?: Error, ...args: T[]) => void;
 

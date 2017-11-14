@@ -45,8 +45,8 @@ const init = (
         next(null, !!err);
       });
     },
-    (d: boolean, next: NodeBack) => {
-      if (d) {
+    (shouldBuild: boolean, next: NodeBack) => {
+      if (shouldBuild) {
         build(next);
       } else {
         next();
