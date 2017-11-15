@@ -10,6 +10,7 @@ Adds extensible emoji functionality to NodeBB
  - Intelligent auto-completion while composing posts and chat messages
  - Ability to convert common emoticons like `:)` to emoji
  - Convenient dialog to view and insert all available emoji
+ - First-party support for custom emoji (available in the ACP)
 
 ## Installation
 
@@ -24,15 +25,51 @@ The following emoji packs are known to be compatible with `nodebb-plugin-emoji`
  - [nodebb-plugin-emoji-cubicopp](https://github.com/NodeBB-Community/nodebb-plugin-emoji-cubicopp)
  - [nodebb-plugin-emoji-vital](https://github.com/NodeBB-Community/nodebb-plugin-emoji-vital)
 
-#### `emoji.js` / `emoji.json`
+To add custom emoji, visit the **Emoji** ACP page and click on the pencil button in the bottom left.
 
-In version two of the emoji plugin, a completely new API is now used to create emoji sets. Now, an emoji set defines it's emojis in an `emoji` file in it's root directory.
+#### Hook: `filter:emoji.packs`
 
-This file can either be a simple JSON file defining the emoji pack, or it can be a Node module exporting a function. Both are expected to result in a schema defined in [lib/types.d.ts](lib/types.d.ts).
+In version two of the emoji plugin, a completely new API is now used to create emoji sets. Now, an emoji set defines its emojis via a hook that is emoitted by the emoji plugin when a build of emoji assets is run.
 
-The `emoji.js` approach is useful when the pack needs to download assets, if it's easier to generate the dictionary on demand, or in any asynchronous situation.
+To use this, you must listen for the hook by adding it to `plugin.json` like so:
+```json
+{
+  "library": "emoji.js",
+  "hooks": [
+    { "hook": "filter:emoji.packs", "method": "defineEmoji" }
+  ]
+}
+```
 
-On an emoji build, initiated either on first install of the plugin or through the plugin ACP page, the emoji plugin will look through **activated** plugins for an `emoji.js` or `emoji.json` file in the plugin root directory. It then requires the file from each matching plugin and does what is necessary to compile assets and metadata centrally.
+And then providing the `defineEmoji` function in your library file (`emoji.js` here):
+```js
+exports.defineEmoji = function (data, callback) {
+  data.packs.push({
+    name: 'My Emoji Pack',
+    id: 'my-emoji',
+    attribution: '',
+    path: __dirname,
+    license: '',
+    mode: 'images',
+    images: {
+      directory: 'emoji',
+    },
+    dictionary: {
+      custom: {
+        aliases: ['personalized'],
+        image: 'custom.png',
+        character: '',
+      },
+    },
+  });
+
+  callback(null, data);
+};
+```
+
+In the above case, we define the emoji pack "My Emoji Pack" and one emoji: `custom` which has an alias of `personalized`, with an image named `custom.png` in the `emoji` directory. For full documentation, I suggest going [to the interface definitions for `Emoji` and `EmojiDefinition`](lib/types.d.ts).
+
+On an emoji build, initiated either on first install of the plugin or through the plugin ACP page, the emoji plugin will fire that hook and gather all emoji packs, then process them to produce metadata files it uses on the client side.
 
 ### Manual installation
 
