@@ -56,13 +56,15 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
         characters,
         table: JSON.parse(results.table.toString()),
         aliases: JSON.parse(results.aliases.toString()),
-        asciiPattern: new RegExp(asciiPattern, 'g'),
+        asciiPattern: new RegExp(`(?:^|\\s)(${asciiPattern})(?=\\s|$)`, 'g'),
         charPattern: new RegExp(charPattern, 'g'),
       };
-      callback(null, metaCache);
     } catch (e) {
       callback(e);
+      return;
     }
+    
+    callback(null, metaCache);
   });
 };
 
@@ -87,10 +89,10 @@ const buildEmoji = (emoji: StoredEmoji, whole: string) => {
 };
 
 const replaceAscii = (str: string, { ascii, asciiPattern, table }: (typeof metaCache)) => {
-  return str.replace(asciiPattern, (text: string) => {
+  return str.replace(asciiPattern, (full: string, text: string) => {
     const emoji = ascii[text] && table[ascii[text]];
     if (emoji) {
-      return buildEmoji(emoji, text);
+      return full.replace(text, buildEmoji(emoji, text));
     }
 
     return text;

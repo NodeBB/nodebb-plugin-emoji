@@ -23,6 +23,7 @@ declare const socket: SocketIO.Server;
 interface JQuery {
   textcomplete: any;
   ajaxSubmit: any;
+  draggable: any;
 }
 
 declare module 'translator' {

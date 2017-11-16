@@ -133,8 +133,11 @@ export function openForInsert(textarea: HTMLTextAreaElement) {
       position.left = `${buttonRect.left + 40}px`;
     }
 
-    // @ts-ignore
-    dialog.css(position).draggable();
+    dialog.css(position);
+
+    if (dialog.draggable) {
+      dialog.draggable();
+    }
 
     dialogActions.open(dialog);
   }
