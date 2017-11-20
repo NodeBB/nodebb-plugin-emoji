@@ -10,7 +10,7 @@
     "url": "https://github.com/NodeBB/nodebb-plugin-emoji.git"
   },
   "nbbpm": {
-    "compatibility": "^1.6.0 || ^1.7.0"
+    "compatibility": "^1.7.0"
   },
   "keywords": [
     "nodebb",
