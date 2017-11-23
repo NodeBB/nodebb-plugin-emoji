@@ -23,9 +23,22 @@ const get = (callback: NodeBack<{ [key: string]: any }>) => {
 
     const sets: map = {};
 
-    Object.keys(data).forEach((key) => {
-      const val = JSON.parse(data[key]);
-      sets[key] = val == null ? defaults[key] : val;
+    Object.keys(defaults).forEach((key) => {
+      const defaultVal = defaults[key];
+      const str = data[key];
+
+      if (typeof str !== 'string') {
+        sets[key] = defaultVal;
+        return;
+      }
+
+      const val = JSON.parse(str);
+      if (typeof val !== typeof defaultVal) {
+        sets[key] = defaultVal;
+        return;
+      }
+
+      sets[key] = val;
     });
 
     callback(null, sets);
