@@ -20,6 +20,7 @@ For best results, install `nodebb-plugin-emoji` and emoji packs through the Node
 
 The following emoji packs are known to be compatible with `nodebb-plugin-emoji`
 
+ - [nodebb-plugin-emoji-android](https://github.com/nodebb-community/nodebb-plugin-emoji-android)
  - [nodebb-plugin-emoji-one](https://github.com/NodeBB-Community/nodebb-plugin-emoji-one)
  - [nodebb-plugin-emoji-apple](https://github.com/NodeBB-Community/nodebb-plugin-emoji-apple)
  - [nodebb-plugin-emoji-cubicopp](https://github.com/NodeBB-Community/nodebb-plugin-emoji-cubicopp)
