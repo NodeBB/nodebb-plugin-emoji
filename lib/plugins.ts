@@ -1,4 +1,4 @@
-import { access } from 'fs';
+import { readFile } from 'fs';
 import { join } from 'path';
 import { some } from 'async';
 
@@ -11,30 +11,36 @@ const noop = () => {};
 
 // build when a plugin is (de)activated if that plugin is an emoji pack
 const toggle = ({ id }: { id: string }, cb: NodeBack = noop) => {
-  some([
-    join(baseDir, 'node_modules', id, 'emoji.json'),
-    join(baseDir, 'node_modules', id, 'emoji.js'),
-  ], (path, next) => {
-    access(path, (err) => {
+  readFile(
+    join(baseDir, 'node_modules', id, 'plugin.json'), 
+    'utf8', 
+    (err, file) => {
       if (err && err.code !== 'ENOENT') {
-        next(err);
-      } else {
-        next(null, !err);
+        cb(err);
+        return;
       }
-    });
-  }, (err: NodeJS.ErrnoException, result: boolean) => {
-    if (err) {
-      cb(err);
-      return;
-    }
 
-    if (!result) {
-      cb();
-      return;
-    }
+      if (err || !file) {
+        cb();
+        return;
+      }
 
-    build(cb);
-  });
+      let plugin;
+      try {
+        plugin = JSON.parse(file);
+      } catch (e) {
+        cb(e);
+        return;
+      }
+
+      const hasHook = plugin.hooks && plugin.hooks
+        .some((hook: { hook: string }) => hook.hook === 'filter:emoji.packs');
+
+      if (hasHook) {
+        build(cb);
+      }
+    },
+  );
 };
 
 export {
