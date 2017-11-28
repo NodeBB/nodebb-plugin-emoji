@@ -44,6 +44,6 @@
   },
   "scripts": {
     "compile": "tsc -p . && tsc -p public",
-    "prepare": "rm -r build && npm run compile && mkdir -p build/emoji && echo '*' > build/emoji/.npmignore"
+    "prepare": "rm -r build && npm run compile && mkdir -p build/emoji && touch build/emoji/avoid_npm_ignore"
   }
 }
