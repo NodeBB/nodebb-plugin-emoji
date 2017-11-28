@@ -44,6 +44,6 @@
   },
   "scripts": {
     "compile": "tsc -p . && tsc -p public",
-    "build": "npm run compile && node ../nodebb/nodebb build js,less --dev"
+    "prepare": "rm -r build && npm run compile && mkdir -p build/emoji"
   }
 }

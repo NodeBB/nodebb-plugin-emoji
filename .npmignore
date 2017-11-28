@@ -62,5 +62,3 @@ typings/
 .git
 .gitignore
 .vscode
-
-build/emoji
