@@ -87,13 +87,17 @@
     white-space: nowrap;
     flex-shrink: 0;
 
-    > li {
+    > li, html[data-dir="rtl"] & > li {
       display: inline-block;
       float: none;
+    }
 
-      &:last-child {
-        margin-right: 30px;
-      }
+    & > li:last-child {
+      margin-right: 30px;
+    }
+    
+    html[data-dir="rtl"] & > li:first-child {
+      margin-right: 30px;
     }
   }
 

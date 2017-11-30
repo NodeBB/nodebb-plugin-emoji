@@ -89,6 +89,12 @@ export function init(callback: Callback<JQuery>) {
         $(window).on('action:composer.discard action:composer.submit', close);
         dialog.find('.close').click(close);
 
+        if (dialog.draggable) {
+          dialog.draggable({
+            handle: '.top-bar',
+          });
+        }
+
         callback(dialog);
       });
     });
@@ -127,17 +133,13 @@ export function openForInsert(textarea: HTMLTextAreaElement) {
     } else {
       position.top = `${buttonRect.top + 40}px`;
     }
-    if (buttonRect.left > buttonRect.right) {
+    if (buttonRect.left > window.innerWidth / 2) {
       position.left = `${buttonRect.left - 400}px`;
     } else {
       position.left = `${buttonRect.left + 40}px`;
     }
 
     dialog.css(position);
-
-    if (dialog.draggable) {
-      dialog.draggable();
-    }
 
     dialogActions.open(dialog);
   }
