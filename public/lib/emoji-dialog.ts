@@ -128,15 +128,15 @@ export function openForInsert(textarea: HTMLTextAreaElement) {
       right: 'auto',
       left: 'auto',
     };
-    if (buttonRect.top > 500) {
+    if (buttonRect.top > 440) {
       position.top = `${buttonRect.top - 400}px`;
     } else {
       position.top = `${buttonRect.top + 40}px`;
     }
-    if (buttonRect.left > window.innerWidth / 2) {
-      position.left = `${buttonRect.left - 400}px`;
-    } else {
+    if (buttonRect.left < window.innerWidth / 2) {
       position.left = `${buttonRect.left + 40}px`;
+    } else {
+      position.left = `${buttonRect.left - 400}px`;
     }
 
     dialog.css(position);
