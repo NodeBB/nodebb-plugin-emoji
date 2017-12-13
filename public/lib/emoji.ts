@@ -11,7 +11,7 @@ export function buildEmoji(emoji: StoredEmoji, defer?: boolean) {
   if (emoji.image) {
     return `<img
       ${defer ? 'data-' : ''}src="${base}/emoji/${emoji.pack}/${emoji.image}"
-      class="not-responsive emoji-${emoji.pack} emoji--${emoji.name} ${deferClass}"
+      class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name} ${deferClass}"
       title="${whole}"
       alt="${emoji.character}"
     />`;
@@ -65,11 +65,24 @@ export function init(callback?: Callback) {
 
     fuse = new Fuse(all, {
       shouldSort: true,
-      threshold: 0.3,
+      threshold: 0.6,
       location: 0,
       distance: 100,
       maxPatternLength: 32,
-      keys: ['name', 'aliases', 'keywords'],
+      keys: [
+        {
+          name: 'name',
+          weight: 0.6,
+        },
+        {
+          name: 'aliases',
+          weight: 0.3,
+        },
+        {
+          name: 'keywords',
+          weight: 0.3,
+        },
+      ],
     });
 
     formatting.addButtonDispatch(
