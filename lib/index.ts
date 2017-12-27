@@ -31,7 +31,7 @@ const init = (
       });
 
       // always build on startup if in dev mode
-      if (global.env === 'development') {
+      if (nconf.any('build_emoji', 'BUILD_EMOJI')) {
         next(null, true);
         return;
       }
