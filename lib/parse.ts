@@ -76,14 +76,14 @@ const buildEmoji = (emoji: StoredEmoji, whole: string) => {
     const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
       src="${route}/${emoji.image}"
-      class="not-responsive emoji-${emoji.pack} emoji--${emoji.name}"
+      class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name}"
       title="${whole}"
       alt="${emoji.character}"
     />`;
   }
 
   return `<span
-    class="emoji-${emoji.pack} emoji--${emoji.name}"
+    class="emoji emoji-${emoji.pack} emoji--${emoji.name}"
     title="${whole}"
   ><span>${emoji.character}</span></span>`;
 };
