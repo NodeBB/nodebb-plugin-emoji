@@ -27,7 +27,7 @@ export let table: MetaData.table;
 export let fuse: Fuse<StoredEmoji>;
 
 export const strategy = {
-  match: /\B:([^\s\n:]*)?$/,
+  match: /\B:([^\s\n:]+)$/,
   search: (term: string, callback: Callback<StoredEmoji[]>) => {
     if (!term) {
       callback(Object.keys(table).map(key => table[key]));
