@@ -1,5 +1,6 @@
 import { basename } from 'path';
 
+const buster = require.main.require('./src/meta').config['cache-buster'];
 const nconf = require.main.require('nconf');
 const url = nconf.get('url');
 
@@ -21,7 +22,7 @@ export function sprite(pack: EmojiDefinition): string {
 
   const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
   return `.emoji-${pack.id} {` +
-    `background-image: url(${route}/${basename(pack.sprite.file)});` +
+    `background-image: url(${route}/${basename(pack.sprite.file)}?${buster});` +
     `background-size: ${pack.sprite.backgroundSize};` +
     'background-repeat: no-repeat;' +
     'display: inline-block;' +

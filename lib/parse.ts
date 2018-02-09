@@ -4,6 +4,7 @@ import { parallel } from 'async';
 
 import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
+const buster = require.main.require('./src/meta').config['cache-buster'];
 const nconf = require.main.require('nconf');
 const url = nconf.get('url');
 
@@ -75,7 +76,7 @@ const buildEmoji = (emoji: StoredEmoji, whole: string) => {
   if (emoji.image) {
     const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
-      src="${route}/${emoji.image}"
+      src="${route}/${emoji.image}?${buster}"
       class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name}"
       title="${whole}"
       alt="${emoji.character}"

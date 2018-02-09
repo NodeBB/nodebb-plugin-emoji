@@ -11,6 +11,7 @@ import './customizations';
 
 const nconf = require.main.require('nconf');
 const db = require.main.require('./src/database');
+const buster = require.main.require('./src/meta').config['cache-buster'];
 
 const init = (
   params: any,
@@ -82,11 +83,13 @@ const addStylesheet = (data: {
     rel: string, type?: string, href: string,
   }[],
 }, callback: NodeBack) => {
+  const rel = nconf.get('relative_path');
+
   data.links.push({
     rel: 'stylesheet',
-    href: nconf.get('relative_path') + '/plugins/nodebb-plugin-emoji/emoji/styles.css',
+    href: `${rel}/plugins/nodebb-plugin-emoji/emoji/styles.css?${buster}`,
   });
-
+  
   callback(null, data);
 };
 

@@ -10,7 +10,7 @@ export function buildEmoji(emoji: StoredEmoji, defer?: boolean) {
 
   if (emoji.image) {
     return `<img
-      ${defer ? 'data-' : ''}src="${base}/emoji/${emoji.pack}/${emoji.image}"
+      ${defer ? 'data-' : ''}src="${base}/emoji/${emoji.pack}/${emoji.image}?${buster}"
       class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name} ${deferClass}"
       title="${whole}"
       alt="${emoji.character}"
