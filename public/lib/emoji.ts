@@ -24,18 +24,12 @@ export function buildEmoji(emoji: StoredEmoji, defer?: boolean) {
 }
 
 export let table: MetaData.table;
-export let fuse: Fuse<StoredEmoji>;
+export let search: (term: string) => StoredEmoji[];
 
 export const strategy = {
   match: /\B:([^\s\n:]+)$/,
   search: (term: string, callback: Callback<StoredEmoji[]>) => {
-    if (!term) {
-      callback(Object.keys(table).map(key => table[key]));
-
-      return;
-    }
-
-    callback(fuse.search(term));
+    callback(search(term));
   },
   index: 1,
   replace: (emoji: StoredEmoji) => {
@@ -56,34 +50,66 @@ export function init(callback?: Callback) {
   initialized = true;
 
   Promise.all([
-    import('Fuse'),
+    import('fuzzysearch'),
+    import('leven'),
     import('composer/formatting'),
-    Promise.resolve($.getJSON(`${base}/emoji/table.json?${buster}`)) as Promise<MetaData.table>,
-  ]).then(([Fuse, formatting, tableData]) => { // tslint:disable-line variable-name
+    $.getJSON(`${base}/emoji/table.json?${buster}`) as PromiseLike<MetaData.table>,
+  ]).then(([fuzzy, leven, formatting, tableData]) => {
     table = tableData;
-    const all = Object.keys(table).map(name => table[name]);
 
-    fuse = new Fuse(all, {
-      shouldSort: true,
-      threshold: 0.6,
-      location: 0,
-      distance: 100,
-      maxPatternLength: 32,
-      keys: [
-        {
-          name: 'name',
-          weight: 0.6,
-        },
-        {
-          name: 'aliases',
-          weight: 0.3,
-        },
-        {
-          name: 'keywords',
-          weight: 0.3,
-        },
-      ],
+    const all: (StoredEmoji & { score?: number })[] = Object.keys(table).map((name) => {
+      const { aliases, character, image, keywords, pack } = table[name];
+      return { name, aliases, character, image, keywords, pack };
     });
+
+    function fuzzyFind(term: string, arr: string[]) {
+      const l = arr.length;
+
+      for (let i = 0; i < l; i += 1) {
+        if (fuzzy(term, arr[i])) {
+          return arr[i];
+        }
+      }
+
+      return null;
+    }
+
+    function fuzzySearch(term: string) {
+      return all.filter((obj) => {
+        if (fuzzy(term, obj.name)) {
+          obj.score = leven(term, obj.name);
+          if (obj.name.startsWith(term)) {
+            obj.score -= 1;
+          }
+    
+          return true;
+        }
+    
+        const aliasMatch = fuzzyFind(term, obj.aliases);
+        if (aliasMatch) {
+          obj.score = 3 * leven(term, aliasMatch);
+          if (aliasMatch.startsWith(term)) {
+            obj.score -= 1;
+          }
+    
+          return true;
+        }
+    
+        const keywordMatch = fuzzyFind(term, obj.keywords);
+        if (keywordMatch) {
+          obj.score = 8 * leven(term, keywordMatch);
+          if (keywordMatch.startsWith(term)) {
+            obj.score -= 1;
+          }
+    
+          return true;
+        }
+    
+        return false;
+      }).sort((a, b) => a.score - b.score).slice(0, 10);
+    }
+
+    search = fuzzySearch;
 
     formatting.addButtonDispatch(
       'emoji-add-emoji',

@@ -1,7 +1,7 @@
 import { h, Component, FunctionalComponent, render } from 'preact';
-import { fuse, strategy, table, buildEmoji, init as initEmoji } from 'emoji';
+import { strategy, table, buildEmoji, init as initEmoji } from 'emoji';
 
-import 'preact/devtools';
+// import 'preact/devtools';
 
 const setsEqual = (arr1: string[], arr2: string[]) => {
   if (arr1.length !== arr2.length) {

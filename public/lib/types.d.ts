@@ -18,6 +18,10 @@ interface Window {
   };
 }
 
+interface String {
+  startsWith(str: string): boolean;
+}
+
 declare const socket: SocketIO.Server;
 
 interface JQuery {
@@ -39,7 +43,11 @@ declare module 'composer/formatting' {
 declare module 'scrollStop' {
   export function apply(element: Element): void;
 }
-declare module 'Fuse' {
-  import * as Fuse from 'fuse';
-  export = Fuse;
+declare module 'fuzzysearch' {
+  const fuzzysearch: (needle: string, haystack: string) => boolean;
+  export = fuzzysearch;
+}
+declare module 'leven' {
+  const leven: (a: string, b: string) => number;
+  export = leven;
 }

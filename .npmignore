@@ -62,3 +62,4 @@ typings/
 .git
 .gitignore
 .vscode
+tmp

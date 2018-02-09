@@ -61,3 +61,4 @@ typings/
 # Custom ignores
 build
 .vscode
+tmp
