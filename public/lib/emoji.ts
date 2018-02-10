@@ -58,8 +58,16 @@ export function init(callback?: Callback) {
     table = tableData;
 
     const all: (StoredEmoji & { score?: number })[] = Object.keys(table).map((name) => {
-      const { aliases, character, image, keywords, pack } = table[name];
-      return { name, aliases, character, image, keywords, pack };
+      const emoji = table[name];
+
+      return {
+        name,
+        aliases: emoji.aliases,
+        keywords: emoji.keywords,
+        character: emoji.character,
+        image: emoji.image,
+        pack: emoji.pack,
+      };
     });
 
     function fuzzyFind(term: string, arr: string[]) {
@@ -75,38 +83,39 @@ export function init(callback?: Callback) {
     }
 
     function fuzzySearch(term: string) {
+      function score(match: string, weight: number) {
+        const weighted = weight * (1 + leven(term, match));
+        return match.startsWith(term) ? weighted - 2 : weighted;
+      }
+      
       return all.filter((obj) => {
         if (fuzzy(term, obj.name)) {
-          obj.score = leven(term, obj.name);
-          if (obj.name.startsWith(term)) {
-            obj.score -= 1;
-          }
+          obj.score = score(obj.name, 1);
     
           return true;
         }
     
         const aliasMatch = fuzzyFind(term, obj.aliases);
         if (aliasMatch) {
-          obj.score = 3 * leven(term, aliasMatch);
-          if (aliasMatch.startsWith(term)) {
-            obj.score -= 1;
-          }
+          obj.score = score(aliasMatch, 3);
     
           return true;
         }
     
         const keywordMatch = fuzzyFind(term, obj.keywords);
         if (keywordMatch) {
-          obj.score = 8 * leven(term, keywordMatch);
-          if (keywordMatch.startsWith(term)) {
-            obj.score -= 1;
-          }
+          obj.score = score(keywordMatch, 7);
     
           return true;
         }
     
         return false;
-      }).sort((a, b) => a.score - b.score).slice(0, 10);
+      }).sort((a, b) => a.score - b.score).sort((a, b) => {
+        const aPrefixed = +a.name.startsWith(term);
+        const bPrefixed = +b.name.startsWith(term);
+
+        return bPrefixed - aPrefixed;
+      }).slice(0, 10);
     }
 
     search = fuzzySearch;
