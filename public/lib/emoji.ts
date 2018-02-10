@@ -29,7 +29,7 @@ export let search: (term: string) => StoredEmoji[];
 export const strategy = {
   match: /\B:([^\s\n:]+)$/,
   search: (term: string, callback: Callback<StoredEmoji[]>) => {
-    callback(search(term));
+    callback(search(term.toLowerCase().replace(/[_-]/g, '')));
   },
   index: 1,
   replace: (emoji: StoredEmoji) => {
