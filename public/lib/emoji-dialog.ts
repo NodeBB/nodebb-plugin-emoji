@@ -3,14 +3,17 @@
 import { translate } from 'translator';
 import { insertIntoTextarea, updateTextareaSelection } from 'composer/controls';
 import { apply as applyScrollStop } from 'scrollStop';
-import { buster, base, table, buildEmoji, init as initEmoji } from 'emoji';
+import { buster, base, table, buildEmoji, init as initEmoji, search } from 'emoji';
 
 const $html = $('html');
 
 export const dialogActions = {
   open(dialog: JQuery) {
     $html.addClass('emoji-insert');
-    return dialog.addClass('open');
+    dialog.addClass('open');
+    dialog.find('.emoji-dialog-search').focus();
+
+    return dialog;
   },
   close(dialog: JQuery) {
     $html.removeClass('emoji-insert');
@@ -64,6 +67,26 @@ export function init(callback: Callback<JQuery>) {
       translate(result, (html: string) => {
         const dialog = $(html).appendTo('body');
 
+        dialog.find('.emoji-dialog-search').on('input', (e) => {
+          const value = (e.target as HTMLInputElement).value;
+
+          if (!value) {
+            dialog.find('.emoji-dialog-search-results').addClass('hidden');
+            dialog.find('.nav-tabs .emoji-dialog-search-results').next().find('a').tab('show');
+            return;
+          }
+
+          const html = search(value)
+            .slice(0, 100)
+            .map(emoji => 
+              `<a class="emoji-link" name="{../name}" href="#">${buildEmoji(emoji, false)}</a>`)
+              .join('\n');
+          
+          dialog.find('.tab-pane.emoji-dialog-search-results').html(html);
+          dialog.find('.emoji-dialog-search-results').removeClass('hidden');
+          dialog.find('.nav-tabs .emoji-dialog-search-results a').tab('show');
+        });
+
         dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
           e.preventDefault();
           $(e.target).tab('show');
@@ -76,7 +99,7 @@ export function init(callback: Callback<JQuery>) {
               const src = $elem.attr('data-src');
               $elem.attr('src', src);
             });
-        }).first().trigger('show.bs.tab');
+        }).eq(1).trigger('show.bs.tab');
 
         applyScrollStop(dialog.find('.tab-content')[0]);
 
