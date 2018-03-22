@@ -72,7 +72,7 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
 const outsideCode = /(^|<\/code>)([^<]*|<(?!code[^>]*>))*(<code[^>]*>|$)/g;
 const emojiPattern = /:([a-z\-.+0-9_]+):/g;
 
-const buildEmoji = (emoji: StoredEmoji, whole: string) => {
+export const buildEmoji = (emoji: StoredEmoji, whole: string) => {
   if (emoji.image) {
     const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img

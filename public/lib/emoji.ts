@@ -29,7 +29,7 @@ export let search: (term: string) => StoredEmoji[];
 export const strategy = {
   match: /\B:([^\s\n:]+)$/,
   search: (term: string, callback: Callback<StoredEmoji[]>) => {
-    callback(search(term.toLowerCase().replace(/[_-]/g, '')));
+    callback(search(term.toLowerCase().replace(/[_-]/g, '')).slice(0, 10));
   },
   index: 1,
   replace: (emoji: StoredEmoji) => {
@@ -43,8 +43,9 @@ export const strategy = {
 
 let initialized = false;
 
-export function init(callback?: Callback) {
+export function init(callback?: Callback<undefined>) {
   if (initialized) {
+    if (callback) { setTimeout(callback, 0); }
     return;
   }
   initialized = true;
@@ -115,7 +116,7 @@ export function init(callback?: Callback) {
         const bPrefixed = +b.name.startsWith(term);
 
         return bPrefixed - aPrefixed;
-      }).slice(0, 10);
+      });
     }
 
     search = fuzzySearch;
@@ -123,9 +124,8 @@ export function init(callback?: Callback) {
     formatting.addButtonDispatch(
       'emoji-add-emoji',
       (textarea: HTMLTextAreaElement) => {
-        import('emoji-dialog').then(({ openForInsert }) => {
-          openForInsert(textarea);
-        });
+        import('emoji-dialog')
+          .then(({ toggleForInsert }) => toggleForInsert(textarea));
       },
     );
 

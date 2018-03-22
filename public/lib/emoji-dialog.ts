@@ -3,11 +3,11 @@
 import { translate } from 'translator';
 import { insertIntoTextarea, updateTextareaSelection } from 'composer/controls';
 import { apply as applyScrollStop } from 'scrollStop';
-import { buster, base, table, buildEmoji } from 'emoji';
+import { buster, base, table, buildEmoji, init as initEmoji } from 'emoji';
 
 const $html = $('html');
 
-const dialogActions = {
+export const dialogActions = {
   open(dialog: JQuery) {
     $html.addClass('emoji-insert');
     return dialog.addClass('open');
@@ -39,7 +39,8 @@ export function init(callback: Callback<JQuery>) {
   Promise.all([
     $.getJSON(`${base}/emoji/categories.json?${buster}`),
     $.getJSON(`${base}/emoji/packs.json?${buster}`),
-  ]).then(([categoriesInfo, packs]: [MetaData.categories, MetaData.packs]) => {
+    new Promise(resolve => initEmoji(resolve)),
+  ]).then(([categoriesInfo, packs]: [MetaData.categories, MetaData.packs, undefined]) => {
     const categories = Object.keys(categoriesInfo).map((category) => {
       const emojis = categoriesInfo[category].map(name => table[name]);
       return {
@@ -77,11 +78,6 @@ export function init(callback: Callback<JQuery>) {
             });
         }).first().trigger('show.bs.tab');
 
-        dialog.modal({
-          backdrop: false,
-          show: false,
-        });
-
         applyScrollStop(dialog.find('.tab-content')[0]);
 
         const close = () => dialogActions.close(dialog);
@@ -101,7 +97,10 @@ export function init(callback: Callback<JQuery>) {
   });
 }
 
-export function openForInsert(textarea: HTMLTextAreaElement) {
+export function toggle(
+  opener: HTMLElement,
+  onClick: (e: JQuery.Event, name: string, dialog: JQuery) => void,
+) {
   function after(dialog: JQuery) {
     if (dialog.hasClass('open')) {
       dialogActions.close(dialog);
@@ -111,17 +110,11 @@ export function openForInsert(textarea: HTMLTextAreaElement) {
     dialog.off('click').on('click', '.emoji-link', (e) => {
       e.preventDefault();
       const name = (e.currentTarget as HTMLAnchorElement).name;
-      const text = `:${name}: `;
-      const { selectionStart, selectionEnd } = textarea;
-      const end = selectionEnd + text.length;
-      const start = selectionStart === selectionEnd ? end : selectionStart;
 
-      insertIntoTextarea(textarea, text);
-      updateTextareaSelection(textarea, start, end);
-      $(textarea).trigger('input');
+      onClick(e, name, dialog);
     });
 
-    const buttonRect = $('[data-format="emoji-add-emoji"]')[0].getBoundingClientRect();
+    const buttonRect = opener.getBoundingClientRect();
     const position = {
       bottom: 'auto',
       top: 'auto',
@@ -150,4 +143,17 @@ export function openForInsert(textarea: HTMLTextAreaElement) {
   } else {
     init(after);
   }
+}
+
+export function toggleForInsert(textarea: HTMLTextAreaElement) {
+  toggle($('[data-format="emoji-add-emoji"]').filter(':visible')[0], (e, name) => {
+    const text = `:${name}: `;
+    const { selectionStart, selectionEnd } = textarea;
+    const end = selectionEnd + text.length;
+    const start = selectionStart === selectionEnd ? end : selectionStart;
+
+    insertIntoTextarea(textarea, text);
+    updateTextareaSelection(textarea, start, end);
+    $(textarea).trigger('input');
+  });
 }
