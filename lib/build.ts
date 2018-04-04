@@ -36,9 +36,7 @@ export default function build(callback: NodeBack) {
     (next: NodeBack) => plugins.fireHook('filter:emoji.packs', { packs: [] }, next),
     // filter out invalid ones
     ({ packs }: { packs: EmojiDefinition[] }, next: NodeBack) => {
-      winston.verbose('[emoji] Loaded packs', packs.map(pack => pack.id).join(', '));
-
-      const filtered = packs.filter(Boolean).filter((pack) => {
+      const filtered = packs.filter((pack) => {
         if (pack && pack.id && pack.name && pack.mode && pack.dictionary && pack.path) {
           return true;
         }
@@ -46,6 +44,8 @@ export default function build(callback: NodeBack) {
         winston.warn('[emoji] pack invalid', pack.path || pack.id);
         return false;
       });
+
+      winston.verbose('[emoji] Loaded packs', filtered.map(pack => pack.id).join(', '));
 
       async.series([
         cb => remove(assetsDir, cb),
@@ -76,10 +76,12 @@ export default function build(callback: NodeBack) {
           const name = key.toLowerCase();
           const emoji = pack.dictionary[key];
 
+          const character = emoji.character || `:${name}:`;
+
           if (!table[name]) {
             table[name] = {
               name,
-              character: emoji.character,
+              character,
               image: emoji.image || '',
               pack: pack.id,
               aliases: emoji.aliases || [],
@@ -87,8 +89,8 @@ export default function build(callback: NodeBack) {
             };
           }
 
-          if (emoji.character && !characters[emoji.character]) {
-            characters[emoji.character] = name;
+          if (!characters[character]) {
+            characters[character] = name;
           }
 
           if (emoji.aliases) {
@@ -125,7 +127,7 @@ export default function build(callback: NodeBack) {
 
         table[name] = {
           name,
-          character: '',
+          character: `:${name}:`,
           pack: 'customizations',
           keywords: [],
           image: emoji.image,
