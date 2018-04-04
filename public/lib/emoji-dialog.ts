@@ -87,21 +87,46 @@ export function init(callback: Callback<JQuery>) {
           dialog.find('.nav-tabs .emoji-dialog-search-results a').tab('show');
         });
 
-        dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
+        const tabContent = dialog.find('.emoji-tabs .tab-content');
+
+        function showDeferred(container: JQuery) {
+          const rect = tabContent[0].getBoundingClientRect();
+          const num = Math.ceil((rect.width * rect.height) / (40 * 40));
+
+          container
+            .find('.emoji-link img.defer')
+            .filter((i, elem) => {
+              if (i <= num) {
+                return true;
+              }
+
+              const elemRect = elem.getBoundingClientRect();
+              return elemRect.right > rect.left &&
+                elemRect.left < rect.right &&
+                elemRect.bottom > rect.top &&
+                elemRect.top < rect.bottom;
+            })
+            .removeClass('defer')
+            .each((i, elem) => {
+              const src = elem.getAttribute('data-src');
+              elem.setAttribute('src', src);
+            });
+        }
+
+        const firstTab = dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
           e.preventDefault();
           $(e.target).tab('show');
         }).on('show.bs.tab', (e) => {
-          $(e.target.getAttribute('href'))
-            .find('.emoji-link img.defer')
-            .removeClass('defer')
-            .each((i, elem) => {
-              const $elem = $(elem);
-              const src = $elem.attr('data-src');
-              $elem.attr('src', src);
-            });
-        }).eq(1).trigger('show.bs.tab');
+          showDeferred($(e.target.getAttribute('href')));
+        }).eq(1);
 
-        applyScrollStop(dialog.find('.tab-content')[0]);
+        setTimeout(() => firstTab.trigger('show.bs.tab'), 10);
+
+        tabContent.on('scroll', (e) => {
+          showDeferred(tabContent.find('.tab-pane.active'));
+        });
+
+        applyScrollStop(tabContent[0]);
 
         const close = () => dialogActions.close(dialog);
 
