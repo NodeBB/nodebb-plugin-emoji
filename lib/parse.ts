@@ -173,7 +173,7 @@ const parse = (content: string, callback: NodeBack<string>) => {
           );
         }
         
-        return inside + output;
+        return (inside || '') + (output || '');
       }),
     );
 
