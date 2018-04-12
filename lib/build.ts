@@ -76,12 +76,10 @@ export default function build(callback: NodeBack) {
           const name = key.toLowerCase();
           const emoji = pack.dictionary[key];
 
-          const character = emoji.character || `:${name}:`;
-
           if (!table[name]) {
             table[name] = {
               name,
-              character,
+              character: emoji.character || `:${name}:`,
               image: emoji.image || '',
               pack: pack.id,
               aliases: emoji.aliases || [],
@@ -89,8 +87,8 @@ export default function build(callback: NodeBack) {
             };
           }
 
-          if (!characters[character]) {
-            characters[character] = name;
+          if (!characters[emoji.character]) {
+            characters[emoji.character] = name;
           }
 
           if (emoji.aliases) {
