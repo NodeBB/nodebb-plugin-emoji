@@ -70,6 +70,7 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
 };
 
 const outsideCode = /(^|<\/code>)([^<]*|<(?!code[^>]*>))*(<code[^>]*>|$)/g;
+const outsideElements = /(<[^>]*>)?([^<>]*)/g;
 const emojiPattern = /:([a-z\-.+0-9_]+):/g;
 
 export const buildEmoji = (emoji: StoredEmoji, whole: string) => {
@@ -127,51 +128,54 @@ const parse = (content: string, callback: NodeBack<string>) => {
     }
     const { table, aliases } = store;
 
-    const parsed = content.replace(outsideCode, (str: string) => {
-      let output = str;
-
-      if (options.native) {
-        // avoid parsing native inside HTML tags
-        // also avoid converting ascii characters
-        output = output.replace(
-          /(<[^>]+>)|([^0-9a-zA-Z`~!@#$%^&*()\-=_+{}|[\]\\:";'<>?,./\s\n]+)/g,
-          (full: string, tag: string, text: string) => {
-            if (text) {
-              return replaceNative(text, store);
-            }
-
-            return full;
-          },
-        );
-      }
-
-      output = output.replace(emojiPattern, (whole: string, text: string) => {
-        const name = text.toLowerCase();
-        const emoji = table[name] || table[aliases[name]];
-
-        if (emoji) {
-          return buildEmoji(emoji, whole);
+    const parsed = content.replace(
+      outsideCode, 
+      outsideCodeStr => outsideCodeStr.replace(outsideElements, (whole, inside, outside) => {
+        let output = outside;
+        
+        if (options.native) {
+          // avoid parsing native inside HTML tags
+          // also avoid converting ascii characters
+          output = output.replace(
+            /(<[^>]+>)|([^0-9a-zA-Z`~!@#$%^&*()\-=_+{}|[\]\\:";'<>?,./\s\n]+)/g,
+            (full: string, tag: string, text: string) => {
+              if (text) {
+                return replaceNative(text, store);
+              }
+              
+              return full;
+            },
+          );
         }
-
-        return whole;
-      });
-
-      if (options.ascii) {
-        // avoid parsing native inside HTML tags
-        output = output.replace(
-          /(<[^>]+>)|([^<]+)/g,
-          (full: string, tag: string, text: string) => {
-            if (text) {
-              return replaceAscii(text, store);
-            }
-
-            return full;
-          },
-        );
-      }
-
-      return output;
-    });
+        
+        output = output.replace(emojiPattern, (whole: string, text: string) => {
+          const name = text.toLowerCase();
+          const emoji = table[name] || table[aliases[name]];
+          
+          if (emoji) {
+            return buildEmoji(emoji, whole);
+          }
+          
+          return whole;
+        });
+        
+        if (options.ascii) {
+          // avoid parsing native inside HTML tags
+          output = output.replace(
+            /(<[^>]+>)|([^<]+)/g,
+            (full: string, tag: string, text: string) => {
+              if (text) {
+                return replaceAscii(text, store);
+              }
+              
+              return full;
+            },
+          );
+        }
+        
+        return inside + output;
+      }),
+    );
 
     callback(null, parsed);
   });
