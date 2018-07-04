@@ -31,7 +31,14 @@ interface JQuery {
 }
 
 declare module 'translator' {
+  export class Translator {
+    static create(lang?: string): Translator;
+    translate(input: string): Promise<string>;
+  }
   export function translate(input: string, callback: Callback<string>): void;
+}
+declare module 'benchpress' {
+  export function render(template: string, data: any): Promise<string>;
 }
 declare module 'composer/controls' {
   export function insertIntoTextarea(textarea: HTMLTextAreaElement, text: string): void;

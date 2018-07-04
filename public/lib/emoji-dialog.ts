@@ -1,6 +1,7 @@
 /// <amd-module name="emoji-dialog"/>
 
-import { translate } from 'translator';
+import { Translator } from 'translator';
+import { render } from 'benchpress';
 import { insertIntoTextarea, updateTextareaSelection } from 'composer/controls';
 import { apply as applyScrollStop } from 'scrollStop';
 import { buster, base, table, buildEmoji, init as initEmoji, search } from 'emoji';
@@ -37,6 +38,8 @@ const priorities: {
   other: 0,
 };
 
+const translator = Translator.create();
+
 // create modal
 export function init(callback: Callback<JQuery>) {
   Promise.all([
@@ -60,88 +63,88 @@ export function init(callback: Callback<JQuery>) {
       return bPriority - aPriority;
     });
 
-    window.templates.parse('partials/emoji-dialog', {
+    return render('partials/emoji-dialog', {
       categories,
       packs,
-    }, (result) => {
-      translate(result, (html: string) => {
-        const dialog = $(html).appendTo('body');
+    });
+  }).then(result => translator.translate(result)).then((html) => {
+    const dialog = $(html).appendTo('body');
 
-        dialog.find('.emoji-dialog-search').on('input', (e) => {
-          const value = (e.target as HTMLInputElement).value;
+    dialog.find('.emoji-dialog-search').on('input', (e) => {
+      const value = (e.target as HTMLInputElement).value;
 
-          if (!value) {
-            dialog.find('.emoji-dialog-search-results').addClass('hidden');
-            dialog.find('.nav-tabs .emoji-dialog-search-results').next().find('a').tab('show');
-            return;
+      if (!value) {
+        dialog.find('.emoji-dialog-search-results').addClass('hidden');
+        dialog.find('.nav-tabs .emoji-dialog-search-results').next().find('a').tab('show');
+        return;
+      }
+
+      const html = search(value)
+        .slice(0, 100)
+        .map(emoji => 
+          `<a class="emoji-link" name="${emoji.name}" href="#">${buildEmoji(emoji, false)}</a>`)
+        .join('\n');
+      
+      dialog.find('.tab-pane.emoji-dialog-search-results').html(html);
+      dialog.find('.emoji-dialog-search-results').removeClass('hidden');
+      dialog.find('.nav-tabs .emoji-dialog-search-results a').tab('show');
+    });
+
+    const tabContent = dialog.find('.emoji-tabs .tab-content');
+
+    function showDeferred(container: JQuery) {
+      const rect = tabContent[0].getBoundingClientRect();
+      const num = Math.ceil((rect.width * rect.height) / (40 * 40));
+
+      container
+        .find('.emoji-link img.defer')
+        .filter((i, elem) => {
+          if (i <= num) {
+            return true;
           }
 
-          const html = search(value)
-            .slice(0, 100)
-            .map(emoji => 
-              `<a class="emoji-link" name="{../name}" href="#">${buildEmoji(emoji, false)}</a>`)
-              .join('\n');
-          
-          dialog.find('.tab-pane.emoji-dialog-search-results').html(html);
-          dialog.find('.emoji-dialog-search-results').removeClass('hidden');
-          dialog.find('.nav-tabs .emoji-dialog-search-results a').tab('show');
+          const elemRect = elem.getBoundingClientRect();
+          return elemRect.right > rect.left &&
+            elemRect.left < rect.right &&
+            elemRect.bottom > rect.top &&
+            elemRect.top < rect.bottom;
+        })
+        .removeClass('defer')
+        .each((i, elem) => {
+          const src = elem.getAttribute('data-src');
+          elem.setAttribute('src', src);
         });
+    }
 
-        const tabContent = dialog.find('.emoji-tabs .tab-content');
+    const firstTab = dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
+      e.preventDefault();
+      $(e.target).tab('show');
+    }).on('show.bs.tab', (e) => {
+      showDeferred($(e.target.getAttribute('href')));
+    }).eq(1);
 
-        function showDeferred(container: JQuery) {
-          const rect = tabContent[0].getBoundingClientRect();
-          const num = Math.ceil((rect.width * rect.height) / (40 * 40));
+    setTimeout(() => firstTab.trigger('show.bs.tab'), 10);
 
-          container
-            .find('.emoji-link img.defer')
-            .filter((i, elem) => {
-              if (i <= num) {
-                return true;
-              }
-
-              const elemRect = elem.getBoundingClientRect();
-              return elemRect.right > rect.left &&
-                elemRect.left < rect.right &&
-                elemRect.bottom > rect.top &&
-                elemRect.top < rect.bottom;
-            })
-            .removeClass('defer')
-            .each((i, elem) => {
-              const src = elem.getAttribute('data-src');
-              elem.setAttribute('src', src);
-            });
-        }
-
-        const firstTab = dialog.find('.emoji-tabs .nav-tabs a').click((e) => {
-          e.preventDefault();
-          $(e.target).tab('show');
-        }).on('show.bs.tab', (e) => {
-          showDeferred($(e.target.getAttribute('href')));
-        }).eq(1);
-
-        setTimeout(() => firstTab.trigger('show.bs.tab'), 10);
-
-        tabContent.on('scroll', (e) => {
-          showDeferred(tabContent.find('.tab-pane.active'));
-        });
-
-        applyScrollStop(tabContent[0]);
-
-        const close = () => dialogActions.close(dialog);
-
-        $(window).on('action:composer.discard action:composer.submit', close);
-        dialog.find('.close').click(close);
-
-        if (dialog.draggable) {
-          dialog.draggable({
-            handle: '.top-bar',
-          });
-        }
-
-        callback(dialog);
-      });
+    tabContent.on('scroll', (e) => {
+      showDeferred(tabContent.find('.tab-pane.active'));
     });
+
+    applyScrollStop(tabContent[0]);
+
+    const close = () => dialogActions.close(dialog);
+
+    $(window).on('action:composer.discard action:composer.submit', close);
+    dialog.find('.close').click(close);
+
+    if (dialog.draggable) {
+      dialog.draggable({
+        handle: '.top-bar',
+      });
+    }
+
+    callback(dialog);
+  }).catch((err) => {
+    console.error('Failed to initialize emoji dialog', err);
   });
 }
 
