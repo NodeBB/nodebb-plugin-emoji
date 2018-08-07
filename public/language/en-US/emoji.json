@@ -20,5 +20,6 @@
   "categories.modifier": "Modifier",
   "categories.other": "Other",
   "categories.custom": "Custom",
-  "search.results": "Search Results"
+  "search.results": "Search Results",
+  "search.placeholder": "Search"
 }
