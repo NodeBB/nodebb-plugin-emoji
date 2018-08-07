@@ -3,7 +3,7 @@
     <div class="top-bar"></div>
     
     <div class="emoji-dialog-search-container">
-      <input type="text" class="form-control emoji-dialog-search">
+      <input type="text" class="form-control emoji-dialog-search" placeholder="[[emoji:search.placeholder]]">
       
       <button type="button" class="close form-control" data-dismiss="modal" aria-label="[[global:close]]">
         <span aria-hidden="true">&times;</span>
