@@ -89,7 +89,7 @@ const addStylesheet = (data: {
     rel: 'stylesheet',
     href: `${rel}/plugins/nodebb-plugin-emoji/emoji/styles.css?${buster}`,
   });
-  
+
   callback(null, data);
 };
 

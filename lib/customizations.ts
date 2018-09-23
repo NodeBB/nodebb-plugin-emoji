@@ -53,16 +53,16 @@ const deleteThing = (key: string, name: string) => {
 const emojiSockets: any = {};
 
 emojiSockets.getCustomizations = (
-  socket: SocketIO.Socket, 
+  socket: SocketIO.Socket,
   callback: NodeBack,
 ) => getCustomizations(callback);
 
 emojiSockets.editEmoji = (
-  socket: SocketIO.Socket, 
+  socket: SocketIO.Socket,
   [name, emoji]: [string, CustomEmoji],
 ) => editThing(emojisKey, name, emoji);
 emojiSockets.deleteEmoji = (
-  socket: SocketIO.Socket, 
+  socket: SocketIO.Socket,
   name: string,
 ) => deleteThing(emojisKey, name);
 
@@ -71,7 +71,7 @@ emojiSockets.editAdjunct = (
   [name, adjunct]: [string, CustomAdjunct],
 ) => editThing(adjunctsKey, name, adjunct);
 emojiSockets.deleteAdjunct = (
-  socket: SocketIO.Socket, 
+  socket: SocketIO.Socket,
   name: string,
 ) => deleteThing(adjunctsKey, name);
 

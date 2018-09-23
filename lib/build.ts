@@ -1,4 +1,4 @@
-import { access, writeFile, symlink, readFile } from 'fs';
+import { writeFile, symlink } from 'fs';
 import { join, resolve, basename } from 'path';
 import { mkdirp, copy, remove } from 'fs-extra';
 import { uniq } from 'lodash';
@@ -14,7 +14,7 @@ const winston = require.main.require('winston');
 const db = require.main.require('./src/database');
 const plugins = require.main.require('./src/plugins');
 
-export const assetsDir = join(__dirname, `../emoji`);
+export const assetsDir = join(__dirname, '../emoji');
 
 const linkDirs = (sourceDir: string, destDir: string, callback: NodeBack) => {
   const type = (process.platform === 'win32') ? 'junction' : 'dir';
@@ -166,13 +166,13 @@ export default function build(callback: NodeBack) {
         (cb) => {
           const css = packs.map(pack => cssBuilders[pack.mode](pack)).join('\n');
           writeFile(
-            join(assetsDir, 'styles.css'), 
-            `${css}\n.emoji-customizations {` + 
-              'display: inline-block;' + 
-              'height: 23px;' + 
-              'margin-top: -1px;' +
-              'margin-bottom: -1px;' +
-            '}',
+            join(assetsDir, 'styles.css'),
+            `${css}\n.emoji-customizations {
+              display: inline-block;
+              height: 23px;
+              margin-top: -1px;
+              margin-bottom: -1px;
+            }`.split('\n').map(x => x.trim()).join(''),
             { encoding: 'utf8' },
             cb,
           );
@@ -216,8 +216,8 @@ export default function build(callback: NodeBack) {
         }, cb),
         // link customizations to public/uploads/emoji
         cb => linkDirs(
-          join(nconf.get('upload_path'), 'emoji'), 
-          join(assetsDir, 'customizations'), 
+          join(nconf.get('upload_path'), 'emoji'),
+          join(assetsDir, 'customizations'),
           cb,
         ),
       ], next);

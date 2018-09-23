@@ -5,11 +5,12 @@ const settings: {
   setOne(key: string, field: string, value: any, cb: NodeBack<void>): void,
 } = require.main.require('./src/meta').settings;
 
-interface map {
-  [key: string]: any;
+interface Settings {
+  parseNative: boolean;
+  parseAscii: boolean;
 }
 
-const defaults: map = {
+const defaults: Settings = {
   parseNative: true,
   parseAscii: true,
 };
@@ -21,9 +22,9 @@ const get = (callback: NodeBack<{ [key: string]: any }>) => {
       return;
     }
 
-    const sets: map = {};
+    const sets: Partial<Settings> = {};
 
-    Object.keys(defaults).forEach((key) => {
+    Object.keys(defaults).forEach((key: keyof Settings) => {
       const defaultVal = defaults[key];
       const str = data[key];
 
@@ -47,8 +48,8 @@ const get = (callback: NodeBack<{ [key: string]: any }>) => {
 const set = (data: {
   [key: string]: any,
 }, callback: NodeBack<void>) => {
-  const sets: map = {};
-  Object.keys(data).forEach((key) => {
+  const sets: Partial<Record<keyof Settings, string>> = {};
+  Object.keys(data).forEach((key: keyof Settings) => {
     sets[key] = JSON.stringify(data[key]);
   });
 

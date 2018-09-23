@@ -12,8 +12,8 @@ const noop = () => {};
 // build when a plugin is (de)activated if that plugin is an emoji pack
 const toggle = ({ id }: { id: string }, cb: NodeBack = noop) => {
   readFile(
-    join(baseDir, 'node_modules', id, 'plugin.json'), 
-    'utf8', 
+    join(baseDir, 'node_modules', id, 'plugin.json'),
+    'utf8',
     (err, file) => {
       if (err && err.code !== 'ENOENT') {
         cb(err);

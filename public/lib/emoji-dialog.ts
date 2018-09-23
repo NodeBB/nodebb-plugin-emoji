@@ -81,10 +81,10 @@ export function init(callback: Callback<JQuery>) {
 
       const html = search(value)
         .slice(0, 100)
-        .map(emoji => 
+        .map(emoji =>
           `<a class="emoji-link" name="${emoji.name}" href="#">${buildEmoji(emoji, false)}</a>`)
         .join('\n');
-      
+
       dialog.find('.tab-pane.emoji-dialog-search-results').html(html);
       dialog.find('.emoji-dialog-search-results').removeClass('hidden');
       dialog.find('.nav-tabs .emoji-dialog-search-results a').tab('show');

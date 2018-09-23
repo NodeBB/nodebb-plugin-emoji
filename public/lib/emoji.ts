@@ -33,10 +33,10 @@ export const strategy = {
   },
   index: 1,
   replace: (emoji: StoredEmoji) => {
-    return ':' + emoji.name + ': ';
+    return `:${emoji.name}: `;
   },
   template: (emoji: StoredEmoji) => {
-    return buildEmoji(emoji) + ' ' + emoji.name;
+    return `${buildEmoji(emoji)} ${emoji.name}`;
   },
   cache: true,
 };
@@ -88,28 +88,28 @@ export function init(callback?: Callback<undefined>) {
         const weighted = weight * (1 + leven(term, match));
         return match.startsWith(term) ? weighted - 2 : weighted;
       }
-      
+
       return all.filter((obj) => {
         if (fuzzy(term, obj.name)) {
           obj.score = score(obj.name, 1);
-    
+
           return true;
         }
-    
+
         const aliasMatch = fuzzyFind(term, obj.aliases);
         if (aliasMatch) {
           obj.score = score(aliasMatch, 3);
-    
+
           return true;
         }
-    
+
         const keywordMatch = fuzzyFind(term, obj.keywords);
         if (keywordMatch) {
           obj.score = score(keywordMatch, 7);
-    
+
           return true;
         }
-    
+
         return false;
       }).sort((a, b) => a.score - b.score).sort((a, b) => {
         const aPrefixed = +a.name.startsWith(term);
