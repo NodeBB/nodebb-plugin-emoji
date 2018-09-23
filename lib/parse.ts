@@ -1,5 +1,4 @@
 import { readFile } from 'fs';
-import { join } from 'path';
 import { parallel } from 'async';
 
 import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
@@ -29,24 +28,29 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
   }
 
   parallel({
-    table: next => readFile(tableFile, next),
-    aliases: next => readFile(aliasesFile, next),
-    ascii: next => readFile(asciiFile, next),
-    characters: next => readFile(charactersFile, next),
-  }, (err: Error, results) => {
+    table: next => readFile(tableFile, 'utf8', next),
+    aliases: next => readFile(aliasesFile, 'utf8', next),
+    ascii: next => readFile(asciiFile, 'utf8', next),
+    characters: next => readFile(charactersFile, 'utf8', next),
+  }, (err: Error, results: {
+    table: string,
+    aliases: string,
+    ascii: string,
+    characters: string,
+  }) => {
     if (err) {
       callback(err);
       return;
     }
 
     try {
-      const ascii = JSON.parse(results.ascii.toString());
+      const ascii = JSON.parse(results.ascii);
       const asciiPattern = Object.keys(ascii)
         .sort((a, b) => b.length - a.length)
         .map(escapeRegExpChars)
         .join('|');
 
-      const characters = JSON.parse(results.characters.toString());
+      const characters = JSON.parse(results.characters);
       const charPattern = Object.keys(characters)
         .sort((a, b) => b.length - a.length)
         .map(escapeRegExpChars)
@@ -55,16 +59,20 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
       metaCache = {
         ascii,
         characters,
-        table: JSON.parse(results.table.toString()),
-        aliases: JSON.parse(results.aliases.toString()),
-        asciiPattern: new RegExp(`(?:^|\\s)(${asciiPattern})(?=\\s|$)`, 'g'),
-        charPattern: new RegExp(charPattern, 'g'),
+        table: JSON.parse(results.table),
+        aliases: JSON.parse(results.aliases),
+        asciiPattern: asciiPattern ?
+          new RegExp(`(^|\\s|\\n)(${asciiPattern})(?=\\n|\\s|$)`, 'g') :
+          /(?!)/,
+        charPattern: charPattern ?
+          new RegExp(charPattern, 'g') :
+          /(?!)/,
       };
     } catch (e) {
       callback(e);
       return;
     }
-    
+
     callback(null, metaCache);
   });
 };
@@ -91,18 +99,25 @@ export const buildEmoji = (emoji: StoredEmoji, whole: string) => {
 };
 
 const replaceAscii = (str: string, { ascii, asciiPattern, table }: (typeof metaCache)) => {
-  return str.replace(asciiPattern, (full: string, text: string) => {
+  return str.replace(asciiPattern, (full: string, before: string, text: string) => {
     const emoji = ascii[text] && table[ascii[text]];
     if (emoji) {
-      return full.replace(text, buildEmoji(emoji, text));
+      return `${before}${buildEmoji(emoji, text)}`;
     }
 
-    return text;
+    return full;
   });
 };
 
-const replaceNative = (str: string, { characters, charPattern }: (typeof metaCache)) => {
-  return str.replace(charPattern, (char: string) => `:${characters[char]}:`);
+const replaceNative = (str: string, { characters, charPattern, table }: (typeof metaCache)) => {
+  return str.replace(charPattern, (char: string) => {
+    const name = characters[char];
+    if (table[name]) {
+      return `:${name}:`;
+    }
+
+    return char;
+  });
 };
 
 interface ParseOptions {
@@ -129,10 +144,10 @@ const parse = (content: string, callback: NodeBack<string>) => {
     const { table, aliases } = store;
 
     const parsed = content.replace(
-      outsideCode, 
+      outsideCode,
       outsideCodeStr => outsideCodeStr.replace(outsideElements, (whole, inside, outside) => {
         let output = outside;
-        
+
         if (options.native) {
           // avoid parsing native inside HTML tags
           // also avoid converting ascii characters
@@ -142,23 +157,23 @@ const parse = (content: string, callback: NodeBack<string>) => {
               if (text) {
                 return replaceNative(text, store);
               }
-              
+
               return full;
             },
           );
         }
-        
+
         output = output.replace(emojiPattern, (whole: string, text: string) => {
           const name = text.toLowerCase();
           const emoji = table[name] || table[aliases[name]];
-          
+
           if (emoji) {
             return buildEmoji(emoji, whole);
           }
-          
+
           return whole;
         });
-        
+
         if (options.ascii) {
           // avoid parsing native inside HTML tags
           output = output.replace(
@@ -167,12 +182,12 @@ const parse = (content: string, callback: NodeBack<string>) => {
               if (text) {
                 return replaceAscii(text, store);
               }
-              
+
               return full;
             },
           );
         }
-        
+
         return (inside || '') + (output || '');
       }),
     );
