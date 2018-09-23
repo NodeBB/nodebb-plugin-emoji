@@ -37,12 +37,12 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
   onEditAscii,
 }) => {
   let imageForm: HTMLFormElement;
-  let imageInput: HTMLInputElement; 
+  let imageInput: HTMLInputElement;
   let fileNameInput: HTMLInputElement;
 
   const editImage = () => {
     imageInput.click();
-    
+
     $(imageInput).one('change', () => {
       if (!imageInput.files.length) {
         return;
@@ -69,8 +69,8 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
   return (
     <tr>
       <td>
-        <input 
-          type="text" 
+        <input
+          type="text"
           className="form-control"
           value={emoji.name}
           onInput={(e: Event) => onEditName((e.target as HTMLInputElement).value)}
@@ -90,9 +90,9 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
             image: emoji.image,
           }) }}
         ></button>
-        <form 
+        <form
           action={`${window.config.relative_path}/api/admin/plugins/emoji/upload`}
-          method="post" 
+          method="post"
           encType="multipart/form-data"
           style={{ display: 'none' }}
           ref={form => imageForm = form as HTMLFormElement}
@@ -103,7 +103,7 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
             accept="image/*"
             ref={input => imageInput = input as HTMLInputElement}
           />
-          <input 
+          <input
             type="hidden"
             name="fileName"
             ref={input => fileNameInput = input as HTMLInputElement}
@@ -111,31 +111,31 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
         </form>
       </td>
       <td>
-        <input 
-          type="text" 
-          className="form-control" 
+        <input
+          type="text"
+          className="form-control"
           value={emoji.aliases.join(',')}
           onInput={(e: Event) => onEditAliases(
-            (e.target as HTMLInputElement).value.split(',').filter(Boolean),
+            (e.target as HTMLInputElement).value.split(','),
           )}
         />
       </td>
       <td>
-        <input 
-          type="text" 
-          className="form-control" 
-          value={emoji.ascii.join(',')} 
+        <input
+          type="text"
+          className="form-control"
+          value={emoji.ascii.join(',')}
           onInput={(e: Event) => onEditAscii(
-            (e.target as HTMLInputElement).value.split(',').filter(Boolean),
+            (e.target as HTMLInputElement).value.split(','),
           )}
         />
       </td>
       <td>
         {
           editing ? (
-            <button 
-              className="btn btn-success" 
-              type="button" 
+            <button
+              className="btn btn-success"
+              type="button"
               onClick={() => onSave(null)}
               disabled={!canSave}
             >
@@ -143,11 +143,11 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
             </button>
           ) : (
             <button
-              className="btn btn-warning" 
-              type="button" 
+              className="btn btn-warning"
+              type="button"
               onClick={() => onDelete(null)}
             >
-              <i className="fa fa-trash"></i>  
+              <i className="fa fa-trash"></i>
             </button>
           )
         }
@@ -192,28 +192,39 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
 
     const validations: {
       fn: () => boolean,
-      message: string,
+      message: JSX.Element,
     }[] = [
       {
         fn: () => !!emoji.name,
-        message: '<strong>Name</strong> is required',
+        message: (
+          <span><strong>Name</strong> is required</span>
+        ),
       },
       {
         fn: () => !!emoji.image,
-        message: '<strong>Image</strong> is required',
+        message: (
+          <span><strong>Image</strong> is required</span>
+        ),
       },
       {
         fn: () => pattern.test(emoji.name),
-        message: '<strong>Name</strong> can only contain letters, numbers, and <code>_-+.</code>',
+        message: (
+          <span><strong>Name</strong> can only contain letters,
+           numbers, and <code>_-+.</code></span>
+        ),
       },
       {
         fn: () => emoji.aliases.every(alias => pattern.test(alias)),
-        message: '<strong>Aliases</strong> can only contain ' +
-          'letters, numbers, and <code>_-+.</code> (comma-separated)',
+        message: (
+          <span><strong>Aliases</strong> can only contain letters,
+          numbers, and <code>_-+.</code> (comma-separated)</span>
+        ),
       },
       {
         fn: () => all.every(({ name }) => emoji.name !== name),
-        message: 'Multiple custom emojis cannot have the same <strong>Name</strong>',
+        message: (
+          <span>Multiple custom emojis cannot have the same <strong>Name</strong></span>
+        ),
       },
     ];
 
@@ -223,17 +234,23 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
   constructor({ emojis }: EmojiListProps) {
     super();
 
-    this.state.previous = emojis.slice();
-    this.state.emojis = emojis.slice();
-    this.state.messages = [];
-    this.state.newEmoji = blankEmoji;
-    this.state.newEmojiMessage = null;
+    this.setState({
+      previous: emojis.slice(),
+      emojis: emojis.slice(),
+      messages: [],
+      newEmoji: blankEmoji,
+      newEmojiMessage: null,
+    });
   }
 
   onAdd() {
     const emojis = this.state.emojis.slice();
     const previous = this.state.previous.slice();
     const emoji = this.state.newEmoji;
+
+    emoji.aliases = emoji.aliases.filter(Boolean);
+    emoji.ascii = emoji.ascii.filter(Boolean);
+
     emojis.push(emoji);
     previous.push(emoji);
     const i = previous.length - 1;
@@ -250,6 +267,9 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
     const emojis = this.state.emojis.slice();
     const previous = this.state.previous.slice();
     const emoji = this.state.emojis[i];
+
+    emoji.aliases = emoji.aliases.filter(Boolean);
+    emoji.ascii = emoji.ascii.filter(Boolean);
 
     const [old] = previous.splice(i, 1, emoji);
     emojis.splice(i, 1, emoji);
@@ -313,11 +333,11 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
     });
   }
 
-  render({}: EmojiListProps, { 
-    previous, 
-    emojis, 
-    messages, 
-    newEmoji, 
+  render({}: EmojiListProps, {
+    previous,
+    emojis,
+    messages,
+    newEmoji,
     newEmojiMessage,
   }: EmojiListState) {
     const rows:JSX.Element[] = [];
@@ -326,7 +346,7 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
       all.splice(i, 1);
 
       const failures = EmojiList.validate(all, emoji);
-      
+
       const props: EmojiProps = {
         emoji,
         onSave: () => this.onSave(i),
@@ -341,7 +361,7 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
       rows.push(<Emoji {...props} key={i} />);
       rows.push(...failures.map(({ message }) => (
         <tr className="text-danger">
-          <td colSpan={5} dangerouslySetInnerHTML={{ __html: message }}></td>
+          <td colSpan={5}>{message}</td>
         </tr>
       )));
       if (messages[i]) {
@@ -373,7 +393,7 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
           />
           {EmojiList.equal(newEmoji, blankEmoji) ? null : newEmojiFailures.map(({ message }) => (
             <tr className="text-danger">
-              <td colSpan={5} dangerouslySetInnerHTML={{ __html: message }}></td>
+              <td colSpan={5}>{message}</td>
             </tr>
           ))}
           {newEmojiMessage}
@@ -410,8 +430,8 @@ class Adjunct extends Component<AdjunctProps, {}> {
     return (
       <tr>
         <td>
-          <input 
-            type="text" 
+          <input
+            type="text"
             className="form-control"
             value={adjunct.name}
             onInput={(e: Event) => onEditName((e.target as HTMLInputElement).value)}
@@ -420,31 +440,31 @@ class Adjunct extends Component<AdjunctProps, {}> {
         </td>
         <td dangerouslySetInnerHTML={{ __html: emoji ? buildEmoji(emoji) : '' }}></td>
         <td>
-          <input 
-            type="text" 
-            className="form-control" 
+          <input
+            type="text"
+            className="form-control"
             value={adjunct.aliases.join(',')}
             onInput={(e: Event) => onEditAliases(
-              (e.target as HTMLInputElement).value.split(',').filter(Boolean),
+              (e.target as HTMLInputElement).value.split(','),
             )}
           />
         </td>
         <td>
-          <input 
-            type="text" 
-            className="form-control" 
-            value={adjunct.ascii.join(',')} 
+          <input
+            type="text"
+            className="form-control"
+            value={adjunct.ascii.join(',')}
             onInput={(e: Event) => onEditAscii(
-              (e.target as HTMLInputElement).value.split(',').filter(Boolean),
+              (e.target as HTMLInputElement).value.split(','),
             )}
           />
         </td>
         <td>
           {
             editing ? (
-              <button 
-                className="btn btn-success" 
-                type="button" 
+              <button
+                className="btn btn-success"
+                type="button"
                 onClick={() => onSave(null)}
                 disabled={!canSave}
               >
@@ -452,11 +472,11 @@ class Adjunct extends Component<AdjunctProps, {}> {
               </button>
             ) : (
               <button
-                className="btn btn-warning" 
-                type="button" 
+                className="btn btn-warning"
+                type="button"
                 onClick={() => onDelete(null)}
               >
-                <i className="fa fa-trash"></i>  
+                <i className="fa fa-trash"></i>
               </button>
             )
           }
@@ -477,7 +497,7 @@ class Adjunct extends Component<AdjunctProps, {}> {
       // listPosition: function (position: any) {
       //   // Adjust calculated position based on window scrollTop value
       //   position.top -= $(window).scrollTop();
-  
+
       //   this.$el.css(this._applyPlacement(position));
       //   this.$el.css('position', 'fixed');
       //   return this;
@@ -547,17 +567,23 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
   constructor({ adjuncts }: AdjunctListProps) {
     super();
 
-    this.state.previous = adjuncts.slice();
-    this.state.adjuncts = adjuncts.slice();
-    this.state.messages = [];
-    this.state.newAdjunct = blankAdjunct;
-    this.state.newAdjunctMessage = null;
+    this.setState({
+      previous: adjuncts.slice(),
+      adjuncts: adjuncts.slice(),
+      messages: [],
+      newAdjunct: blankAdjunct,
+      newAdjunctMessage: null,
+    });
   }
 
   onAdd() {
     const adjuncts = this.state.adjuncts.slice();
     const previous = this.state.previous.slice();
     const adjunct = this.state.newAdjunct;
+
+    adjunct.aliases = adjunct.aliases.filter(Boolean);
+    adjunct.ascii = adjunct.ascii.filter(Boolean);
+
     adjuncts.push(adjunct);
     previous.push(adjunct);
     const i = previous.length - 1;
@@ -574,6 +600,9 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
     const adjuncts = this.state.adjuncts.slice();
     const previous = this.state.previous.slice();
     const adjunct = this.state.adjuncts[i];
+
+    adjunct.aliases = adjunct.aliases.filter(Boolean);
+    adjunct.ascii = adjunct.ascii.filter(Boolean);
 
     const [old] = previous.splice(i, 1, adjunct);
     adjuncts.splice(i, 1, adjunct);
@@ -637,11 +666,11 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
     });
   }
 
-  render({}: AdjunctListProps, { 
-    previous, 
-    adjuncts, 
-    messages, 
-    newAdjunct, 
+  render({}: AdjunctListProps, {
+    previous,
+    adjuncts,
+    messages,
+    newAdjunct,
     newAdjunctMessage,
   }: AdjunctListState) {
     const rows:JSX.Element[] = [];
@@ -650,7 +679,7 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
       all.splice(i, 1);
 
       const failures = AdjunctList.validate(all, adjunct);
-      
+
       const props: AdjunctProps = {
         adjunct,
         onSave: () => this.onSave(i),
@@ -693,7 +722,7 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
             editing
             canSave={!newAdjunctFailures.length}
           />
-          {AdjunctList.equal(newAdjunct, blankAdjunct) ? null : 
+          {AdjunctList.equal(newAdjunct, blankAdjunct) ? null :
           newAdjunctFailures.map(({ message }) => (
             <tr className="text-danger">
               <td colSpan={5} dangerouslySetInnerHTML={{ __html: message }}></td>
@@ -727,11 +756,11 @@ class App extends Component<AppProps, AppState> {
     this.state = state;
   }
 
-  render({ 
-    onEditEmoji, 
-    onDeleteEmoji, 
-    onEditAdjunct, 
-    onDeleteAdjunct, 
+  render({
+    onEditEmoji,
+    onDeleteEmoji,
+    onEditAdjunct,
+    onDeleteAdjunct,
   }: AppProps, {
     emojis,
     adjuncts,
@@ -739,9 +768,9 @@ class App extends Component<AppProps, AppState> {
     return (
       <div>
         <p>
-          Below you can add custom emoji, and also add new aliases 
-          and ASCII patterns for existing emoji. While this list is 
-          edited live, you must still <strong>Build Emoji Assets </strong> 
+          Below you can add custom emoji, and also add new aliases
+          and ASCII patterns for existing emoji. While this list is
+          edited live, you must still <strong>Build Emoji Assets </strong>
           to actually use these customizations.
         </p>
         <div className="panel panel-default">
@@ -771,7 +800,7 @@ class App extends Component<AppProps, AppState> {
 
 let initialized = false;
 export function init(
-  elem: Element, 
+  elem: Element,
   cb: Callback,
 ) {
   if (initialized) {
@@ -784,13 +813,13 @@ export function init(
     const props: AppProps = {
       state: customizations,
       onEditEmoji: (args) => {
-        socket.emit('admin.plugins.emoji.editEmoji', args); 
+        socket.emit('admin.plugins.emoji.editEmoji', args);
       },
       onDeleteEmoji: (name) => {
         socket.emit('admin.plugins.emoji.deleteEmoji', name);
       },
       onEditAdjunct: (args) => {
-        socket.emit('admin.plugins.emoji.editAdjunct', args); 
+        socket.emit('admin.plugins.emoji.editAdjunct', args);
       },
       onDeleteAdjunct: (name) => {
         socket.emit('admin.plugins.emoji.deleteAdjunct', name);
@@ -800,7 +829,7 @@ export function init(
       render((
         <App {...props} />
       ), elem);
-      
+
       cb(null);
     });
   });
