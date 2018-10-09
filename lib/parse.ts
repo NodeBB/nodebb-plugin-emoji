@@ -5,6 +5,7 @@ import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
 const buster = require.main.require('./src/meta').config['cache-buster'];
 const nconf = require.main.require('nconf');
+const winston = require.main.require('winston');
 const url = nconf.get('url');
 
 let metaCache: {
@@ -138,7 +139,7 @@ export function setOptions(newOptions: ParseOptions) {
 const parse = (content: string, callback: NodeBack<string>) => {
   getTable((err, store) => {
     if (err) {
-      console.error(err);
+      winston.error(err);
       callback(null, content);
       return;
     }
