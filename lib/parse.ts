@@ -138,7 +138,8 @@ export function setOptions(newOptions: ParseOptions) {
 const parse = (content: string, callback: NodeBack<string>) => {
   getTable((err, store) => {
     if (err) {
-      callback(err);
+      console.error(err);
+      callback(null, content);
       return;
     }
     const { table, aliases } = store;
