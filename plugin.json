@@ -29,7 +29,6 @@
     { "hook": "filter:composer.formatting", "method": "composerFormatting", "priority": 19 },
     { "hook": "filter:parse.raw", "method": "parse.raw", "priority": 9 },
     { "hook": "filter:parse.post", "method": "parse.post", "priority": 9 },
-    { "hook": "filter:email.modify", "method": "modifyEmail" },
     { "hook": "action:plugin.activate", "method": "plugins.activation" },
     { "hook": "action:plugin.deactivate", "method": "plugins.deactivation" },
     { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" }
