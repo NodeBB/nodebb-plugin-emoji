@@ -25,6 +25,7 @@ The following emoji packs are known to be compatible with `nodebb-plugin-emoji`
  - [nodebb-plugin-emoji-apple](https://github.com/NodeBB-Community/nodebb-plugin-emoji-apple)
  - [nodebb-plugin-emoji-cubicopp](https://github.com/NodeBB-Community/nodebb-plugin-emoji-cubicopp)
  - [nodebb-plugin-emoji-vital](https://github.com/NodeBB-Community/nodebb-plugin-emoji-vital)
+ - [nodebb-plugin-emoji-fontawesome](https://github.com/NodeBB-Community/nodebb-plugin-emoji-fontawesome)
 
 To add custom emoji, visit the **Emoji** ACP page and click on the pencil button in the bottom left.
 
