@@ -9,7 +9,7 @@ const setsEqual = (arr1: string[], arr2: string[]) => {
   }
 
   const h1: { [val: string]: boolean } = {};
-  arr1.forEach(val => h1[val] = true);
+  arr1.forEach((val) => { h1[val] = true; });
 
   return arr2.every(val => h1[val]);
 };
@@ -81,32 +81,34 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
           type="button"
           className="btn btn-default"
           onClick={editImage}
-          dangerouslySetInnerHTML={{ __html: buildEmoji({
-            character: '',
-            pack: 'customizations',
-            keywords: [],
-            name: emoji.name,
-            aliases: emoji.aliases,
-            image: emoji.image,
-          }) }}
+          dangerouslySetInnerHTML={{
+            __html: buildEmoji({
+              character: '',
+              pack: 'customizations',
+              keywords: [],
+              name: emoji.name,
+              aliases: emoji.aliases,
+              image: emoji.image,
+            }),
+          }}
         ></button>
         <form
           action={`${window.config.relative_path}/api/admin/plugins/emoji/upload`}
           method="post"
           encType="multipart/form-data"
           style={{ display: 'none' }}
-          ref={form => imageForm = form as HTMLFormElement}
+          ref={(form) => { imageForm = form as HTMLFormElement; }}
         >
           <input
             type="file"
             name="emojiImage"
             accept="image/*"
-            ref={input => imageInput = input as HTMLInputElement}
+            ref={(input) => { imageInput = input as HTMLInputElement; }}
           />
           <input
             type="hidden"
             name="fileName"
-            ref={input => fileNameInput = input as HTMLInputElement}
+            ref={(input) => { fileNameInput = input as HTMLInputElement; }}
           />
         </form>
       </td>
@@ -116,7 +118,7 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
           className="form-control"
           value={emoji.aliases.join(',')}
           onInput={(e: Event) => onEditAliases(
-            (e.target as HTMLInputElement).value.split(','),
+            (e.target as HTMLInputElement).value.split(',')
           )}
         />
       </td>
@@ -126,7 +128,7 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
           className="form-control"
           value={emoji.ascii.join(',')}
           onInput={(e: Event) => onEditAscii(
-            (e.target as HTMLInputElement).value.split(','),
+            (e.target as HTMLInputElement).value.split(',')
           )}
         />
       </td>
@@ -177,7 +179,7 @@ const blankEmoji: CustomEmoji = {
   ascii: [],
 };
 class EmojiList extends Component<EmojiListProps, EmojiListState> {
-  static equal(a: CustomEmoji, b: CustomEmoji) {
+  private static equal(a: CustomEmoji, b: CustomEmoji) {
     if (a === b) {
       return true;
     }
@@ -187,12 +189,13 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
       setsEqual(a.aliases, b.aliases) &&
       setsEqual(a.ascii, b.ascii);
   }
-  static validate(all: CustomEmoji[], emoji: CustomEmoji) {
+
+  private static validate(all: CustomEmoji[], emoji: CustomEmoji) {
     const pattern = /^[a-z\-.+0-9_]*$/i;
 
     const validations: {
-      fn: () => boolean,
-      message: JSX.Element,
+      fn: () => boolean;
+      message: JSX.Element;
     }[] = [
       {
         fn: () => !!emoji.name,
@@ -231,7 +234,7 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
     return validations.filter(validation => !validation.fn());
   }
 
-  constructor({ emojis }: EmojiListProps) {
+  public constructor({ emojis }: EmojiListProps) {
     super();
 
     this.setState({
@@ -243,7 +246,7 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
     });
   }
 
-  onAdd() {
+  private onAdd() {
     const emojis = this.state.emojis.slice();
     const previous = this.state.previous.slice();
     const emoji = this.state.newEmoji;
@@ -253,7 +256,6 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
 
     emojis.push(emoji);
     previous.push(emoji);
-    const i = previous.length - 1;
 
     this.setState({
       previous,
@@ -263,7 +265,8 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
 
     this.props.onEdit([emoji.name, emoji]);
   }
-  onSave(i: number) {
+
+  private onSave(i: number) {
     const emojis = this.state.emojis.slice();
     const previous = this.state.previous.slice();
     const emoji = this.state.emojis[i];
@@ -281,9 +284,8 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
 
     this.props.onEdit([old.name, emoji]);
   }
-  onDelete(i: number) {
-    const messages = this.state.messages.slice();
 
+  private onDelete(i: number) {
     const confirm = () => this.onConfirmDelete(i);
     const nope = () => {
       const messages = this.state.messages.slice();
@@ -294,10 +296,12 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
       });
     };
 
+    const messages = this.state.messages.slice();
+
     messages[i] = (
       <tr>
         <td>
-        <button className="btn btn-default" type="button" onClick={nope}>Cancel</button>
+          <button className="btn btn-default" type="button" onClick={nope}>Cancel</button>
         </td>
         <td colSpan={3}>
           <span class="help-block">Are you sure you want to delete this emoji?</span>
@@ -311,7 +315,8 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
       messages,
     });
   }
-  onConfirmDelete(i: number) {
+
+  private onConfirmDelete(i: number) {
     const emojis = this.state.emojis.slice();
     const previous = this.state.previous.slice();
     const [old] = previous.splice(i, 1);
@@ -325,7 +330,7 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
     this.props.onDelete(old.name);
   }
 
-  onEdit(i: number, emoji: CustomEmoji) {
+  private onEdit(i: number, emoji: CustomEmoji) {
     const emojis = this.state.emojis.slice();
     emojis.splice(i, 1, emoji);
     this.setState({
@@ -333,14 +338,14 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
     });
   }
 
-  render({}: EmojiListProps, {
+  public render(_: EmojiListProps, {
     previous,
     emojis,
     messages,
     newEmoji,
     newEmojiMessage,
   }: EmojiListState) {
-    const rows:JSX.Element[] = [];
+    const rows: JSX.Element[] = [];
     emojis.forEach((emoji, i) => {
       const all = previous.slice();
       all.splice(i, 1);
@@ -414,9 +419,9 @@ interface AdjunctProps {
   onEditAscii: Callback<string[]>;
 }
 class Adjunct extends Component<AdjunctProps, {}> {
-  nameInput: Element;
+  private nameInput: Element;
 
-  render({
+  public render({
     editing,
     canSave,
     adjunct,
@@ -435,7 +440,7 @@ class Adjunct extends Component<AdjunctProps, {}> {
             className="form-control"
             value={adjunct.name}
             onInput={(e: Event) => onEditName((e.target as HTMLInputElement).value)}
-            ref={input => this.nameInput = input}
+            ref={(input) => { this.nameInput = input; }}
           />
         </td>
         <td dangerouslySetInnerHTML={{ __html: emoji ? buildEmoji(emoji) : '' }}></td>
@@ -445,7 +450,7 @@ class Adjunct extends Component<AdjunctProps, {}> {
             className="form-control"
             value={adjunct.aliases.join(',')}
             onInput={(e: Event) => onEditAliases(
-              (e.target as HTMLInputElement).value.split(','),
+              (e.target as HTMLInputElement).value.split(',')
             )}
           />
         </td>
@@ -455,7 +460,7 @@ class Adjunct extends Component<AdjunctProps, {}> {
             className="form-control"
             value={adjunct.ascii.join(',')}
             onInput={(e: Event) => onEditAscii(
-              (e.target as HTMLInputElement).value.split(','),
+              (e.target as HTMLInputElement).value.split(',')
             )}
           />
         </td>
@@ -485,7 +490,7 @@ class Adjunct extends Component<AdjunctProps, {}> {
     );
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     $(this.nameInput).on('textComplete:select', () => {
       this.props.onEditName((this.nameInput as HTMLInputElement).value);
     }).textcomplete([{
@@ -526,7 +531,7 @@ const blankAdjunct: CustomAdjunct = {
   ascii: [],
 };
 class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
-  static equal(a: CustomAdjunct, b: CustomAdjunct) {
+  private static equal(a: CustomAdjunct, b: CustomAdjunct) {
     if (a === b) {
       return true;
     }
@@ -535,12 +540,13 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
       setsEqual(a.aliases, b.aliases) &&
       setsEqual(a.ascii, b.ascii);
   }
-  static validate(all: CustomAdjunct[], emoji: CustomAdjunct) {
+
+  private static validate(all: CustomAdjunct[], emoji: CustomAdjunct) {
     const pattern = /^[a-z\-.+0-9_]*$/i;
 
     const validations: {
-      fn: () => boolean,
-      message: string,
+      fn: () => boolean;
+      message: string;
     }[] = [
       {
         fn: () => !!emoji.name,
@@ -564,7 +570,7 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
     return validations.filter(validation => !validation.fn());
   }
 
-  constructor({ adjuncts }: AdjunctListProps) {
+  public constructor({ adjuncts }: AdjunctListProps) {
     super();
 
     this.setState({
@@ -576,7 +582,7 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
     });
   }
 
-  onAdd() {
+  private onAdd() {
     const adjuncts = this.state.adjuncts.slice();
     const previous = this.state.previous.slice();
     const adjunct = this.state.newAdjunct;
@@ -586,7 +592,6 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
 
     adjuncts.push(adjunct);
     previous.push(adjunct);
-    const i = previous.length - 1;
 
     this.setState({
       previous,
@@ -596,7 +601,8 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
 
     this.props.onEdit([adjunct.name, adjunct]);
   }
-  onSave(i: number) {
+
+  private onSave(i: number) {
     const adjuncts = this.state.adjuncts.slice();
     const previous = this.state.previous.slice();
     const adjunct = this.state.adjuncts[i];
@@ -614,9 +620,8 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
 
     this.props.onEdit([old.name, adjunct]);
   }
-  onDelete(i: number) {
-    const messages = this.state.messages.slice();
 
+  private onDelete(i: number) {
     const confirm = () => this.onConfirmDelete(i);
     const nope = () => {
       const messages = this.state.messages.slice();
@@ -627,10 +632,12 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
       });
     };
 
+    const messages = this.state.messages.slice();
+
     messages[i] = (
       <tr>
         <td>
-        <button className="btn btn-default" type="button" onClick={nope}>Cancel</button>
+          <button className="btn btn-default" type="button" onClick={nope}>Cancel</button>
         </td>
         <td colSpan={3}>
           <span class="help-block">Are you sure you want to delete this extension?</span>
@@ -644,7 +651,8 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
       messages,
     });
   }
-  onConfirmDelete(i: number) {
+
+  private onConfirmDelete(i: number) {
     const adjuncts = this.state.adjuncts.slice();
     const previous = this.state.previous.slice();
     const [old] = previous.splice(i, 1);
@@ -658,7 +666,7 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
     this.props.onDelete(old.name);
   }
 
-  onEdit(i: number, emoji: CustomAdjunct) {
+  private onEdit(i: number, emoji: CustomAdjunct) {
     const adjuncts = this.state.adjuncts.slice();
     adjuncts.splice(i, 1, emoji);
     this.setState({
@@ -666,14 +674,14 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
     });
   }
 
-  render({}: AdjunctListProps, {
+  public render(_: AdjunctListProps, {
     previous,
     adjuncts,
     messages,
     newAdjunct,
     newAdjunctMessage,
   }: AdjunctListState) {
-    const rows:JSX.Element[] = [];
+    const rows: JSX.Element[] = [];
     adjuncts.forEach((adjunct, i) => {
       const all = previous.slice();
       all.splice(i, 1);
@@ -723,11 +731,11 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
             canSave={!newAdjunctFailures.length}
           />
           {AdjunctList.equal(newAdjunct, blankAdjunct) ? null :
-          newAdjunctFailures.map(({ message }) => (
-            <tr className="text-danger">
-              <td colSpan={5} dangerouslySetInnerHTML={{ __html: message }}></td>
-            </tr>
-          ))}
+            newAdjunctFailures.map(({ message }) => (
+              <tr className="text-danger">
+                <td colSpan={5} dangerouslySetInnerHTML={{ __html: message }}></td>
+              </tr>
+            ))}
           {newAdjunctMessage}
         </tfoot>
       </table>
@@ -751,12 +759,13 @@ interface AppState {
 }
 
 class App extends Component<AppProps, AppState> {
-  constructor({ state }: AppProps) {
+  public constructor({ state }: AppProps) {
     super();
     this.state = state;
   }
 
-  render({
+  // eslint-disable-next-line class-methods-use-this
+  public render({
     onEditEmoji,
     onDeleteEmoji,
     onEditAdjunct,
@@ -801,7 +810,7 @@ class App extends Component<AppProps, AppState> {
 let initialized = false;
 export function init(
   elem: Element,
-  cb: Callback,
+  cb: Callback
 ) {
   if (initialized) {
     cb(null);

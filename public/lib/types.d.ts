@@ -2,16 +2,16 @@ declare type Callback<T = void> = (result: T) => void;
 
 interface Window {
   config: {
-    relative_path: string,
-    'cache-buster': string,
+    relative_path: string;
+    'cache-buster': string;
   };
   app: {
-    alertSuccess(message?: string): void,
-    alertError(message?: string): void,
-    alertError(error: Error): void,
+    alertSuccess(message?: string): void;
+    alertError(message?: string): void;
+    alertError(error: Error): void;
   };
   templates: {
-    parse(template: string, data: any, callback: Callback<string>): void,
+    parse(template: string, data: any, callback: Callback<string>): void;
   };
   utils: {
     generateUUID(): string;
@@ -32,8 +32,9 @@ interface JQuery {
 
 declare module 'translator' {
   export class Translator {
-    static create(lang?: string): Translator;
-    translate(input: string): Promise<string>;
+    public static create(lang?: string): Translator;
+
+    public translate(input: string): Promise<string>;
   }
   export function translate(input: string, callback: Callback<string>): void;
 }
@@ -42,7 +43,9 @@ declare module 'benchpress' {
 }
 declare module 'composer/controls' {
   export function insertIntoTextarea(textarea: HTMLTextAreaElement, text: string): void;
-  export function updateTextareaSelection(textarea: HTMLTextAreaElement, start: number, end: number): void;
+  export function updateTextareaSelection(
+    textarea: HTMLTextAreaElement, start: number, end: number
+  ): void;
 }
 declare module 'composer/formatting' {
   export function addButtonDispatch(name: string, callback: Callback<Element>): void;

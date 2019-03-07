@@ -1,8 +1,8 @@
 const settings: {
-  get(key: string, cb: NodeBack<{ [key: string]: any }>): void,
-  set(key: string, value: any, cb: NodeBack<void>): void,
-  getOne(key: string, field: string, cb: NodeBack<any>): void,
-  setOne(key: string, field: string, value: any, cb: NodeBack<void>): void,
+  get(key: string, cb: NodeBack<{ [key: string]: any }>): void;
+  set(key: string, value: any, cb: NodeBack<void>): void;
+  getOne(key: string, field: string, cb: NodeBack<any>): void;
+  setOne(key: string, field: string, value: any, cb: NodeBack<void>): void;
 } = require.main.require('./src/meta').settings;
 
 interface Settings {
@@ -46,7 +46,7 @@ const get = (callback: NodeBack<{ [key: string]: any }>) => {
   });
 };
 const set = (data: {
-  [key: string]: any,
+  [key: string]: any;
 }, callback: NodeBack<void>) => {
   const sets: Partial<Record<keyof Settings, string>> = {};
   Object.keys(data).forEach((key: keyof Settings) => {

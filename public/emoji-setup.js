@@ -1,3 +1,9 @@
+/* eslint-disable prefer-arrow-callback, func-names, strict, no-var */
+/* eslint-disable vars-on-top, no-plusplus, no-bitwise, no-multi-assign */
+/* eslint-disable no-nested-ternary, no-labels, no-restricted-syntax */
+/* eslint-disable no-continue, import/no-amd, import/no-dynamic-require */
+/* eslint-disable prefer-template, global-require */
+
 define('leven', function () {
   /*
   The MIT License (MIT)
@@ -24,6 +30,7 @@ define('leven', function () {
   */
 
   'use strict';
+
   var arr = [];
   var charCodeCache = [];
 
@@ -123,7 +130,7 @@ define('fuzzysearch', function () {
 
   'use strict';
 
-  function fuzzysearch (needle, haystack) {
+  function fuzzysearch(needle, haystack) {
     var hlen = haystack.length;
     var nlen = needle.length;
     if (nlen > hlen) {

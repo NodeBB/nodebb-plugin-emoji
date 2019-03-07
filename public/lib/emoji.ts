@@ -1,3 +1,4 @@
+// eslint-disable-next-line spaced-comment
 /// <amd-module name="emoji"/>
 
 const base = `${window.config.relative_path}/plugins/nodebb-plugin-emoji`;
@@ -23,7 +24,8 @@ export function buildEmoji(emoji: StoredEmoji, defer?: boolean) {
   ><span>${emoji.character}</span></span>`;
 }
 
-export let table: MetaData.table;
+/* eslint-disable import/no-mutable-exports */
+export let table: MetaData.Table;
 export let search: (term: string) => StoredEmoji[];
 
 export const strategy = {
@@ -32,12 +34,8 @@ export const strategy = {
     callback(search(term.toLowerCase().replace(/[_-]/g, '')).slice(0, 10));
   },
   index: 1,
-  replace: (emoji: StoredEmoji) => {
-    return `:${emoji.name}: `;
-  },
-  template: (emoji: StoredEmoji) => {
-    return `${buildEmoji(emoji)} ${emoji.name}`;
-  },
+  replace: (emoji: StoredEmoji) => `:${emoji.name}: `,
+  template: (emoji: StoredEmoji) => `${buildEmoji(emoji)} ${emoji.name}`,
   cache: true,
 };
 
@@ -54,7 +52,7 @@ export function init(callback?: Callback<undefined>) {
     import('fuzzysearch'),
     import('leven'),
     import('composer/formatting'),
-    $.getJSON(`${base}/emoji/table.json?${buster}`) as PromiseLike<MetaData.table>,
+    $.getJSON(`${base}/emoji/table.json?${buster}`) as PromiseLike<MetaData.Table>,
   ]).then(([fuzzy, leven, formatting, tableData]) => {
     table = tableData;
 
@@ -126,7 +124,7 @@ export function init(callback?: Callback<undefined>) {
       (textarea: HTMLTextAreaElement) => {
         import('emoji-dialog')
           .then(({ toggleForInsert }) => toggleForInsert(textarea));
-      },
+      }
     );
 
     if (callback) { setTimeout(callback, 0); }

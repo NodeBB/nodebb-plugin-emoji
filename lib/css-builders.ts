@@ -14,11 +14,9 @@ export function images(pack: EmojiDefinition) {
 }
 
 export function sprite(pack: EmojiDefinition): string {
-  const classes = Object.keys(pack.dictionary).map((name) => {
-    return `.emoji-${pack.id}.emoji--${name} {` +
+  const classes = Object.keys(pack.dictionary).map(name => `.emoji-${pack.id}.emoji--${name} {` +
       `background-position: ${pack.dictionary[name].backgroundPosition};` +
-    '}';
-  });
+    '}');
 
   const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
   return `.emoji-${pack.id} {
@@ -56,17 +54,17 @@ export function font(pack: EmojiDefinition): string {
     font-family: '${pack.font.family}';
     ${(pack.font.eot ? `src: url(${route}/${basename(pack.font.eot)});` : '')}
     src: ${[
-      pack.font.eot &&
+    pack.font.eot &&
         `url(${route}/${basename(pack.font.eot)}?#iefix) format('embedded-opentype')`,
-      pack.font.woff2 &&
+    pack.font.woff2 &&
         `url(${route}/${basename(pack.font.woff2)}) format('woff2')`,
-      pack.font.woff &&
+    pack.font.woff &&
         `url(${route}/${basename(pack.font.woff)}) format('woff')`,
-      pack.font.ttf &&
+    pack.font.ttf &&
         `url(${route}/${basename(pack.font.ttf)}) format('truetype')`,
-      pack.font.svg &&
+    pack.font.svg &&
         `url(${route}/${basename(pack.font.svg)}) format('svg')`,
-    ].filter(Boolean).join(', ')};
+  ].filter(Boolean).join(', ')};
   }
   .emoji-${pack.id} {
     font-family: '${pack.font.family}';

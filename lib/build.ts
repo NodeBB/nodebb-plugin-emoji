@@ -6,12 +6,10 @@ import * as async from 'async';
 
 import * as cssBuilders from './css-builders';
 import { clearCache } from './parse';
-import { setOne as setSetting } from './settings';
 import { getCustomizations } from './customizations';
 
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
-const db = require.main.require('./src/database');
 const plugins = require.main.require('./src/plugins');
 
 export const assetsDir = join(__dirname, '../emoji');
@@ -56,13 +54,13 @@ export default function build(callback: NodeBack) {
       getCustomizations((err, custs) => next(err, packs, custs));
     },
     (packs: EmojiDefinition[], customizations: Customizations, next: NodeBack) => {
-      const table: MetaData.table = {};
-      const aliases: MetaData.aliases = {};
-      const ascii: MetaData.ascii = {};
-      const characters: MetaData.characters = {};
+      const table: MetaData.Table = {};
+      const aliases: MetaData.Aliases = {};
+      const ascii: MetaData.Ascii = {};
+      const characters: MetaData.Characters = {};
 
-      const categoriesInfo: MetaData.categories = {};
-      const packsInfo: MetaData.packs = [];
+      const categoriesInfo: MetaData.Categories = {};
+      const packsInfo: MetaData.Packs = [];
 
       packs.forEach((pack) => {
         packsInfo.push({
@@ -157,8 +155,8 @@ export default function build(callback: NodeBack) {
           aliases: table[name].aliases.concat(adjunct.aliases),
         };
 
-        adjunct.aliases.forEach(alias => aliases[alias] = name);
-        adjunct.ascii.forEach(str => ascii[str] = name);
+        adjunct.aliases.forEach((alias) => { aliases[alias] = name; });
+        adjunct.ascii.forEach((str) => { ascii[str] = name; });
       });
 
       async.parallel([
@@ -174,7 +172,7 @@ export default function build(callback: NodeBack) {
               margin-bottom: -1px;
             }`.split('\n').map(x => x.trim()).join(''),
             { encoding: 'utf8' },
-            cb,
+            cb
           );
         },
         // persist metadata to disk
@@ -185,17 +183,17 @@ export default function build(callback: NodeBack) {
         cb => writeFile(categoriesFile, JSON.stringify(categoriesInfo), cb),
         cb => writeFile(packsFile, JSON.stringify(packsInfo), cb),
         // handle copying or linking necessary assets
-        cb => async.each(packs, (pack, next) => {
+        cb => async.each(packs, (pack, next2) => {
           const dir = join(assetsDir, pack.id);
 
           if (pack.mode === 'images') {
-            linkDirs(resolve(pack.path, pack.images.directory), dir, next);
+            linkDirs(resolve(pack.path, pack.images.directory), dir, next2);
           } else if (pack.mode === 'sprite') {
             const filename = basename(pack.sprite.file);
             async.series([
-              cb => mkdirp(dir, cb),
-              cb => copy(resolve(pack.path, pack.sprite.file), join(dir, filename), cb),
-            ], next);
+              cb2 => mkdirp(dir, cb2),
+              cb2 => copy(resolve(pack.path, pack.sprite.file), join(dir, filename), cb2),
+            ], next2);
           } else { // pack.mode === 'font'
             const fontFiles = [
               pack.font.eot,
@@ -206,23 +204,23 @@ export default function build(callback: NodeBack) {
             ].filter(Boolean);
 
             async.series([
-              cb => mkdirp(dir, cb),
-              cb => async.each(fontFiles, (file, next) => {
+              cb2 => mkdirp(dir, cb2),
+              cb2 => async.each(fontFiles, (file, next3) => {
                 const filename = basename(file);
-                copy(resolve(pack.path, file), join(dir, filename), next);
-              }, cb),
-            ], next);
+                copy(resolve(pack.path, file), join(dir, filename), next3);
+              }, cb2),
+            ], next2);
           }
         }, cb),
         // link customizations to public/uploads/emoji
         cb => linkDirs(
           join(nconf.get('upload_path'), 'emoji'),
           join(assetsDir, 'customizations'),
-          cb,
+          cb
         ),
       ], next);
     },
-    (results: any, next: NodeBack) => {
+    (_: void, next: NodeBack) => {
       clearCache();
       next();
     },

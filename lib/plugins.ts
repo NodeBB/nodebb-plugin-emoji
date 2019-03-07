@@ -1,6 +1,5 @@
 import { readFile } from 'fs';
 import { join } from 'path';
-import { some } from 'async';
 
 import { build } from './pubsub';
 
@@ -39,7 +38,7 @@ const toggle = ({ id }: { id: string }, cb: NodeBack = noop) => {
       if (hasHook) {
         build(cb);
       }
-    },
+    }
   );
 };
 

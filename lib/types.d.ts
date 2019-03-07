@@ -3,21 +3,21 @@
  */
 declare interface Emoji {
   /** alternative names for this emoji */
-  aliases?: string[],
+  aliases?: string[];
   /** keywords to match when searching for emoji */
-  keywords?: string[],
+  keywords?: string[];
   /** common ascii representations for this emoji */
-  ascii?: string[],
+  ascii?: string[];
   /**
    * **`images` mode** image file name [`grinning-face.png`]
    */
-  image?: string,
+  image?: string;
   /**
    * **`sprite` mode** CSS `background-position`
    */
-  backgroundPosition?: string,
+  backgroundPosition?: string;
   /** unicode text character */
-  character: string,
+  character: string;
   /**
    * categories this emoji fits in (default: `['other']`)
    *
@@ -37,7 +37,7 @@ declare interface Emoji {
    * if adding other categories, add translations for them like
    * `"categories.people": "People"` under `emoji.json`
    */
-  categories?: string[],
+  categories?: string[];
 }
 
 declare interface EmojiDefinition {
@@ -127,48 +127,48 @@ declare interface StoredEmoji {
   character: string;
   image: string;
   pack: string;
-  aliases: string[],
-  keywords: string[],
+  aliases: string[];
+  keywords: string[];
 }
 
 declare namespace MetaData {
   /** table of all emoji */
-  type table = {
-    [name: string]: StoredEmoji,
-  };
+  interface Table {
+    [name: string]: StoredEmoji;
+  }
 
   /** map of all aliases to the base name */
-  type aliases = {
-    [alias: string]: string,
-  };
+  interface Aliases {
+    [alias: string]: string;
+  }
 
   /** map of ascii to base names */
-  type ascii = {
-    [str: string]: string,
-  };
+  interface Ascii {
+    [str: string]: string;
+  }
 
   /** list of emoji names in each category */
-  type categories = {
-    [category: string]: string[],
-  };
+  interface Categories {
+    [category: string]: string[];
+  }
 
   /** map of characters to emoji names */
-  type characters = {
-    [character: string]: string,
-  };
+  interface Characters {
+    [character: string]: string;
+  }
 
   /** storing pack information for dialog */
-  type packs = {
-    name: string,
-    id: string,
-    attribution: string,
-    license: string,
+  type Packs = {
+    name: string;
+    id: string;
+    attribution: string;
+    license: string;
   }[];
 }
 
-declare module NodeJS  {
+declare namespace NodeJS {
   export interface Global {
-    env: 'development' | 'production'
+    env: 'development' | 'production';
   }
 }
 
@@ -193,4 +193,9 @@ interface CustomAdjunct {
 interface Customizations {
   emojis: CustomEmoji[];
   adjuncts: CustomAdjunct[];
+}
+
+declare module 'string-hash' {
+  const hash: (str: string) => number;
+  export = hash;
 }

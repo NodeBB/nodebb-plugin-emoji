@@ -1,8 +1,8 @@
+import * as async from 'async';
+import * as hash from 'string-hash';
+
 const adminSockets = require.main.require('./src/socket.io/admin');
 const db = require.main.require('./src/database');
-
-const hash: (str: string) => number = require('string-hash');
-import * as async from 'async';
 
 const emojisKey = 'emoji:customizations:emojis';
 const adjunctsKey = 'emoji:customizations:adjuncts';
@@ -18,8 +18,8 @@ export const getCustomizations = (callback: NodeBack<Customizations>) => {
       adjuncts: cb => db.getSortedSetRangeWithScores(adjunctsKey, 0, -1, cb),
     }, next),
     ({ emojis, adjuncts }: {
-      emojis: SortedResult[],
-      adjuncts: SortedResult[],
+      emojis: SortedResult[];
+      adjuncts: SortedResult[];
     }, next: NodeBack) => {
       const emojisParsed: CustomEmoji[] = emojis.map(emoji => JSON.parse(emoji.value));
       const adjunctsParsed: CustomAdjunct[] = adjuncts.map(adjunct => JSON.parse(adjunct.value));
@@ -54,25 +54,25 @@ const emojiSockets: any = {};
 
 emojiSockets.getCustomizations = (
   socket: SocketIO.Socket,
-  callback: NodeBack,
+  callback: NodeBack
 ) => getCustomizations(callback);
 
 emojiSockets.editEmoji = (
   socket: SocketIO.Socket,
-  [name, emoji]: [string, CustomEmoji],
+  [name, emoji]: [string, CustomEmoji]
 ) => editThing(emojisKey, name, emoji);
 emojiSockets.deleteEmoji = (
   socket: SocketIO.Socket,
-  name: string,
+  name: string
 ) => deleteThing(emojisKey, name);
 
 emojiSockets.editAdjunct = (
   socket: SocketIO.Socket,
-  [name, adjunct]: [string, CustomAdjunct],
+  [name, adjunct]: [string, CustomAdjunct]
 ) => editThing(adjunctsKey, name, adjunct);
 emojiSockets.deleteAdjunct = (
   socket: SocketIO.Socket,
-  name: string,
+  name: string
 ) => deleteThing(adjunctsKey, name);
 
 adminSockets.plugins.emoji = emojiSockets;

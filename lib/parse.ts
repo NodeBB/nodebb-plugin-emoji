@@ -9,12 +9,12 @@ const winston = require.main.require('winston');
 const url = nconf.get('url');
 
 let metaCache: {
-  table: MetaData.table,
-  aliases: MetaData.aliases,
-  ascii: MetaData.ascii,
-  asciiPattern: RegExp,
-  characters: MetaData.characters,
-  charPattern: RegExp,
+  table: MetaData.Table;
+  aliases: MetaData.Aliases;
+  ascii: MetaData.Ascii;
+  asciiPattern: RegExp;
+  characters: MetaData.Characters;
+  charPattern: RegExp;
 } = null;
 export function clearCache() {
   metaCache = null;
@@ -34,10 +34,10 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
     ascii: next => readFile(asciiFile, 'utf8', next),
     characters: next => readFile(charactersFile, 'utf8', next),
   }, (err: Error, results: {
-    table: string,
-    aliases: string,
-    ascii: string,
-    characters: string,
+    table: string;
+    aliases: string;
+    ascii: string;
+    characters: string;
   }) => {
     if (err) {
       callback(err);
@@ -99,27 +99,29 @@ export const buildEmoji = (emoji: StoredEmoji, whole: string) => {
   ><span>${emoji.character}</span></span>`;
 };
 
-const replaceAscii = (str: string, { ascii, asciiPattern, table }: (typeof metaCache)) => {
-  return str.replace(asciiPattern, (full: string, before: string, text: string) => {
-    const emoji = ascii[text] && table[ascii[text]];
-    if (emoji) {
-      return `${before}${buildEmoji(emoji, text)}`;
-    }
+const replaceAscii = (
+  str: string,
+  { ascii, asciiPattern, table }: (typeof metaCache)
+) => str.replace(asciiPattern, (full: string, before: string, text: string) => {
+  const emoji = ascii[text] && table[ascii[text]];
+  if (emoji) {
+    return `${before}${buildEmoji(emoji, text)}`;
+  }
 
-    return full;
-  });
-};
+  return full;
+});
 
-const replaceNative = (str: string, { characters, charPattern, table }: (typeof metaCache)) => {
-  return str.replace(charPattern, (char: string) => {
-    const name = characters[char];
-    if (table[name]) {
-      return `:${name}:`;
-    }
+const replaceNative = (
+  str: string,
+  { characters, charPattern, table }: (typeof metaCache)
+) => str.replace(charPattern, (char: string) => {
+  const name = characters[char];
+  if (table[name]) {
+    return `:${name}:`;
+  }
 
-    return char;
-  });
-};
+  return char;
+});
 
 interface ParseOptions {
   /** whether to parse ascii emoji representations into emoji */
@@ -147,7 +149,7 @@ const parse = (content: string, callback: NodeBack<string>) => {
 
     const parsed = content.replace(
       outsideCode,
-      outsideCodeStr => outsideCodeStr.replace(outsideElements, (whole, inside, outside) => {
+      outsideCodeStr => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
         let output = outside;
 
         if (options.native) {
@@ -161,7 +163,7 @@ const parse = (content: string, callback: NodeBack<string>) => {
               }
 
               return full;
-            },
+            }
           );
         }
 
@@ -186,12 +188,12 @@ const parse = (content: string, callback: NodeBack<string>) => {
               }
 
               return full;
-            },
+            }
           );
         }
 
         return (inside || '') + (output || '');
-      }),
+      })
     );
 
     callback(null, parsed);

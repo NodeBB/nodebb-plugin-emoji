@@ -10,20 +10,19 @@ import controllers from './controllers';
 import './customizations';
 
 const nconf = require.main.require('nconf');
-const db = require.main.require('./src/database');
 const buster = require.main.require('./src/meta').config['cache-buster'];
 
 const init = (
   params: any,
-  callback: NodeBack<void>,
+  callback: NodeBack<void>
 ) => {
   controllers(params);
 
   waterfall([
     settings.get,
     ({ parseAscii, parseNative }: {
-      parseAscii: boolean,
-      parseNative: boolean,
+      parseAscii: boolean;
+      parseNative: boolean;
     }, next: NodeBack) => {
       // initialise ascii flag
       parse.setOptions({
@@ -40,7 +39,8 @@ const init = (
       // otherwise, build if never built before
       access(tableFile, (err) => {
         if (err && err.code !== 'ENOENT') {
-          return next(err);
+          next(err);
+          return;
         }
 
         next(null, !!err);
@@ -57,7 +57,7 @@ const init = (
 };
 
 const adminMenu = (header: {
-  plugins: { route: string, icon: string, name: string }[],
+  plugins: { route: string; icon: string; name: string }[];
 }, callback: NodeBack) => {
   header.plugins.push({
     route: '/plugins/emoji',
@@ -68,7 +68,7 @@ const adminMenu = (header: {
 };
 
 const composerFormatting = (data: {
-  options: { name: string, className: string, title: string }[],
+  options: { name: string; className: string; title: string }[];
 }, callback: NodeBack) => {
   data.options.push({
     name: 'emoji-add-emoji',
@@ -80,8 +80,8 @@ const composerFormatting = (data: {
 
 const addStylesheet = (data: {
   links: {
-    rel: string, type?: string, href: string,
-  }[],
+    rel: string; type?: string; href: string;
+  }[];
 }, callback: NodeBack) => {
   const rel = nconf.get('relative_path');
 
