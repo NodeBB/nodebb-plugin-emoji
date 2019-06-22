@@ -491,22 +491,24 @@ class Adjunct extends Component<AdjunctProps, {}> {
   }
 
   public componentDidMount() {
-    $(this.nameInput).on('textComplete:select', () => {
-      this.props.onEditName((this.nameInput as HTMLInputElement).value);
-    }).textcomplete([{
+    const Textcomplete = window.Textcomplete;
+    const { Textarea } = Textcomplete.editors;
+
+    const editor = new Textarea(this.nameInput);
+    const completer = new Textcomplete(editor, {
+      dropdown: {
+        style: { zIndex: 20000 },
+      },
+    });
+
+    completer.register([{
       ...strategy,
       replace: (emoji: StoredEmoji) => emoji.name,
       match: /^(.+)$/,
-    }], {
-      zIndex: 20000,
-      // listPosition: function (position: any) {
-      //   // Adjust calculated position based on window scrollTop value
-      //   position.top -= $(window).scrollTop();
+    }]);
 
-      //   this.$el.css(this._applyPlacement(position));
-      //   this.$el.css('position', 'fixed');
-      //   return this;
-      // },
+    completer.on('selected', () => {
+      this.props.onEditName((this.nameInput as HTMLInputElement).value);
     });
   }
 }

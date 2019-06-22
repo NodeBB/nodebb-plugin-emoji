@@ -16,6 +16,7 @@ interface Window {
   utils: {
     generateUUID(): string;
   };
+  Textcomplete: any;
 }
 
 interface String {
@@ -25,7 +26,6 @@ interface String {
 declare const socket: SocketIO.Server;
 
 interface JQuery {
-  textcomplete: any;
   ajaxSubmit: any;
   draggable: any;
 }

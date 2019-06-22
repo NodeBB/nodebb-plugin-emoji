@@ -18,7 +18,8 @@
     "public/emoji-setup.js"
   ],
   "acpScripts": [
-    "public/admin.js"
+    "public/admin.js",
+    "public/emoji-setup.js"
   ],
   "languages": "public/language",
   "defaultLang": "en-US",
