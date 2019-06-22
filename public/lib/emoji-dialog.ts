@@ -48,6 +48,12 @@ const priorities: {
 
 const translator = Translator.create();
 
+function stringCompare(a: string, b: string) {
+  if (a < b) { return -1; }
+  if (a > b) { return 1; }
+  return 0;
+}
+
 // create modal
 export function init(callback: Callback<JQuery>) {
   Promise.all([
@@ -63,7 +69,7 @@ export function init(callback: Callback<JQuery>) {
           emojis: emojis.map(emoji => ({
             name: emoji.name,
             html: buildEmoji(emoji, true),
-          })),
+          })).sort((a, b) => stringCompare(a.name, b.name)),
         };
       }).sort((a, b) => {
         const aPriority = priorities[a.name] || 0;
