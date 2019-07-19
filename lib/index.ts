@@ -93,6 +93,18 @@ const addStylesheet = (data: {
   callback(null, data);
 };
 
+const configGet = (config: any, next: NodeBack<any>) => {
+  settings.getOne('customFirst', (err, customFirst) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    config.emojiCustomFirst = customFirst;
+    next(null, config);
+  });
+};
+
 export {
   init,
   adminMenu,
@@ -100,4 +112,5 @@ export {
   plugins,
   parse,
   addStylesheet,
+  configGet,
 };

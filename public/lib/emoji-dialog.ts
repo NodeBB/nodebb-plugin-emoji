@@ -46,6 +46,10 @@ const priorities: {
   other: 0,
 };
 
+if (window.config.emojiCustomFirst) {
+  priorities.custom = 100;
+}
+
 const translator = Translator.create();
 
 function stringCompare(a: string, b: string) {

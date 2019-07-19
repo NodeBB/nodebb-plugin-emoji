@@ -8,11 +8,13 @@ const settings: {
 interface Settings {
   parseNative: boolean;
   parseAscii: boolean;
+  customFirst: boolean;
 }
 
 const defaults: Settings = {
   parseNative: true,
   parseAscii: true,
+  customFirst: false,
 };
 
 const get = (callback: NodeBack<{ [key: string]: any }>) => {
@@ -55,14 +57,20 @@ const set = (data: {
 
   settings.set('emoji', sets, callback);
 };
-const getOne = (field: string, callback: NodeBack<any>) => {
-  settings.getOne('emoji', field, (err, val) => {
+const getOne = (field: keyof Settings, callback: NodeBack<any>) => {
+  settings.getOne('emoji', field, (err, str) => {
     if (err) {
       callback(err);
       return;
     }
 
-    callback(null, JSON.parse(val));
+    const defaultVal = defaults[field];
+    let val = JSON.parse(str);
+    if (typeof val !== typeof defaultVal) {
+      val = defaultVal;
+    }
+
+    callback(null, val);
   });
 };
 const setOne = (field: string, value: any, callback: NodeBack<void>) => {

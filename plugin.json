@@ -32,6 +32,7 @@
     { "hook": "filter:parse.post", "method": "parse.post", "priority": 9 },
     { "hook": "action:plugin.activate", "method": "plugins.activation" },
     { "hook": "action:plugin.deactivate", "method": "plugins.deactivation" },
-    { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" }
+    { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
+    { "hook": "filter:config.get", "method": "configGet" }
   ]
 }

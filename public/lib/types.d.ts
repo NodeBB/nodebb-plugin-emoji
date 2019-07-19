@@ -4,6 +4,7 @@ interface Window {
   config: {
     relative_path: string;
     'cache-buster': string;
+    emojiCustomFirst: boolean;
   };
   app: {
     alertSuccess(message?: string): void;

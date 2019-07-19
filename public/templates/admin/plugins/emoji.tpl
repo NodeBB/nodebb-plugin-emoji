@@ -14,6 +14,13 @@
           [[admin/plugins/emoji:settings.parseNative]]
         </label>
       </div>
+
+      <div class="form-group">
+        <label for="emoji-customFirst">
+          <input id="emoji-customFirst" type="checkbox" <!-- IF settings.customFirst --> checked <!-- ENDIF settings.customFirst --> />
+          [[admin/plugins/emoji:settings.customFirst]]
+        </label>
+      </div>
     </div>
 
     <div class="panel-footer">

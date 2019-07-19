@@ -9,6 +9,7 @@ define('admin/plugins/emoji', [], function () {
     var settings = {
       parseAscii: !!$('#emoji-parseAscii').prop('checked'),
       parseNative: !!$('#emoji-parseNative').prop('checked'),
+      customFirst: !!$('#emoji-customFirst').prop('checked'),
     };
     $.get(window.config.relative_path + '/api/admin/plugins/emoji/save', { settings: JSON.stringify(settings) }, function () {
       window.app.alertSuccess();
