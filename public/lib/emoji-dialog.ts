@@ -150,7 +150,7 @@ export function init(callback: Callback<JQuery>) {
 
       const close = () => dialogActions.close(dialog);
 
-      $(window).on('action:composer.discard action:composer.submit', close);
+      $(window).on('action:composer.discard action:composer.submit action:composer.minimize', close);
       dialog.find('.close').click(close);
 
       if (dialog.draggable) {
