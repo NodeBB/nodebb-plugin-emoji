@@ -49,7 +49,7 @@ declare module 'composer/controls' {
   ): void;
 }
 declare module 'composer/formatting' {
-  export function addButtonDispatch(name: string, callback: Callback<Element>): void;
+  export function addButtonDispatch(name: string, callback: any): void;
 }
 declare module 'scrollStop' {
   export function apply(element: Element): void;

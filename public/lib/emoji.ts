@@ -121,9 +121,9 @@ export function init(callback?: Callback<undefined>) {
 
     formatting.addButtonDispatch(
       'emoji-add-emoji',
-      (textarea: HTMLTextAreaElement) => {
+      (textarea: HTMLTextAreaElement, start: number, end: number, event: JQuery.ClickEvent) => {
         import('emoji-dialog')
-          .then(({ toggleForInsert }) => toggleForInsert(textarea));
+          .then(({ toggleForInsert }) => toggleForInsert(textarea, start, end, event));
       }
     );
 

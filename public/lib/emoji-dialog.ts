@@ -177,7 +177,7 @@ export function init(callback: Callback<JQuery>) {
 }
 
 export function toggle(
-  opener: HTMLElement,
+  opener: HTMLElement | null,
   onClick: (e: JQuery.Event, name: string, dialog: JQuery) => void
 ) {
   function after(dialog: JQuery) {
@@ -193,7 +193,11 @@ export function toggle(
       onClick(e, name, dialog);
     });
 
-    const buttonRect = opener.getBoundingClientRect();
+    // default if there's no button
+    const buttonRect = opener ? opener.getBoundingClientRect() : {
+      top: window.innerHeight / 3,
+      left: window.innerWidth / 3,
+    };
     const position = {
       bottom: 'auto',
       top: 'auto',
@@ -224,8 +228,17 @@ export function toggle(
   }
 }
 
-export function toggleForInsert(textarea: HTMLTextAreaElement) {
-  toggle($('[data-format="emoji-add-emoji"]').filter(':visible')[0], (e, name) => {
+export function toggleForInsert(textarea: HTMLTextAreaElement, start: number, end: number, event: JQuery.ClickEvent) {
+  // handle new and old API case
+  let button;
+  if (event && event.target) {
+    button = $(event.target);
+  } else {
+    button = $(textarea).parents('.composer-container').find('[data-format="emoji-add-emoji"]');
+  }
+  button = button[0];
+  
+  toggle(button, (e, name) => {
     const text = `:${name}: `;
     const { selectionStart, selectionEnd } = textarea;
     const end = selectionEnd + text.length;
