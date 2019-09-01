@@ -154,7 +154,13 @@ export function init(callback: Callback<JQuery>) {
 
       const close = () => dialogActions.close(dialog);
 
-      $(window).on('action:composer.discard action:composer.submit action:composer.minimize', close);
+      $(window).on([
+        'action:composer.discard',
+        'action:composer.submit',
+        'action:composer.minimize',
+        'action:chat.minimize',
+        'action:chat.closed',
+      ].join(' '), close);
       dialog.find('.close').click(close);
 
       if (dialog.draggable) {
