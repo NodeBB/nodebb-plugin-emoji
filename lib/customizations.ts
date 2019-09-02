@@ -14,15 +14,15 @@ interface SortedResult {
 export const getCustomizations = (callback: NodeBack<Customizations>) => {
   async.waterfall([
     (next: NodeBack) => async.parallel({
-      emojis: cb => db.getSortedSetRangeWithScores(emojisKey, 0, -1, cb),
-      adjuncts: cb => db.getSortedSetRangeWithScores(adjunctsKey, 0, -1, cb),
+      emojis: (cb) => db.getSortedSetRangeWithScores(emojisKey, 0, -1, cb),
+      adjuncts: (cb) => db.getSortedSetRangeWithScores(adjunctsKey, 0, -1, cb),
     }, next),
     ({ emojis, adjuncts }: {
       emojis: SortedResult[];
       adjuncts: SortedResult[];
     }, next: NodeBack) => {
-      const emojisParsed: CustomEmoji[] = emojis.map(emoji => JSON.parse(emoji.value));
-      const adjunctsParsed: CustomAdjunct[] = adjuncts.map(adjunct => JSON.parse(adjunct.value));
+      const emojisParsed: CustomEmoji[] = emojis.map((emoji) => JSON.parse(emoji.value));
+      const adjunctsParsed: CustomAdjunct[] = adjuncts.map((adjunct) => JSON.parse(adjunct.value));
 
       next(null, {
         emojis: emojisParsed,

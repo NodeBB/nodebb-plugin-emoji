@@ -14,7 +14,7 @@ export function images(pack: EmojiDefinition) {
 }
 
 export function sprite(pack: EmojiDefinition): string {
-  const classes = Object.keys(pack.dictionary).map(name => `.emoji-${pack.id}.emoji--${name} {` +
+  const classes = Object.keys(pack.dictionary).map((name) => `.emoji-${pack.id}.emoji--${name} {` +
       `background-position: ${pack.dictionary[name].backgroundPosition};` +
     '}');
 
@@ -44,7 +44,7 @@ export function sprite(pack: EmojiDefinition): string {
     font-size: 23px;
     line-height: 23px;
   }
-  ${classes.join('')}`.split('\n').map(x => x.trim()).join('');
+  ${classes.join('')}`.split('\n').map((x) => x.trim()).join('');
 }
 
 export function font(pack: EmojiDefinition): string {
@@ -79,5 +79,5 @@ export function font(pack: EmojiDefinition): string {
     vertical-align: bottom;
     margin-top: -1px;
     margin-bottom: -1px;
-  }`.split('\n').map(x => x.trim()).join('');
+  }`.split('\n').map((x) => x.trim()).join('');
 }

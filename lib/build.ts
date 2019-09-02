@@ -43,11 +43,11 @@ export default function build(callback: NodeBack) {
         return false;
       });
 
-      winston.verbose('[emoji] Loaded packs', filtered.map(pack => pack.id).join(', '));
+      winston.verbose('[emoji] Loaded packs', filtered.map((pack) => pack.id).join(', '));
 
       async.series([
-        cb => remove(assetsDir, cb),
-        cb => mkdirp(assetsDir, cb),
+        (cb) => remove(assetsDir, cb),
+        (cb) => mkdirp(assetsDir, cb),
       ], (err: Error) => next(err, filtered));
     },
     (packs: EmojiDefinition[], next: NodeBack) => {
@@ -162,7 +162,7 @@ export default function build(callback: NodeBack) {
       async.parallel([
         // generate CSS styles and store them
         (cb) => {
-          const css = packs.map(pack => cssBuilders[pack.mode](pack)).join('\n');
+          const css = packs.map((pack) => cssBuilders[pack.mode](pack)).join('\n');
           writeFile(
             join(assetsDir, 'styles.css'),
             `${css}\n.emoji-customizations {
@@ -170,20 +170,20 @@ export default function build(callback: NodeBack) {
               height: 23px;
               margin-top: -1px;
               margin-bottom: -1px;
-            }`.split('\n').map(x => x.trim()).join(''),
+            }`.split('\n').map((x) => x.trim()).join(''),
             { encoding: 'utf8' },
             cb
           );
         },
         // persist metadata to disk
-        cb => writeFile(tableFile, JSON.stringify(table), cb),
-        cb => writeFile(aliasesFile, JSON.stringify(aliases), cb),
-        cb => writeFile(asciiFile, JSON.stringify(ascii), cb),
-        cb => writeFile(charactersFile, JSON.stringify(characters), cb),
-        cb => writeFile(categoriesFile, JSON.stringify(categoriesInfo), cb),
-        cb => writeFile(packsFile, JSON.stringify(packsInfo), cb),
+        (cb) => writeFile(tableFile, JSON.stringify(table), cb),
+        (cb) => writeFile(aliasesFile, JSON.stringify(aliases), cb),
+        (cb) => writeFile(asciiFile, JSON.stringify(ascii), cb),
+        (cb) => writeFile(charactersFile, JSON.stringify(characters), cb),
+        (cb) => writeFile(categoriesFile, JSON.stringify(categoriesInfo), cb),
+        (cb) => writeFile(packsFile, JSON.stringify(packsInfo), cb),
         // handle copying or linking necessary assets
-        cb => async.each(packs, (pack, next2) => {
+        (cb) => async.each(packs, (pack, next2) => {
           const dir = join(assetsDir, pack.id);
 
           if (pack.mode === 'images') {
@@ -191,8 +191,8 @@ export default function build(callback: NodeBack) {
           } else if (pack.mode === 'sprite') {
             const filename = basename(pack.sprite.file);
             async.series([
-              cb2 => mkdirp(dir, cb2),
-              cb2 => copy(resolve(pack.path, pack.sprite.file), join(dir, filename), cb2),
+              (cb2) => mkdirp(dir, cb2),
+              (cb2) => copy(resolve(pack.path, pack.sprite.file), join(dir, filename), cb2),
             ], next2);
           } else { // pack.mode === 'font'
             const fontFiles = [
@@ -204,8 +204,8 @@ export default function build(callback: NodeBack) {
             ].filter(Boolean);
 
             async.series([
-              cb2 => mkdirp(dir, cb2),
-              cb2 => async.each(fontFiles, (file, next3) => {
+              (cb2) => mkdirp(dir, cb2),
+              (cb2) => async.each(fontFiles, (file, next3) => {
                 const filename = basename(file);
                 copy(resolve(pack.path, file), join(dir, filename), next3);
               }, cb2),
@@ -213,7 +213,7 @@ export default function build(callback: NodeBack) {
           }
         }, cb),
         // link customizations to public/uploads/emoji
-        cb => linkDirs(
+        (cb) => linkDirs(
           join(nconf.get('upload_path'), 'emoji'),
           join(assetsDir, 'customizations'),
           cb

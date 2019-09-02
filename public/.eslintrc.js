@@ -7,4 +7,7 @@ module.exports = {
   globals: {
     socket: true,
   },
+  rules: {
+    'max-classes-per-file': 'off',
+  },
 };

@@ -29,10 +29,10 @@ const getTable = (callback: NodeBack<typeof metaCache>) => {
   }
 
   parallel({
-    table: next => readFile(tableFile, 'utf8', next),
-    aliases: next => readFile(aliasesFile, 'utf8', next),
-    ascii: next => readFile(asciiFile, 'utf8', next),
-    characters: next => readFile(charactersFile, 'utf8', next),
+    table: (next) => readFile(tableFile, 'utf8', next),
+    aliases: (next) => readFile(aliasesFile, 'utf8', next),
+    ascii: (next) => readFile(asciiFile, 'utf8', next),
+    characters: (next) => readFile(charactersFile, 'utf8', next),
   }, (err: Error, results: {
     table: string;
     aliases: string;
@@ -149,7 +149,7 @@ const parse = (content: string, callback: NodeBack<string>) => {
 
     const parsed = content.replace(
       outsideCode,
-      outsideCodeStr => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
+      (outsideCodeStr) => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
         let output = outside;
 
         if (options.native) {
