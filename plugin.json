@@ -14,7 +14,6 @@
     "emoji": "build/emoji"
   },
   "scripts": [
-    "build/public/lib/emoji.js",
     "public/emoji-setup.js"
   ],
   "acpScripts": [
