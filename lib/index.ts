@@ -1,5 +1,4 @@
-import { waterfall } from 'async';
-import { access } from 'fs';
+import { access } from 'fs-extra';
 
 import * as settings from './settings';
 import * as plugins from './plugins';
@@ -12,48 +11,34 @@ import './customizations';
 const nconf = require.main.require('nconf');
 const buster = require.main.require('./src/meta').config['cache-buster'];
 
-const init = (
-  params: any,
-  callback: NodeBack<void>
-) => {
+const init = async (params: any): Promise<void> => {
   controllers(params);
 
-  waterfall([
-    settings.get,
-    ({ parseAscii, parseNative }: {
-      parseAscii: boolean;
-      parseNative: boolean;
-    }, next: NodeBack) => {
-      // initialise ascii flag
-      parse.setOptions({
-        ascii: parseAscii,
-        native: parseNative,
-      });
+  const sets = await settings.get();
+  const { parseAscii, parseNative } = sets as {
+    parseAscii: boolean;
+    parseNative: boolean;
+  };
 
-      // always build on startup if in dev mode
-      if (nconf.any('build_emoji', 'BUILD_EMOJI')) {
-        next(null, true);
-        return;
-      }
+  // initialize parser flags
+  parse.setOptions({
+    ascii: parseAscii,
+    native: parseNative,
+  });
 
-      // otherwise, build if never built before
-      access(tableFile, (err) => {
-        if (err && err.code !== 'ENOENT') {
-          next(err);
-          return;
-        }
+  // always build on startup if in dev mode
+  const shouldBuild = nconf.any('build_emoji', 'BUILD_EMOJI') ||
+  // otherwise, build if never built before
+  access(tableFile).catch((err) => {
+    if (err && err.code !== 'ENOENT') {
+      throw err;
+    }
+    return false;
+  });
 
-        next(null, !!err);
-      });
-    },
-    (shouldBuild: boolean, next: NodeBack) => {
-      if (shouldBuild) {
-        build(next);
-      } else {
-        next();
-      }
-    },
-  ], callback);
+  if (shouldBuild) {
+    await build();
+  }
 };
 
 const adminMenu = (header: {
@@ -93,16 +78,11 @@ const addStylesheet = (data: {
   callback(null, data);
 };
 
-const configGet = (config: any, next: NodeBack<any>) => {
-  settings.getOne('customFirst', (err, customFirst) => {
-    if (err) {
-      next(err);
-      return;
-    }
-
-    config.emojiCustomFirst = customFirst;
-    next(null, config);
-  });
+const configGet = async (config: any): Promise<any> => {
+  const customFirst = await settings.getOne('customFirst');
+  // eslint-disable-next-line no-param-reassign
+  config.emojiCustomFirst = customFirst;
+  return config;
 };
 
 export {

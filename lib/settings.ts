@@ -1,8 +1,8 @@
 const settings: {
-  get(key: string, cb: NodeBack<{ [key: string]: any }>): void;
-  set(key: string, value: any, cb: NodeBack<void>): void;
-  getOne(key: string, field: string, cb: NodeBack<any>): void;
-  setOne(key: string, field: string, value: any, cb: NodeBack<void>): void;
+  get(key: string): Promise<{ [key: string]: any }>;
+  set(key: string, value: any): Promise<void>;
+  getOne(key: string, field: string): Promise<any>;
+  setOne(key: string, field: string, value: any): Promise<void>;
 } = require.main.require('./src/meta').settings;
 
 interface Settings {
@@ -17,64 +17,53 @@ const defaults: Settings = {
   customFirst: false,
 };
 
-const get = (callback: NodeBack<{ [key: string]: any }>) => {
-  settings.get('emoji', (err, data) => {
-    if (err) {
-      callback(err);
+const get = async (): Promise<{ [key: string]: any }> => {
+  const data = await settings.get('emoji');
+  const sets: Partial<Settings> = {};
+
+  Object.keys(defaults).forEach((key: keyof Settings) => {
+    const defaultVal = defaults[key];
+    const str = data[key];
+
+    if (typeof str !== 'string') {
+      sets[key] = defaultVal;
       return;
     }
 
-    const sets: Partial<Settings> = {};
+    const val = JSON.parse(str);
+    if (typeof val !== typeof defaultVal) {
+      sets[key] = defaultVal;
+      return;
+    }
 
-    Object.keys(defaults).forEach((key: keyof Settings) => {
-      const defaultVal = defaults[key];
-      const str = data[key];
-
-      if (typeof str !== 'string') {
-        sets[key] = defaultVal;
-        return;
-      }
-
-      const val = JSON.parse(str);
-      if (typeof val !== typeof defaultVal) {
-        sets[key] = defaultVal;
-        return;
-      }
-
-      sets[key] = val;
-    });
-
-    callback(null, sets);
+    sets[key] = val;
   });
+
+  return sets;
 };
-const set = (data: {
+const set = async (data: {
   [key: string]: any;
-}, callback: NodeBack<void>) => {
+}) => {
   const sets: Partial<Record<keyof Settings, string>> = {};
   Object.keys(data).forEach((key: keyof Settings) => {
     sets[key] = JSON.stringify(data[key]);
   });
 
-  settings.set('emoji', sets, callback);
+  await settings.set('emoji', sets);
 };
-const getOne = (field: keyof Settings, callback: NodeBack<any>) => {
-  settings.getOne('emoji', field, (err, str) => {
-    if (err) {
-      callback(err);
-      return;
-    }
+const getOne = async (field: keyof Settings): Promise<any> => {
+  const str = await settings.getOne('emoji', field);
 
-    const defaultVal = defaults[field];
-    let val = JSON.parse(str);
-    if (typeof val !== typeof defaultVal) {
-      val = defaultVal;
-    }
+  const defaultVal = defaults[field];
+  let val = JSON.parse(str);
+  if (typeof val !== typeof defaultVal) {
+    val = defaultVal;
+  }
 
-    callback(null, val);
-  });
+  return val;
 };
-const setOne = (field: string, value: any, callback: NodeBack<void>) => {
-  settings.setOne('emoji', field, JSON.stringify(value), callback);
+const setOne = async (field: string, value: any) => {
+  await settings.setOne('emoji', field, JSON.stringify(value));
 };
 
 export {
