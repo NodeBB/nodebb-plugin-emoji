@@ -1,4 +1,10 @@
-import { h, Component, FunctionalComponent, render } from 'preact';
+import {
+  h,
+  Component,
+  FunctionalComponent,
+  render,
+  JSX,
+} from 'preact';
 import { strategy, table, buildEmoji, init as initEmoji } from 'emoji';
 
 // import 'preact/devtools';
