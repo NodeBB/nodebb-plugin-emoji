@@ -1,0 +1,25 @@
+{
+  "composer.title": "Emoji",
+  "meta-load-failed": "Ошибка загрузки данных emoji",
+  "modal.title": "Доступные смайлики",
+  "modal.legal": "Легальная информация",
+  "modal.legal.header": "Отображаемые смайлики относятся к разным <em>наборам смайликов</em>. <br> К какому набору относится эмодзи, указано в <code>атрибуте</code> HTML класса (<code>class=\"emoji-[pack ID]\"</code>).",
+  "modal.legal.set.header": "<strong>%1</strong> Набор эмодзи <small>ID: <code>%2</code></small>",
+  "modal.legal.set.attribution": "Атрибуция",
+  "modal.legal.set.license": "Лицензия",
+
+  "categories.symbols": "Символы",
+  "categories.objects": "Объекты",
+  "categories.nature": "Природа",
+  "categories.people": "Люди",
+  "categories.food": "Еда",
+  "categories.travel": "Путешествие",
+  "categories.activity": "Активность",
+  "categories.flags": "Флаги",
+  "categories.regional": "Региональные",
+  "categories.modifier": "Модификатор",
+  "categories.other": "Другие",
+  "categories.custom": "Кастом",
+  "search.results": "Результаты поиска",
+  "search.placeholder": "Поиск"
+}
