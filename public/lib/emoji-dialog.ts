@@ -162,6 +162,11 @@ export function init(callback: Callback<JQuery>) {
         'action:chat.closed',
       ].join(' '), close);
       dialog.find('.close').click(close);
+      $(document).on('click', (e) => {
+        if (!$(e.target).is('.emoji-dialog *')) {
+          close();
+        }
+      });
 
       if (dialog.draggable) {
         dialog.draggable({
