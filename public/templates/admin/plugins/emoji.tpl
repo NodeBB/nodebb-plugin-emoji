@@ -3,21 +3,21 @@
     <div class="panel-body">
       <div class="form-group">
         <label for="emoji-parseAscii">
-          <input id="emoji-parseAscii" type="checkbox" <!-- IF settings.parseAscii --> checked <!-- ENDIF settings.parseAscii --> />
+          <input id="emoji-parseAscii" type="checkbox" {{{ if settings.parseAscii }}} checked {{{ end }}} />
           [[admin/plugins/emoji:settings.parseAscii]]
         </label>
       </div>
 
       <div class="form-group">
         <label for="emoji-parseNative">
-          <input id="emoji-parseNative" type="checkbox" <!-- IF settings.parseNative --> checked <!-- ENDIF settings.parseNative --> />
+          <input id="emoji-parseNative" type="checkbox" {{{ if settings.parseNative }}} checked {{{ end }}} />
           [[admin/plugins/emoji:settings.parseNative]]
         </label>
       </div>
 
       <div class="form-group">
         <label for="emoji-customFirst">
-          <input id="emoji-customFirst" type="checkbox" <!-- IF settings.customFirst --> checked <!-- ENDIF settings.customFirst --> />
+          <input id="emoji-customFirst" type="checkbox" {{{ if settings.customFirst }}} checked {{{ end }}} />
           [[admin/plugins/emoji:settings.customFirst]]
         </label>
       </div>

@@ -17,13 +17,13 @@
         </a>
       </li>
 
-      <!-- BEGIN categories -->
-      <li role="presentation" class="<!-- IF @first -->active<!-- ENDIF @first -->">
-        <a href="#emoji-tab-{../name}" aria-controls="{../name}" role="tab" data-toggle="tab" data-ajaxify="false">
-          [[emoji:categories.{../name}]]
+      {{{ each categories }}}
+      <li role="presentation" class="{{{ if @first }}}active{{{ end }}}">
+        <a href="#emoji-tab-{./name}" aria-controls="{./name}" role="tab" data-toggle="tab" data-ajaxify="false">
+          [[emoji:categories.{./name}]]
         </a>
       </li>
-      <!-- END categories -->
+      {{{ end }}}
 
       <li role="presentation">
         <button href="#emoji-tab-legal" class="btn btn-info" aria-controls="legal" role="tab" data-toggle="tab" data-ajaxify="false">
@@ -38,13 +38,13 @@
         <!-- search results emoji go here -->
       </div>
 
-      <!-- BEGIN categories -->
-      <div role="tabpanel" class="tab-pane <!-- IF @first -->active<!-- ENDIF @first -->" id="emoji-tab-{../name}">
-        <!-- BEGIN emojis -->
-        <a class="emoji-link" name="{../name}" href="#">{../html}</a>
-        <!-- END emojis -->
+      {{{ each categories }}}
+      <div role="tabpanel" class="tab-pane {{{ if @first }}}active{{{ end }}}" id="emoji-tab-{./name}">
+        {{{ each ./emojis }}}
+        <a class="emoji-link" name="{./name}" href="#">{./html}</a>
+        {{{ end }}}
       </div>
-      <!-- END categories -->
+      {{{ end }}}
 
       <div role="tabpanel" class="tab-pane" id="emoji-tab-legal">
         <div class="col-xs-12">
@@ -52,25 +52,25 @@
             [[emoji:modal.legal.header]]
           </p>
         </div>
-        <!-- BEGIN packs -->
+        {{{ each packs }}}
         <div class="col-xs-12">
           <h3>[[emoji:modal.legal.set.header, {../name}, {../id}]]</h3>
 
-          <!-- IF ../attribution -->
+          {{{ if ./attribution }}}
           <h4>[[emoji:modal.legal.set.attribution]]</h4>
           <div class="well">
-            {../attribution}
+            {./attribution}
           </div>
-          <!-- ENDIF ../attribution -->
+          {{{ end }}}
 
-          <!-- IF ../license -->
+          {{{ if ./license }}}
           <h4>[[emoji:modal.legal.set.license]]</h4>
           <div class="well">
-            {../license}
+            {./license}
           </div>
-          <!-- ENDIF ../license -->
+          {{{ end }}}
         </div>
-        <!-- END packs -->
+        {{{ end }}}
       </div>
     </div>
   </div>
