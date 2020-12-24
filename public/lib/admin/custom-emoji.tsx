@@ -54,7 +54,7 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
         return;
       }
 
-      const fileName = `${window.utils.generateUUID()}-${imageInput.files[0].name}`;
+      const fileName = `${utils.generateUUID()}-${imageInput.files[0].name}`;
       fileNameInput.value = fileName;
 
       $(imageForm).ajaxSubmit({
@@ -65,7 +65,7 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
         error: () => {
           const err = Error('Failed to upload file');
           console.error(err);
-          window.app.alertError(err);
+          app.alertError(err);
           imageInput.value = '';
         },
       });
@@ -99,7 +99,7 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
           }}
         ></button>
         <form
-          action={`${window.config.relative_path}/api/admin/plugins/emoji/upload`}
+          action={`${config.relative_path}/api/admin/plugins/emoji/upload`}
           method="post"
           encType="multipart/form-data"
           style={{ display: 'none' }}
@@ -497,7 +497,6 @@ class Adjunct extends Component<AdjunctProps, {}> {
   }
 
   public componentDidMount() {
-    const Textcomplete = window.Textcomplete;
     const { Textarea } = Textcomplete.editors;
 
     const editor = new Textarea(this.nameInput);

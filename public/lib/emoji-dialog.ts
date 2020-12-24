@@ -46,7 +46,7 @@ const priorities: {
   other: 0,
 };
 
-if (window.config.emojiCustomFirst) {
+if (config.emojiCustomFirst) {
   priorities.custom = 100;
 }
 

@@ -1,8 +1,8 @@
 // eslint-disable-next-line spaced-comment
 /// <amd-module name="emoji"/>
 
-const base = `${window.config.relative_path}/plugins/nodebb-plugin-emoji`;
-const buster = window.config['cache-buster'];
+const base = `${config.relative_path}/plugins/nodebb-plugin-emoji`;
+const buster = config['cache-buster'];
 
 export { base, buster };
 export function buildEmoji(emoji: StoredEmoji, defer?: boolean) {
@@ -131,7 +131,7 @@ export function init(callback?: Callback<undefined>) {
   }).catch((err) => {
     const e = Error('[[emoji:meta-load-failed]]');
     console.error(e);
-    window.app.alertError(e);
+    app.alertError(e);
     throw err;
   });
 }

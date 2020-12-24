@@ -28,7 +28,7 @@ export default function controllers({ router, middleware }: {
   router.get('/api/admin/plugins/emoji', renderAdmin);
 
   const saveAdmin: RequestHandler = (req, res, next) => {
-    const data = JSON.parse(req.query.settings);
+    const data = JSON.parse(req.query.settings as string);
     settings.set(data).then(
       () => setImmediate(() => res.send('OK')),
       (err) => setImmediate(next, err)

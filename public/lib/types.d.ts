@@ -1,24 +1,19 @@
 declare type Callback<T = void> = (result: T) => void;
 
-interface Window {
-  config: {
+declare const config: {
     relative_path: string;
     'cache-buster': string;
     emojiCustomFirst: boolean;
   };
-  app: {
+declare const app: {
     alertSuccess(message?: string): void;
     alertError(message?: string): void;
     alertError(error: Error): void;
   };
-  templates: {
-    parse(template: string, data: any, callback: Callback<string>): void;
-  };
-  utils: {
+declare const utils: {
     generateUUID(): string;
   };
-  Textcomplete: any;
-}
+declare const Textcomplete: any;
 
 interface String {
   startsWith(str: string): boolean;

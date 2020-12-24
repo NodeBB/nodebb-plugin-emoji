@@ -41,11 +41,11 @@ export default async function build() {
       return true;
     }
 
-    winston.warn('[emoji] pack invalid', pack.path || pack.id);
+    winston.warn('[emoji] pack invalid: ', pack.path || pack.id);
     return false;
   });
 
-  winston.verbose('[emoji] Loaded packs', filtered.map((pack) => pack.id).join(', '));
+  winston.verbose('[emoji] Loaded packs: ' + filtered.map((pack) => pack.id).join(', '));
 
   await remove(assetsDir);
   await mkdirp(assetsDir);
