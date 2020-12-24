@@ -6,8 +6,8 @@
   "modules": {
     "emoji.js": "build/public/lib/emoji.js",
     "emoji-dialog.js": "build/public/lib/emoji-dialog.js",
-    "preact.js": "node_modules/preact/dist/preact.js",
-    "preact/devtools.js": "node_modules/preact/devtools.js",
+    "preact.js": "node_modules/preact/dist/preact.umd.js",
+    "preact/devtools.js": "node_modules/preact/devtools/dist/devtools.umd.js",
     "custom-emoji.js": "build/public/lib/admin/custom-emoji.js"
   },
   "staticDirs": {
