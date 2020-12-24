@@ -58,6 +58,9 @@ const Emoji: FunctionalComponent<EmojiProps> = ({
       fileNameInput.value = fileName;
 
       $(imageForm).ajaxSubmit({
+        headers: {
+          'x-csrf-token': config.csrf_token,
+        },
         success: () => {
           onEditImage(fileName);
           imageInput.value = '';

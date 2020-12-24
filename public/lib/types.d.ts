@@ -1,18 +1,19 @@
 declare type Callback<T = void> = (result: T) => void;
 
 declare const config: {
-    relative_path: string;
-    'cache-buster': string;
-    emojiCustomFirst: boolean;
-  };
+  relative_path: string;
+  'cache-buster': string;
+  emojiCustomFirst: boolean;
+  csrf_token: string;
+};
 declare const app: {
-    alertSuccess(message?: string): void;
-    alertError(message?: string): void;
-    alertError(error: Error): void;
-  };
+  alertSuccess(message?: string): void;
+  alertError(message?: string): void;
+  alertError(error: Error): void;
+};
 declare const utils: {
-    generateUUID(): string;
-  };
+  generateUUID(): string;
+};
 declare const Textcomplete: any;
 
 interface String {
