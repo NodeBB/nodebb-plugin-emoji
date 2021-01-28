@@ -34,7 +34,7 @@ export default async function build() {
   winston.verbose('[emoji] Building emoji assets');
 
   // fetch the emoji definitions
-  const { packs }: { packs: EmojiDefinition[] } = await plugins.fireHook('filter:emoji.packs', { packs: [] });
+  const { packs }: { packs: EmojiDefinition[] } = await plugins.hooks.fire('filter:emoji.packs', { packs: [] });
   // filter out invalid ones
   const filtered = packs.filter((pack) => {
     if (pack && pack.id && pack.name && pack.mode && pack.dictionary && pack.path) {
