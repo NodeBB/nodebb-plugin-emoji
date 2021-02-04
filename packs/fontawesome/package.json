@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji-fontawesome",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Use the included fontawesome icons as emoji",
   "main": "emoji.js",
   "scripts": {
