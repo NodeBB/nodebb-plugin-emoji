@@ -1,0 +1,30 @@
+{
+  "name": "nodebb-plugin-emoji-vital",
+  "version": "2.0.0",
+  "description": "Vital non-standard unlicensed emoji",
+  "main": "emoji.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/vital",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NodeBB/nodebb-plugin-emoji.git"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "emoji",
+    "vital",
+    "extended"
+  ],
+  "nbbpm": {
+    "name": "Emoji One",
+    "compatibility": "^1.7.0"
+  },
+  "peerDependencies": {
+    "nodebb-plugin-emoji": "^3.4.2"
+  },
+  "author": "Peter Jaszkowiak",
+  "license": "MIT"
+}

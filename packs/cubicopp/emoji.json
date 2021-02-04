@@ -1,0 +1,89 @@
+{
+  "name": "Cubicopp",
+  "id": "cubicopp",
+  "mode": "images",
+  "images": {
+    "directory": "emoji"
+  },
+  "dictionary": {
+    "angry": {
+      "image": "angry.svg",
+      "character": "😠",
+      "aliases": ["mad", "rage"]
+    },
+    "big_mouth": {
+      "image": "big_mouth.svg",
+      "character": "😮",
+      "aliases": ["loud_mouth", "open_mouth"]
+    },
+    "cheeky": {
+      "image": "cheeky.svg",
+      "character": "😏",
+      "aliases": ["smirk"]
+    },
+    "confused": {
+      "image": "confused.svg",
+      "character": "😕"
+    },
+    "crying": {
+      "image": "crying.svg",
+      "character": "😢"
+    },
+    "expressionless": {
+      "image": "expressionless.svg",
+      "character": "😑",
+      "ascii": ["-_-", ":|"],
+      "aliases": ["straight_face"]
+    },
+    "happy": {
+      "image": "happy.svg",
+      "character": "😀",
+      "aliases": ["smile"],
+      "ascii": [":)", ":D"]
+    },
+    "joking": {
+      "image": "joking.svg",
+      "character": "🙄"
+    },
+    "kiss": {
+      "image": "kiss.svg",
+      "character": "😙"
+    },
+    "kiss_big": {
+      "image": "kiss_big.svg",
+      "character": "😘"
+    },
+    "laughing": {
+      "image": "laughing.svg",
+      "character": "😄"
+    },
+    "lol": {
+      "image": "lol.svg",
+      "character": "😂"
+    },
+    "sad": {
+      "image": "sad.svg",
+      "character": "😥"
+    },
+    "sunglasses": {
+      "image": "sunglasses.svg",
+      "character": "😎"
+    },
+    "surprised": {
+      "image": "surprised.svg",
+      "character": "😆"
+    },
+    "tongue_out": {
+      "image": "tongue_out.svg",
+      "character": "😜"
+    },
+    "upset": {
+      "image": "upset.svg",
+      "character": "🙁"
+    },
+    "warning": {
+      "image": "warning.svg",
+      "character": "⚠"
+    }
+  }
+}

@@ -140,7 +140,7 @@ const parse = async (content: string): Promise<string> => {
 
   const parsed = content.replace(
     outsideCode,
-    (outsideCodeStr) => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
+    outsideCodeStr => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
       let output = outside;
 
       if (options.native) {

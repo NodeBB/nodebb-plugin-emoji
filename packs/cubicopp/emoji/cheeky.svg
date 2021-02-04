@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" id="svg2" viewBox="0 0 16 16" version="1.0">
+  <defs id="defs4">
+    <radialGradient id="radialGradient2764" gradientUnits="userSpaceOnUse" cy="8.2976" cx="8.902" gradientTransform="matrix(1.0604 0 0 .19882 -1.4393 12.85)" r="7.5446">
+      <stop id="stop2760" offset="0"/>
+      <stop id="stop2762" stop-opacity="0" offset="1"/>
+    </radialGradient>
+    <radialGradient id="radialGradient7071" gradientUnits="userSpaceOnUse" cy="5.1875" cx="1.6848" gradientTransform="matrix(.69310 3.175 -3.6848 .80437 19.201 -9.522)" r="5.9842">
+      <stop id="stop6684" stop-color="#fff" offset="0"/>
+      <stop id="stop6686" stop-color="#fce94f" offset="1"/>
+    </radialGradient>
+    <radialGradient id="radialGradient7073" gradientUnits="userSpaceOnUse" cy="11.985" cx="11" gradientTransform="matrix(1.2221 -1.1471 1.0091 1.0706 -14.516 11.788)" r="6.9741">
+      <stop id="stop3149" stop-color="#fce94f" offset="0"/>
+      <stop id="stop3151" stop-color="#edd400" offset="1"/>
+    </radialGradient>
+  </defs>
+  <g id="layer1">
+    <path id="path2177" opacity=".4" style="color:#000000" d="m16 14.5c0 0.828-3.584 1.5-8 1.5s-8-0.672-8-1.5c2.2204e-16 -0.828 3.584-1.5 8-1.5s8 0.672 8 1.5z" fill-rule="evenodd" fill="url(#radialGradient2764)"/>
+    <path id="rect5503" stroke="#c4a000" stroke-linecap="round" fill="url(#radialGradient7073)" d="m4.0104 1.5223h8.0036c1.377 0 2.486 1.1085 2.486 2.4855v7.9932c0 1.377-1.109 2.486-2.486 2.486h-8.0036c-1.377 0-2.4855-1.109-2.4855-2.486v-7.9932c0-1.377 1.1085-2.4855 2.4855-2.4855z"/>
+    <path id="rect5505" stroke="url(#radialGradient7071)" stroke-linecap="round" fill="none" d="m4.0303 2.509h7.9707c0.831 0 1.499 0.6685 1.499 1.4988v7.9932c0 0.831-0.668 1.499-1.499 1.499h-7.9707c-0.8303 0-1.4987-0.668-1.4987-1.499v-7.9932c0-0.8303 0.6684-1.4988 1.4987-1.4988z"/>
+    <path id="path2869" d="m3 10h10v1h-10v-1z"/>
+    <path id="path2957" d="m9 7h1v1h-1v-1z"/>
+    <path id="path2961" d="m9 8h1v1h-1v-1z" fill="#fce94f"/>
+    <path id="path2989" d="m7 7h-1v1h1v-1z"/>
+    <path id="path2991" d="m7 8h-1v1h1v-1z" fill="#fce94f"/>
+    <path id="path3015" d="m3 11h1v1h-1v-1z" fill="#fce94f"/>
+    <path id="path3061" d="m12 11h1v1h-1v-1z" fill="#fce94f"/>
+    <path id="path3063" d="m4 11h8v1h-8v-1z"/>
+    <path id="path3065" d="m5 11h6v1h-6v-1z" fill="#eeeeec"/>
+    <path id="path3067" d="m5 12h6v1h-6v-1z"/>
+    <path id="path3069" d="m6 6h-1v1h1v-1z"/>
+    <path id="path3071" d="m6 7h-1v1h1v-1z" fill="#fce94f"/>
+    <path id="path3073" d="m11 6h-1v1h1v-1z"/>
+    <path id="path3075" d="m11 7h-1v1h1v-1z" fill="#fce94f"/>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Cubikopp smilies</dc:title>
+        <dc:date>2009-12-31T01:40:45</dc:date>
+        <dc:description>Awesome Smilies by SK (formerly needcoffee).</dc:description>
+        <dc:source>http://openclipart.org/detail/28774/cubikopp-smilies-by-qubodup-28774</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>qubodup</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>15px</rdf:li>
+            <rdf:li>angry</rdf:li>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>confused</rdf:li>
+            <rdf:li>cute</rdf:li>
+            <rdf:li>evil</rdf:li>
+            <rdf:li>externalsource</rdf:li>
+            <rdf:li>fun</rdf:li>
+            <rdf:li>funny</rdf:li>
+            <rdf:li>happy</rdf:li>
+            <rdf:li>image</rdf:li>
+            <rdf:li>kiss</rdf:li>
+            <rdf:li>kissing</rdf:li>
+            <rdf:li>media</rdf:li>
+            <rdf:li>pixel art</rdf:li>
+            <rdf:li>png</rdf:li>
+            <rdf:li>public domain</rdf:li>
+            <rdf:li>question</rdf:li>
+            <rdf:li>rectangle</rdf:li>
+            <rdf:li>sad</rdf:li>
+            <rdf:li>small</rdf:li>
+            <rdf:li>smilies</rdf:li>
+            <rdf:li>svg</rdf:li>
+            <rdf:li>sweet</rdf:li>
+            <rdf:li>throw up</rdf:li>
+            <rdf:li>unchecked</rdf:li>
+            <rdf:li>weirded out</rdf:li>
+            <rdf:li>yellow</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

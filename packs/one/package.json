@@ -1,0 +1,38 @@
+{
+  "name": "nodebb-plugin-emoji-one",
+  "version": "2.0.0",
+  "description": "The emoji-one set for NodeBB (requires nodebb-plugin-emoji)",
+  "main": "emoji.js",
+  "author": "Ole Reglitzki <frissdiegurke@protonmail.com> (https://github.com/frissdiegurke)",
+  "contributors": [
+    "Ole Reglitzki <frissdiegurke@protonmail.com> (https://github.com/frissdiegurke)",
+    "Peter Jaszkowiak <p.jaszkow@gmail.com> (https://github.com/pitaj)"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/one",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NodeBB/nodebb-plugin-emoji.git"
+  },
+  "nbbpm": {
+    "name": "Emoji One",
+    "compatibility": "^1.7.0"
+  },
+  "peerDependencies": {
+    "nodebb-plugin-emoji": "^3.4.2"
+  },
+  "keywords": [
+    "nodebb",
+    "emoji-one",
+    "emojione",
+    "extended",
+    "emoji",
+    "one"
+  ],
+  "dependencies": {
+    "download": "^6.2.3",
+    "emojione": "^3.1.2",
+    "lodash.frompairs": "^4.0.1",
+    "semver": "^5.4.1"
+  }
+}

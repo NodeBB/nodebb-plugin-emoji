@@ -45,7 +45,7 @@ export default async function build() {
     return false;
   });
 
-  winston.verbose('[emoji] Loaded packs: ' + filtered.map((pack) => pack.id).join(', '));
+  winston.verbose(`[emoji] Loaded packs: ${filtered.map(pack => pack.id).join(', ')}`);
 
   await remove(assetsDir);
   await mkdirp(assetsDir);
@@ -158,13 +158,13 @@ export default async function build() {
   });
 
   // generate CSS styles
-  const css = packs.map((pack) => cssBuilders[pack.mode](pack)).join('\n');
+  const css = packs.map(pack => cssBuilders[pack.mode](pack)).join('\n');
   const cssFile = `${css}\n.emoji-customizations {
     display: inline-block;
     height: 23px;
     margin-top: -1px;
     margin-bottom: -1px;
-  }`.split('\n').map((x) => x.trim()).join('');
+  }`.split('\n').map(x => x.trim()).join('');
 
   // handling copying or linking necessary assets
   const assetOperations = packs.map(async (pack) => {

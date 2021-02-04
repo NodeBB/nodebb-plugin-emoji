@@ -63,14 +63,14 @@ export function init(callback: Callback<JQuery>) {
   Promise.all([
     $.getJSON(`${base}/emoji/categories.json?${buster}`),
     $.getJSON(`${base}/emoji/packs.json?${buster}`),
-    new Promise((resolve) => initEmoji(resolve)),
+    new Promise(resolve => initEmoji(resolve)),
   ])
     .then(([categoriesInfo, packs]: [MetaData.Categories, MetaData.Packs, undefined]) => {
       const categories = Object.keys(categoriesInfo).map((category) => {
-        const emojis = categoriesInfo[category].map((name) => table[name]);
+        const emojis = categoriesInfo[category].map(name => table[name]);
         return {
           name: category,
-          emojis: emojis.map((emoji) => ({
+          emojis: emojis.map(emoji => ({
             name: emoji.name,
             html: buildEmoji(emoji, true),
           })).sort((a, b) => stringCompare(a.name, b.name)),
@@ -87,7 +87,7 @@ export function init(callback: Callback<JQuery>) {
         packs,
       });
     })
-    .then((result) => translator.translate(result)).then((html) => {
+    .then(result => translator.translate(result)).then((html) => {
       const dialog = $(html).appendTo('body');
 
       dialog.find('.emoji-dialog-search').on('input', (e) => {
@@ -102,7 +102,7 @@ export function init(callback: Callback<JQuery>) {
         const results = search(value)
           .slice(0, 100)
           .map(
-            (emoji) => `<a class="emoji-link" name="${emoji.name}" href="#">${buildEmoji(emoji, false)}</a>`
+            emoji => `<a class="emoji-link" name="${emoji.name}" href="#">${buildEmoji(emoji, false)}</a>`
           )
           .join('\n');
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import {
   h,
   Component,
@@ -17,7 +19,7 @@ const setsEqual = (arr1: string[], arr2: string[]) => {
   const h1: { [val: string]: boolean } = {};
   arr1.forEach((val) => { h1[val] = true; });
 
-  return arr2.every((val) => h1[val]);
+  return arr2.every(val => h1[val]);
 };
 
 interface EmojiProps {
@@ -226,7 +228,7 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
         ),
       },
       {
-        fn: () => emoji.aliases.every((alias) => pattern.test(alias)),
+        fn: () => emoji.aliases.every(alias => pattern.test(alias)),
         message: (
           <span><strong>Aliases</strong> can only contain letters,
           numbers, and <code>_-+.</code> (comma-separated)</span>
@@ -240,7 +242,7 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
       },
     ];
 
-    return validations.filter((validation) => !validation.fn());
+    return validations.filter(validation => !validation.fn());
   }
 
   public constructor({ emojis }: EmojiListProps) {
@@ -365,10 +367,10 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
         emoji,
         onSave: () => this.onSave(i),
         onDelete: () => this.onDelete(i),
-        onEditName: (name) => this.onEdit(i, { ...emoji, name }),
-        onEditImage: (image) => this.onEdit(i, { ...emoji, image }),
-        onEditAliases: (aliases) => this.onEdit(i, { ...emoji, aliases }),
-        onEditAscii: (ascii) => this.onEdit(i, { ...emoji, ascii }),
+        onEditName: name => this.onEdit(i, { ...emoji, name }),
+        onEditImage: image => this.onEdit(i, { ...emoji, image }),
+        onEditAliases: aliases => this.onEdit(i, { ...emoji, aliases }),
+        onEditAscii: ascii => this.onEdit(i, { ...emoji, ascii }),
         editing: !EmojiList.equal(emoji, previous[i]),
         canSave: !failures.length,
       };
@@ -398,10 +400,10 @@ class EmojiList extends Component<EmojiListProps, EmojiListState> {
             emoji={newEmoji}
             onSave={() => this.onAdd()}
             onDelete={() => {}}
-            onEditName={(name) => this.setState({ newEmoji: { ...newEmoji, name } })}
-            onEditImage={(image) => this.setState({ newEmoji: { ...newEmoji, image } })}
-            onEditAliases={(aliases) => this.setState({ newEmoji: { ...newEmoji, aliases } })}
-            onEditAscii={(ascii) => this.setState({ newEmoji: { ...newEmoji, ascii } })}
+            onEditName={name => this.setState({ newEmoji: { ...newEmoji, name } })}
+            onEditImage={image => this.setState({ newEmoji: { ...newEmoji, image } })}
+            onEditAliases={aliases => this.setState({ newEmoji: { ...newEmoji, aliases } })}
+            onEditAscii={ascii => this.setState({ newEmoji: { ...newEmoji, ascii } })}
             editing
             canSave={!newEmojiFailures.length}
           />
@@ -567,7 +569,7 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
         message: '<strong>Name</strong> must be an existing emoji',
       },
       {
-        fn: () => emoji.aliases.every((alias) => pattern.test(alias)),
+        fn: () => emoji.aliases.every(alias => pattern.test(alias)),
         message: '<strong>Aliases</strong> can only contain ' +
           'letters, numbers, and <code>_-+.</code> (comma-separated)',
       },
@@ -577,7 +579,7 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
       },
     ];
 
-    return validations.filter((validation) => !validation.fn());
+    return validations.filter(validation => !validation.fn());
   }
 
   public constructor({ adjuncts }: AdjunctListProps) {
@@ -702,9 +704,9 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
         adjunct,
         onSave: () => this.onSave(i),
         onDelete: () => this.onDelete(i),
-        onEditName: (name) => this.onEdit(i, { ...adjunct, name }),
-        onEditAliases: (aliases) => this.onEdit(i, { ...adjunct, aliases }),
-        onEditAscii: (ascii) => this.onEdit(i, { ...adjunct, ascii }),
+        onEditName: name => this.onEdit(i, { ...adjunct, name }),
+        onEditAliases: aliases => this.onEdit(i, { ...adjunct, aliases }),
+        onEditAscii: ascii => this.onEdit(i, { ...adjunct, ascii }),
         editing: !AdjunctList.equal(adjunct, previous[i]),
         canSave: !failures.length,
       };
@@ -734,9 +736,9 @@ class AdjunctList extends Component<AdjunctListProps, AdjunctListState> {
             adjunct={newAdjunct}
             onSave={() => this.onAdd()}
             onDelete={() => {}}
-            onEditName={(name) => this.setState({ newAdjunct: { ...newAdjunct, name } })}
-            onEditAliases={(aliases) => this.setState({ newAdjunct: { ...newAdjunct, aliases } })}
-            onEditAscii={(ascii) => this.setState({ newAdjunct: { ...newAdjunct, ascii } })}
+            onEditName={name => this.setState({ newAdjunct: { ...newAdjunct, name } })}
+            onEditAliases={aliases => this.setState({ newAdjunct: { ...newAdjunct, aliases } })}
+            onEditAscii={ascii => this.setState({ newAdjunct: { ...newAdjunct, ascii } })}
             editing
             canSave={!newAdjunctFailures.length}
           />

@@ -1,7 +1,7 @@
 import { Router, RequestHandler } from 'express';
 import { join } from 'path';
 import { rename } from 'fs';
-import * as multer from 'multer';
+import multer from 'multer';
 
 import * as settings from './settings';
 import { build } from './pubsub';
@@ -16,12 +16,12 @@ export default function controllers({ router, middleware }: {
   middleware: { admin: { [key: string]: RequestHandler } };
 }) {
   const renderAdmin: RequestHandler = (req, res, next) => {
-    settings.get().then((sets) => setImmediate(() => {
+    settings.get().then(sets => setImmediate(() => {
       res.render('admin/plugins/emoji', {
         version,
         settings: sets,
       });
-    }), (err) => setImmediate(next, err));
+    }), err => setImmediate(next, err));
   };
 
   router.get('/admin/plugins/emoji', middleware.admin.buildHeader, renderAdmin);
@@ -31,7 +31,7 @@ export default function controllers({ router, middleware }: {
     const data = JSON.parse(req.query.settings as string);
     settings.set(data).then(
       () => setImmediate(() => res.send('OK')),
-      (err) => setImmediate(next, err)
+      err => setImmediate(next, err)
     );
   };
   router.get('/api/admin/plugins/emoji/save', saveAdmin);
@@ -39,7 +39,7 @@ export default function controllers({ router, middleware }: {
   const adminBuild: RequestHandler = (req, res, next) => {
     build().then(
       () => setImmediate(() => res.send('OK')),
-      (err) => setImmediate(next, err)
+      err => setImmediate(next, err)
     );
   };
   router.get('/api/admin/plugins/emoji/build', adminBuild);

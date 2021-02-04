@@ -22,9 +22,9 @@ module.exports = {
       minProperties: 5,
       consistent: true
     }],
+    'arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-empty-function': 'off',
   },
 };
-  

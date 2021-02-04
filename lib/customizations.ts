@@ -1,4 +1,4 @@
-import * as hash from 'string-hash';
+import hash from 'string-hash';
 
 const adminSockets = require.main.require('./src/socket.io/admin');
 const db = require.main.require('./src/database');
@@ -16,8 +16,8 @@ export const getCustomizations = async (): Promise<Customizations> => {
     db.getSortedSetRangeWithScores(adjunctsKey, 0, -1),
   ]);
 
-  const emojisParsed: CustomEmoji[] = emojis.map((emoji) => JSON.parse(emoji.value));
-  const adjunctsParsed: CustomAdjunct[] = adjuncts.map((adjunct) => JSON.parse(adjunct.value));
+  const emojisParsed: CustomEmoji[] = emojis.map(emoji => JSON.parse(emoji.value));
+  const adjunctsParsed: CustomAdjunct[] = adjuncts.map(adjunct => JSON.parse(adjunct.value));
 
   return {
     emojis: emojisParsed,
