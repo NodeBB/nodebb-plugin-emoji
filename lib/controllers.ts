@@ -1,5 +1,5 @@
 import { Router, RequestHandler } from 'express';
-import { join } from 'path';
+import { join, basename } from 'path';
 import { rename } from 'fs';
 import multer from 'multer';
 
@@ -50,7 +50,7 @@ export default function controllers({ router, middleware }: {
       return;
     }
 
-    const fileName = req.body.fileName;
+    const fileName = basename(req.body.fileName);
     rename(req.file.path, join(nconf.get('upload_path'), 'emoji', fileName), (err) => {
       if (err) {
         next(err);
