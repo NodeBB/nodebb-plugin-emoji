@@ -10,8 +10,6 @@ module.exports = {
     app: true,
     config: true,
     Textcomplete: true,
-  },
-  rules: {
-    'max-classes-per-file': 'off',
+    ajaxify: true,
   },
 };

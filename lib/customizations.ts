@@ -1,6 +1,3 @@
-import hash from 'string-hash';
-
-const adminSockets = require.main.require('./src/socket.io/admin');
 const db = require.main.require('./src/database');
 
 const emojisKey = 'emoji:customizations:emojis';
@@ -10,52 +7,38 @@ interface SortedResult {
   value: string;
   score: number;
 }
-export const getCustomizations = async (): Promise<Customizations> => {
+export async function getAll(): Promise<Customizations> {
   const [emojis, adjuncts]: [SortedResult[], SortedResult[]] = await Promise.all([
     db.getSortedSetRangeWithScores(emojisKey, 0, -1),
     db.getSortedSetRangeWithScores(adjunctsKey, 0, -1),
   ]);
-
-  const emojisParsed: CustomEmoji[] = emojis.map(emoji => JSON.parse(emoji.value));
-  const adjunctsParsed: CustomAdjunct[] = adjuncts.map(adjunct => JSON.parse(adjunct.value));
-
   return {
-    emojis: emojisParsed,
-    adjuncts: adjunctsParsed,
+    emojis: Object.fromEntries(emojis.map(({ value, score }) => [score, JSON.parse(value)])),
+    adjuncts: Object.fromEntries(adjuncts.map(({ value, score }) => [score, JSON.parse(value)])),
   };
-};
+}
 
-const editThing = async (key: string, name: string, thing: CustomEmoji | CustomAdjunct) => {
-  const num = hash(name);
-  await db.sortedSetsRemoveRangeByScore([key], num, num);
+export async function add({ type, item }: { type: string, item: unknown }): Promise<string> {
+  const key = type === 'emoji' ? emojisKey : adjunctsKey;
+  // get maximum score from set
+  const [result] = await db.getSortedSetRevRangeWithScores(key, 0, 1);
+  const lastId = (result && result.score) || 1;
+  const id = lastId + 1;
+  await db.sortedSetAdd(key, id, JSON.stringify(item));
+  return id;
+}
 
-  const thingNum = hash(thing.name);
-  await db.sortedSetAdd(key, thingNum, JSON.stringify(thing));
-};
+export async function edit({ type, id, item }: {
+  type: string,
+  id: number,
+  item: unknown,
+}): Promise<void> {
+  const key = type === 'emoji' ? emojisKey : adjunctsKey;
+  await db.sortedSetsRemoveRangeByScore([key], id, id);
+  await db.sortedSetAdd(key, id, JSON.stringify(item));
+}
 
-const deleteThing = async (key: string, name: string) => {
-  const num = hash(name);
-  await db.sortedSetsRemoveRangeByScore([key], num, num);
-};
-
-const emojiSockets = {
-  getCustomizations,
-  editEmoji: async (
-    socket: SocketIO.Socket,
-    [name, emoji]: [string, CustomEmoji]
-  ) => editThing(emojisKey, name, emoji),
-  deleteEmoji: async (
-    socket: SocketIO.Socket,
-    name: string
-  ) => deleteThing(emojisKey, name),
-  editAdjunct: async (
-    socket: SocketIO.Socket,
-    [name, adjunct]: [string, CustomAdjunct]
-  ) => editThing(adjunctsKey, name, adjunct),
-  deleteAdjunct: async (
-    socket: SocketIO.Socket,
-    name: string
-  ) => deleteThing(adjunctsKey, name),
-};
-
-adminSockets.plugins.emoji = emojiSockets;
+export async function remove({ type, id }: { type: string, id: number }): Promise<void> {
+  const key = type === 'emoji' ? emojisKey : adjunctsKey;
+  await db.sortedSetsRemoveRangeByScore([key], id, id);
+}

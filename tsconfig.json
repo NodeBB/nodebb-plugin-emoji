@@ -4,17 +4,14 @@
   ],
   "compilerOptions": {
     "outDir": "build/lib",
-    "lib": ["es2017"],
-    "target": "es2017",
+    "lib": ["es2019"],
+    "target": "es2019",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "noImplicitAny": true,
     "alwaysStrict": true,
-    "sourceMap": true,
-    "types": [
-      "socket.io"
-    ]
+    "sourceMap": true
   },
   "typeAcquisition": {
     "enable": false

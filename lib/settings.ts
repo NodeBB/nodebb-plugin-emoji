@@ -1,15 +1,9 @@
 const settings: {
-  get(key: string): Promise<{ [key: string]: any }>;
-  set(key: string, value: any): Promise<void>;
-  getOne(key: string, field: string): Promise<any>;
-  setOne(key: string, field: string, value: any): Promise<void>;
+  get(key: string): Promise<{ [key: string]: unknown } | null>;
+  set(key: string, value: unknown): Promise<void>;
+  getOne(key: string, field: string): Promise<unknown>;
+  setOne(key: string, field: string, value: unknown): Promise<void>;
 } = require.main.require('./src/meta').settings;
-
-interface Settings {
-  parseNative: boolean;
-  parseAscii: boolean;
-  customFirst: boolean;
-}
 
 const defaults: Settings = {
   parseNative: true,
@@ -17,58 +11,44 @@ const defaults: Settings = {
   customFirst: false,
 };
 
-const get = async (): Promise<{ [key: string]: any }> => {
-  const data = await settings.get('emoji');
-  const sets: Partial<Settings> = {};
-
-  Object.keys(defaults).forEach((key: keyof Settings) => {
-    const defaultVal = defaults[key];
-    const str = data[key];
-
-    if (typeof str !== 'string') {
-      sets[key] = defaultVal;
-      return;
-    }
-
-    const val = JSON.parse(str);
-    if (typeof val !== typeof defaultVal) {
-      sets[key] = defaultVal;
-      return;
-    }
-
-    sets[key] = val;
-  });
-
-  return sets;
-};
-const set = async (data: {
-  [key: string]: any;
-}) => {
-  const sets: Partial<Record<keyof Settings, string>> = {};
-  Object.keys(data).forEach((key: keyof Settings) => {
-    sets[key] = JSON.stringify(data[key]);
-  });
-
-  await settings.set('emoji', sets);
-};
-const getOne = async (field: keyof Settings): Promise<any> => {
-  const str = await settings.getOne('emoji', field);
-
-  const defaultVal = defaults[field];
-  let val = JSON.parse(str);
-  if (typeof val !== typeof defaultVal) {
-    val = defaultVal;
+function fromStore<
+  K extends keyof Settings
+>(key: K, x: unknown): Settings[K] {
+  if (typeof x === typeof defaults[key]) {
+    return x as Settings[K];
   }
+  if (typeof x === 'string') {
+    try {
+      return JSON.parse(x) ?? defaults[key];
+    } catch {
+      return defaults[key];
+    }
+  }
+  return defaults[key];
+}
 
-  return val;
-};
-const setOne = async (field: string, value: any) => {
+export async function get(): Promise<Settings> {
+  const data = await settings.get('emoji');
+
+  return {
+    parseNative: fromStore('parseNative', data?.parseNative),
+    parseAscii: fromStore('parseAscii', data?.parseAscii),
+    customFirst: fromStore('customFirst', data?.customFirst),
+  };
+}
+export async function set(data: Settings): Promise<void> {
+  await settings.set('emoji', {
+    parseNative: JSON.stringify(data.parseNative),
+    parseAscii: JSON.stringify(data.parseAscii),
+    customFirst: JSON.stringify(data.customFirst),
+  });
+}
+export async function getOne<K extends keyof Settings>(field: K): Promise<Settings[K]> {
+  const val = await settings.getOne('emoji', field);
+  return fromStore(field, val);
+}
+export async function setOne<
+  K extends keyof Settings
+>(field: K, value: Settings[K]): Promise<void> {
   await settings.setOne('emoji', field, JSON.stringify(value));
-};
-
-export {
-  get,
-  set,
-  getOne,
-  setOne,
-};
+}

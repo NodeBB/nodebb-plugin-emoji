@@ -191,11 +191,16 @@ interface CustomAdjunct {
 }
 
 interface Customizations {
-  emojis: CustomEmoji[];
-  adjuncts: CustomAdjunct[];
+  emojis: {
+    [id: number]: CustomEmoji
+  };
+  adjuncts: {
+    [id: number]: CustomAdjunct
+  }
 }
 
-declare module 'string-hash' {
-  const hash: (str: string) => number;
-  export = hash;
+interface Settings {
+  parseNative: boolean;
+  parseAscii: boolean;
+  customFirst: boolean;
 }

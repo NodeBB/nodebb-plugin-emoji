@@ -10,7 +10,7 @@ import { uniq } from 'lodash';
 
 import * as cssBuilders from './css-builders';
 import { clearCache } from './parse';
-import { getCustomizations } from './customizations';
+import { getAll as getCustomizations } from './customizations';
 
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
@@ -30,7 +30,7 @@ export const charactersFile = join(assetsDir, 'characters.json');
 export const categoriesFile = join(assetsDir, 'categories.json');
 export const packsFile = join(assetsDir, 'packs.json');
 
-export default async function build() {
+export default async function build(): Promise<void> {
   winston.verbose('[emoji] Building emoji assets');
 
   // fetch the emoji definitions
@@ -116,7 +116,7 @@ export default async function build() {
     categoriesInfo[category] = uniq(categoriesInfo[category]);
   });
 
-  customizations.emojis.forEach((emoji) => {
+  Object.values(customizations.emojis).forEach((emoji) => {
     const name = emoji.name.toLowerCase();
 
     table[name] = {
@@ -144,7 +144,7 @@ export default async function build() {
     categoriesInfo.custom = categoriesInfo.custom || [];
     categoriesInfo.custom.push(name);
   });
-  customizations.adjuncts.forEach((adjunct) => {
+  Object.values(customizations.adjuncts).forEach((adjunct) => {
     const name = adjunct.name;
     if (!table[name]) { return; }
 

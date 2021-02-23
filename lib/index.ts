@@ -1,17 +1,15 @@
 import { access } from 'fs-extra';
 
 import * as settings from './settings';
-import * as plugins from './plugins';
 import * as parse from './parse';
 import { tableFile } from './build';
 import { build } from './pubsub';
 import controllers from './controllers';
-import './customizations';
 
 const nconf = require.main.require('nconf');
 const buster = require.main.require('./src/meta').config['cache-buster'];
 
-const init = async (params: any): Promise<void> => {
+export async function init(params: any): Promise<void> {
   controllers(params);
 
   const sets = await settings.get();
@@ -39,35 +37,35 @@ const init = async (params: any): Promise<void> => {
   if (shouldBuild) {
     await build();
   }
-};
+}
 
-const adminMenu = (header: {
+export async function adminMenu<Payload extends {
   plugins: { route: string; icon: string; name: string }[];
-}, callback: NodeBack) => {
+}>(header: Payload): Promise<Payload> {
   header.plugins.push({
     route: '/plugins/emoji',
     icon: 'fa-smile-o',
     name: 'Emoji',
   });
-  callback(null, header);
-};
+  return header;
+}
 
-const composerFormatting = (data: {
+export async function composerFormatting<Payload extends {
   options: { name: string; className: string; title: string }[];
-}, callback: NodeBack) => {
+}>(data: Payload): Promise<Payload> {
   data.options.push({
     name: 'emoji-add-emoji',
     className: 'fa fa-smile-o emoji-add-emoji',
     title: '[[emoji:composer.title]]',
   });
-  callback(null, data);
-};
+  return data;
+}
 
-const addStylesheet = (data: {
+export async function addStylesheet<Payload extends {
   links: {
     rel: string; type?: string; href: string;
   }[];
-}, callback: NodeBack) => {
+}>(data: Payload): Promise<Payload> {
   const rel = nconf.get('relative_path');
 
   data.links.push({
@@ -75,22 +73,16 @@ const addStylesheet = (data: {
     href: `${rel}/plugins/nodebb-plugin-emoji/emoji/styles.css?${buster}`,
   });
 
-  callback(null, data);
-};
+  return data;
+}
 
-const configGet = async (config: any): Promise<any> => {
+export async function configGet(config: any): Promise<any> {
   const customFirst = await settings.getOne('customFirst');
   // eslint-disable-next-line no-param-reassign
   config.emojiCustomFirst = customFirst;
   return config;
-};
+}
 
 export {
-  init,
-  adminMenu,
-  composerFormatting,
-  plugins,
   parse,
-  addStylesheet,
-  configGet,
 };

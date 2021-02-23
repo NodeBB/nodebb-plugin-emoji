@@ -15,7 +15,7 @@ let metaCache: {
   characters: MetaData.Characters;
   charPattern: RegExp;
 } = null;
-export function clearCache() {
+export function clearCache(): void {
   metaCache = null;
 }
 
@@ -72,7 +72,7 @@ const outsideCode = /(^|<\/code>)([^<]*|<(?!code[^>]*>))*(<code[^>]*>|$)/g;
 const outsideElements = /(<[^>]*>)?([^<>]*)/g;
 const emojiPattern = /:([a-z\-.+0-9_]+):/g;
 
-export const buildEmoji = (emoji: StoredEmoji, whole: string) => {
+export const buildEmoji = (emoji: StoredEmoji, whole: string): string => {
   if (emoji.image) {
     const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
@@ -124,7 +124,7 @@ const options: ParseOptions = {
   native: false,
 };
 
-export function setOptions(newOptions: ParseOptions) {
+export function setOptions(newOptions: ParseOptions): void {
   Object.assign(options, newOptions);
 }
 

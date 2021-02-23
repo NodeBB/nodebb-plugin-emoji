@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 declare type Callback<T = void> = (result: T) => void;
 
 declare const config: {
@@ -9,7 +11,10 @@ declare const config: {
 declare const app: {
   alertSuccess(message?: string): void;
   alertError(message?: string): void;
-  alertError(error: Error): void;
+  alertError(error?: Error): void;
+};
+declare const ajaxify: {
+  data: any;
 };
 declare const utils: {
   generateUUID(): string;
@@ -19,8 +24,6 @@ declare const Textcomplete: any;
 interface String {
   startsWith(str: string): boolean;
 }
-
-declare const socket: SocketIO.Server;
 
 interface JQuery {
   ajaxSubmit: any;

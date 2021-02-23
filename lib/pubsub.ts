@@ -8,7 +8,7 @@ const pubsub = require.main.require('./src/pubsub');
 
 const primary = nconf.get('isPrimary') === 'true' || nconf.get('isPrimary') === true;
 
-export async function build() {
+export async function build(): Promise<void> {
   if (pubsub.pubClient) {
     pubsub.publish('emoji:build', {
       hostname: hostname(),

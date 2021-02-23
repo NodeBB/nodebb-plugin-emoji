@@ -4,7 +4,7 @@ const buster = require.main.require('./src/meta').config['cache-buster'];
 const nconf = require.main.require('nconf');
 const url = nconf.get('url');
 
-export function images(pack: EmojiDefinition) {
+export function images(pack: EmojiDefinition): string {
   return `.emoji-${pack.id} {` +
     'display: inline-block;' +
     'height: 23px;' +

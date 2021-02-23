@@ -17,14 +17,14 @@ import {
 const $html = $('html');
 
 export const dialogActions = {
-  open(dialog: JQuery) {
+  open(dialog: JQuery): JQuery {
     $html.addClass('emoji-insert');
     dialog.addClass('open');
     dialog.find('.emoji-dialog-search').focus();
 
     return dialog;
   },
-  close(dialog: JQuery) {
+  close(dialog: JQuery): JQuery {
     $html.removeClass('emoji-insert');
     return dialog.removeClass('open');
   },
@@ -59,7 +59,7 @@ function stringCompare(a: string, b: string) {
 }
 
 // create modal
-export function init(callback: Callback<JQuery>) {
+export function init(callback: Callback<JQuery>): void {
   Promise.all([
     $.getJSON(`${base}/emoji/categories.json?${buster}`),
     $.getJSON(`${base}/emoji/packs.json?${buster}`),
@@ -184,7 +184,7 @@ export function init(callback: Callback<JQuery>) {
 export function toggle(
   opener: HTMLElement | null,
   onClick: (e: JQuery.Event, name: string, dialog: JQuery) => void
-) {
+): void {
   function after(dialog: JQuery) {
     if (dialog.hasClass('open')) {
       dialogActions.close(dialog);
@@ -238,7 +238,7 @@ export function toggleForInsert(
   selectStart: number,
   selectEnd: number,
   event: JQuery.ClickEvent
-) {
+): void {
   // handle new and old API case
   let button;
   if (event && event.target) {
