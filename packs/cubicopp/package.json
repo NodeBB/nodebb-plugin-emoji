@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji-cubicopp",
-  "version": "2.0.1",
+  "version": "2.0.5",
   "description": "The cubicopp emoji-set for NodeBB (requires nodebb-plugin-emoji)",
   "main": "emoji.json",
   "author": "Ole Reglitzki <frissdiegurke@protonmail.com> (https://github.com/frissdiegurke)",
@@ -25,6 +25,6 @@
     "cubicopp"
   ],
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^3.4.2"
+    "nodebb-plugin-emoji": "^3.4.2 || ^3.5.0"
   }
 }
