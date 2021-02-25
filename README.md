@@ -20,12 +20,12 @@ For best results, install `nodebb-plugin-emoji` and emoji packs through the Node
 
 The following emoji packs are known to be compatible with `nodebb-plugin-emoji`
 
- - [nodebb-plugin-emoji-android](https://github.com/nodebb-community/nodebb-plugin-emoji-android)
- - [nodebb-plugin-emoji-one](https://github.com/NodeBB-Community/nodebb-plugin-emoji-one)
- - [nodebb-plugin-emoji-apple](https://github.com/NodeBB-Community/nodebb-plugin-emoji-apple)
- - [nodebb-plugin-emoji-cubicopp](https://github.com/NodeBB-Community/nodebb-plugin-emoji-cubicopp)
- - [nodebb-plugin-emoji-vital](https://github.com/NodeBB-Community/nodebb-plugin-emoji-vital)
- - [nodebb-plugin-emoji-fontawesome](https://github.com/NodeBB-Community/nodebb-plugin-emoji-fontawesome)
+ - [nodebb-plugin-emoji-android](https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/android)
+ - [nodebb-plugin-emoji-one](https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/one)
+ - [nodebb-plugin-emoji-apple](https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/apple)
+ - [nodebb-plugin-emoji-cubicopp](https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/cubicopp)
+ - [nodebb-plugin-emoji-vital](https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/vital)
+ - [nodebb-plugin-emoji-fontawesome](https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/fontawesome)
 
 To add custom emoji, visit the **Emoji** ACP page and click on the pencil button in the bottom left.
 
