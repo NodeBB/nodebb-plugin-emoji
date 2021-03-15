@@ -129,6 +129,9 @@ export function setOptions(newOptions: ParseOptions): void {
 }
 
 const parse = async (content: string): Promise<string> => {
+  if (!content) {
+    return content;
+  }
   let store: typeof metaCache;
   try {
     store = await getTable();
