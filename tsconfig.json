@@ -3,6 +3,7 @@
     "lib/**/*.ts"
   ],
   "compilerOptions": {
+    "types": [],
     "outDir": "build/lib",
     "lib": ["es2019"],
     "target": "es2019",

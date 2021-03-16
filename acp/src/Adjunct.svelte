@@ -39,7 +39,7 @@ export function reset(): void {
   ascii = item.ascii.slice();
 }
 
-const empty = !item.name && !item.aliases?.length && !item.ascii?.length;
+const empty = !item.name && !item.aliases.length && !item.ascii.length;
 
 let newAlias = '';
 function removeAlias(a: string) {

@@ -82,7 +82,7 @@ function addAscii() {
   newAscii = '';
 }
 
-const empty = !emoji.name && !emoji.image && !emoji.aliases?.length && !emoji.ascii?.length;
+const empty = !emoji.name && !emoji.image && !emoji.aliases.length && !emoji.ascii.length;
 let editing = false;
 $: editing = !deepEquals({
   name,
