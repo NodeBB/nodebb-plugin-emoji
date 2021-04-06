@@ -1,0 +1,25 @@
+{
+  "composer.title": "Hangulatjelek",
+  "meta-load-failed": "Hangulatjel meta információk betoltése sikertelen",
+  "modal.title": "Elérhető hangulatjelek",
+  "modal.legal": "Jogi információk",
+  "modal.legal.header": "A megjelenített hangulatjelek különböző <em>hangulatjel csomagokhoz</em> tartoznak. <br> Hogy az adott hangulatjel melyik csomaghoz tartozik, azt a HTML <code>class</code> attribútum jelöli (<code>class=\"emoji-[pack ID]\"</code>).",
+  "modal.legal.set.header": "<strong>%1</strong> Hangulatjel csomag <small>azonosító: <code>%2</code></small>",
+  "modal.legal.set.attribution": "Tulajdonjog",
+  "modal.legal.set.license": "Szerződés",
+
+  "categories.symbols": "Szimbólumok",
+  "categories.objects": "Objektumok",
+  "categories.nature": "Természet",
+  "categories.people": "Emberek",
+  "categories.food": "Étel",
+  "categories.travel": "Utazás",
+  "categories.activity": "Aktivitás",
+  "categories.flags": "Zászlók",
+  "categories.regional": "Regionális",
+  "categories.modifier": "Preferált bőrszín",
+  "categories.other": "Egyéb",
+  "categories.custom": "Egyedi",
+  "search.results": "Keresési eredmények",
+  "search.placeholder": "Keresés"
+}
