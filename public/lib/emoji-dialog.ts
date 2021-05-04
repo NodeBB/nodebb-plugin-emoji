@@ -20,7 +20,9 @@ export const dialogActions = {
   open(dialog: JQuery): JQuery {
     $html.addClass('emoji-insert');
     dialog.addClass('open');
-    dialog.find('.emoji-dialog-search').focus();
+    if (!utils.isMobile()) {
+      dialog.find('.emoji-dialog-search').focus();
+    }
 
     return dialog;
   },

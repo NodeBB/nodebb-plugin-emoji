@@ -18,6 +18,7 @@ declare const ajaxify: {
 };
 declare const utils: {
   generateUUID(): string;
+  isMobile(): boolean;
 };
 declare const Textcomplete: any;
 
