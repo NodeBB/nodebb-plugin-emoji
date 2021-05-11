@@ -8,7 +8,7 @@ import { build } from './pubsub';
 import * as customizations from './customizations';
 
 const nconf = require.main.require('nconf');
-const { setupApiRoute } = require.main.require('./src/routes/helpers');
+const { setupApiRoute, setupAdminPageRoute } = require.main.require('./src/routes/helpers');
 const { formatApiResponse } = require.main.require('./src/controllers/helpers');
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
@@ -26,26 +26,7 @@ export default function controllers({ router, middleware }: {
       });
     }), err => setImmediate(next, err));
   };
-
-  router.get('/admin/plugins/emoji', middleware.admin.buildHeader, renderAdmin);
-  router.get('/api/admin/plugins/emoji', renderAdmin);
-
-  const saveAdmin: RequestHandler = (req, res, next) => {
-    const data = JSON.parse(req.query.settings as string);
-    settings.set(data).then(
-      () => setImmediate(() => res.send('OK')),
-      err => setImmediate(next, err)
-    );
-  };
-  router.get('/api/admin/plugins/emoji/save', saveAdmin);
-
-  const adminBuild: RequestHandler = (req, res, next) => {
-    build().then(
-      () => setImmediate(() => res.send('OK')),
-      err => setImmediate(next, err)
-    );
-  };
-  router.get('/api/admin/plugins/emoji/build', adminBuild);
+  setupAdminPageRoute(router, '/admin/plugins/emoji', middleware, [], renderAdmin);
 
   const updateSettings: RequestHandler = async (req, res) => {
     const data = req.body;
@@ -127,5 +108,5 @@ export default function controllers({ router, middleware }: {
     dest: join(nconf.get('upload_path'), 'emoji'),
   });
 
-  router.post('/api/admin/plugins/emoji/upload', upload.single('emojiImage'), uploadEmoji);
+  router.post('/api/admin/plugins/emoji/upload', middleware.admin.checkPrivileges, upload.single('emojiImage'), uploadEmoji);
 }
