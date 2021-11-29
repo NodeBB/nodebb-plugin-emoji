@@ -37,19 +37,19 @@ export default function controllers({ router, middleware }: {
     });
     formatApiResponse(200, res);
   };
-  setupApiRoute(router, 'put', '/api/v3/admin/plugins/emoji/settings', [middleware.authenticate, middleware.admin.checkPrivileges], updateSettings);
+  setupApiRoute(router, 'put', '/api/v3/admin/plugins/emoji/settings', [middleware.admin.checkPrivileges], updateSettings);
 
   const buildAssets: RequestHandler = async (req, res) => {
     await build();
     formatApiResponse(200, res);
   };
-  setupApiRoute(router, 'put', '/api/v3/admin/plugins/emoji/build', [middleware.authenticate, middleware.admin.checkPrivileges], buildAssets);
+  setupApiRoute(router, 'put', '/api/v3/admin/plugins/emoji/build', [middleware.admin.checkPrivileges], buildAssets);
 
   const provideCustomizations: RequestHandler = async (req, res) => {
     const data = await customizations.getAll();
     formatApiResponse(200, res, data);
   };
-  setupApiRoute(router, 'get', '/api/v3/admin/plugins/emoji/customizations', [middleware.authenticate, middleware.admin.checkPrivileges], provideCustomizations);
+  setupApiRoute(router, 'get', '/api/v3/admin/plugins/emoji/customizations', [middleware.admin.checkPrivileges], provideCustomizations);
 
   const addCustomization: RequestHandler = async (req, res) => {
     const type = req.params.type;
@@ -61,7 +61,7 @@ export default function controllers({ router, middleware }: {
     const id = await customizations.add({ type, item });
     formatApiResponse(200, res, { id });
   };
-  setupApiRoute(router, 'post', '/api/v3/admin/plugins/emoji/customizations/:type', [middleware.authenticate, middleware.admin.checkPrivileges], addCustomization);
+  setupApiRoute(router, 'post', '/api/v3/admin/plugins/emoji/customizations/:type', [middleware.admin.checkPrivileges], addCustomization);
 
   const editCustomization: RequestHandler = async (req, res) => {
     const id = parseInt(req.params.id, 10);
@@ -74,7 +74,7 @@ export default function controllers({ router, middleware }: {
     await customizations.edit({ type, id, item });
     formatApiResponse(200, res);
   };
-  setupApiRoute(router, 'put', '/api/v3/admin/plugins/emoji/customizations/:type/:id', [middleware.authenticate, middleware.admin.checkPrivileges], editCustomization);
+  setupApiRoute(router, 'put', '/api/v3/admin/plugins/emoji/customizations/:type/:id', [middleware.admin.checkPrivileges], editCustomization);
 
   const deleteCustomization: RequestHandler = async (req, res) => {
     const id = parseInt(req.params.id, 10);
@@ -86,7 +86,7 @@ export default function controllers({ router, middleware }: {
     await customizations.remove({ type, id });
     formatApiResponse(200, res);
   };
-  setupApiRoute(router, 'delete', '/api/v3/admin/plugins/emoji/customizations/:type/:id', [middleware.authenticate, middleware.admin.checkPrivileges], deleteCustomization);
+  setupApiRoute(router, 'delete', '/api/v3/admin/plugins/emoji/customizations/:type/:id', [middleware.admin.checkPrivileges], deleteCustomization);
 
   const uploadEmoji: RequestHandler = (req, res, next) => {
     if (!req.file) {
