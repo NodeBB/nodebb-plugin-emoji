@@ -5,6 +5,7 @@ import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 const buster = require.main.require('./src/meta').config['cache-buster'];
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
+const baseUrl = nconf.get('base_url');
 const relative_path = nconf.get('relative_path');
 
 let metaCache: {
@@ -91,7 +92,11 @@ export function setOptions(newOptions: ParseOptions): void {
 
 export const buildEmoji = (emoji: StoredEmoji, whole: string): string => {
   if (emoji.image) {
-    const route = `${options.assetBaseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
+    const assetUrl = options.assetBaseUrl.startsWith('http') ?
+      options.assetBaseUrl :
+      baseUrl + options.assetBaseUrl;
+
+    const route = `${assetUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
       src="${route}/${emoji.image}?${buster}"
       class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name}"
