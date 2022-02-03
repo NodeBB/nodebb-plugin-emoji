@@ -62,6 +62,6 @@
     "build": "npm run compile && cd acp && rollup -c",
     "pretest": "npm run lint && npm run build",
     "test": "node build/lib/tests.js",
-    "prepare": "rm -r build; mkdir -p build/emoji && touch build/emoji/avoid_npm_ignore && npm run test"
+    "prepare": "bash prepare.sh"
   }
 }
