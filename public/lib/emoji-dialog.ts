@@ -161,6 +161,11 @@ export function init(callback: Callback<JQuery>): void {
         'action:chat.minimize',
         'action:chat.closed',
       ].join(' '), close);
+
+      $(window).on('action:composer.fullscreen', (ev, data) => {
+        data.postContainer.append(dialog);
+      });
+
       dialog.find('.close').click(close);
       $(document).on('click', (e) => {
         if (!$(e.target).is('.emoji-dialog *')) {
