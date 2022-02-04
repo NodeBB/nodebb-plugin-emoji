@@ -20,6 +20,7 @@ export const dialogActions = {
   open(dialog: JQuery): JQuery {
     $html.addClass('emoji-insert');
     dialog.addClass('open');
+    dialog.appendTo(document.fullscreenElement || 'body');
     dialog.find('.emoji-dialog-search').focus();
 
     return dialog;
@@ -88,7 +89,7 @@ export function init(callback: Callback<JQuery>): void {
       });
     })
     .then(result => translator.translate(result)).then((html) => {
-      const dialog = $(html).appendTo('body');
+      const dialog = $(html).appendTo(document.fullscreenElement || 'body');
 
       dialog.find('.emoji-dialog-search').on('input', (e) => {
         const value = (e.target as HTMLInputElement).value;
@@ -161,10 +162,6 @@ export function init(callback: Callback<JQuery>): void {
         'action:chat.minimize',
         'action:chat.closed',
       ].join(' '), close);
-
-      $(window).on('action:composer.fullscreen', (ev, data) => {
-        data.postContainer.append(dialog);
-      });
 
       dialog.find('.close').click(close);
       $(document).on('click', (e) => {
