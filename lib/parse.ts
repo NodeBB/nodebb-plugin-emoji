@@ -3,9 +3,7 @@ import { readFile } from 'fs-extra';
 import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
 const buster = require.main.require('./src/meta').config['cache-buster'];
-const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
-const url = nconf.get('url');
 
 let metaCache: {
   table: MetaData.Table;
@@ -72,9 +70,26 @@ const outsideCode = /(^|<\/code>)([^<]*|<(?!code[^>]*>))*(<code[^>]*>|$)/g;
 const outsideElements = /(<[^>]*>)?([^<>]*)/g;
 const emojiPattern = /:([a-z\-.+0-9_]+):/g;
 
+interface ParseOptions {
+  /** whether to parse ascii emoji representations into emoji */
+  ascii?: boolean;
+  native?: boolean;
+  baseUrl: string;
+}
+
+const options: ParseOptions = {
+  ascii: false,
+  native: false,
+  baseUrl: '',
+};
+
+export function setOptions(newOptions: ParseOptions): void {
+  Object.assign(options, newOptions);
+}
+
 export const buildEmoji = (emoji: StoredEmoji, whole: string): string => {
   if (emoji.image) {
-    const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
+    const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
       src="${route}/${emoji.image}?${buster}"
       class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name}"
@@ -112,21 +127,6 @@ const replaceNative = (
 
   return char;
 });
-
-interface ParseOptions {
-  /** whether to parse ascii emoji representations into emoji */
-  ascii?: boolean;
-  native?: boolean;
-}
-
-const options: ParseOptions = {
-  ascii: false,
-  native: false,
-};
-
-export function setOptions(newOptions: ParseOptions): void {
-  Object.assign(options, newOptions);
-}
 
 const parse = async (content: string): Promise<string> => {
   if (!content) {

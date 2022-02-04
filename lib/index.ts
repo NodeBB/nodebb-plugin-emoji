@@ -8,6 +8,7 @@ import controllers from './controllers';
 
 const nconf = require.main.require('nconf');
 const buster = require.main.require('./src/meta').config['cache-buster'];
+const apiControllers = require.main.require('./src/controllers/api');
 
 export async function init(params: any): Promise<void> {
   controllers(params);
@@ -18,10 +19,18 @@ export async function init(params: any): Promise<void> {
     parseNative: boolean;
   };
 
+  // get assetBaseUrl from core config
+  const { assetBaseUrl } = await apiControllers.loadConfig({ uid: 0, query: { } });
+
+  const baseUrl = assetBaseUrl.startsWith('http') ?
+    assetBaseUrl :
+    nconf.get('base_url') + assetBaseUrl;
+
   // initialize parser flags
   parse.setOptions({
     ascii: parseAscii,
     native: parseNative,
+    baseUrl,
   });
 
   // always build on startup if in dev mode
