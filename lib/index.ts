@@ -22,11 +22,15 @@ export async function init(params: any): Promise<void> {
   // get assetBaseUrl from core config
   const { assetBaseUrl } = await apiControllers.loadConfig({ uid: 0, query: { } });
 
+  const baseUrl = assetBaseUrl.startsWith('http') ?
+    assetBaseUrl :
+    nconf.get('base_url') + assetBaseUrl;
+
   // initialize parser flags
   parse.setOptions({
     ascii: parseAscii,
     native: parseNative,
-    assetBaseUrl,
+    baseUrl,
   });
 
   // always build on startup if in dev mode
