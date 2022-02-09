@@ -45,5 +45,5 @@ export function show(): void {
 </div>
 
 <svelte:head>
-  <link rel="stylesheet" href={`${config.relative_path}/plugins/nodebb-plugin-emoji/emoji/styles.css?${config['cache-buster']}`} />
+  <link rel="stylesheet" href={`${config.assetBaseUrl}/plugins/nodebb-plugin-emoji/emoji/styles.css?${config['cache-buster']}`} />
 </svelte:head>

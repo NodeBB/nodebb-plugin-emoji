@@ -13,10 +13,9 @@ const apiControllers = require.main.require('./src/controllers/api');
 async function getBaseUrl(): Promise<string> {
   const { assetBaseUrl } = await apiControllers.loadConfig({ uid: 0, query: { } });
 
-  const baseUrl = assetBaseUrl.startsWith('http') ?
+  return assetBaseUrl.startsWith('http') ?
     assetBaseUrl :
     nconf.get('base_url') + assetBaseUrl;
-  return baseUrl;
 }
 
 export async function init(params: any): Promise<void> {
