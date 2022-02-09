@@ -9,6 +9,7 @@ import {
 import { uniq } from 'lodash';
 
 import * as cssBuilders from './css-builders';
+import { getBaseUrl } from './base-url';
 import { clearCache } from './parse';
 import { getAll as getCustomizations } from './customizations';
 
@@ -158,6 +159,7 @@ export default async function build(): Promise<void> {
   });
 
   // generate CSS styles
+  cssBuilders.setBaseUrl(await getBaseUrl());
   const css = packs.map(pack => cssBuilders[pack.mode](pack)).join('\n');
   const cssFile = `${css}\n.emoji-customizations {
     display: inline-block;

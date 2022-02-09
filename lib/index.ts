@@ -5,18 +5,10 @@ import * as parse from './parse';
 import { tableFile } from './build';
 import { build } from './pubsub';
 import controllers from './controllers';
+import { getBaseUrl } from './base-url';
 
 const nconf = require.main.require('nconf');
 const buster = require.main.require('./src/meta').config['cache-buster'];
-const apiControllers = require.main.require('./src/controllers/api');
-
-async function getBaseUrl(): Promise<string> {
-  const { assetBaseUrl } = await apiControllers.loadConfig({ uid: 0, query: { } });
-
-  return assetBaseUrl.startsWith('http') ?
-    assetBaseUrl :
-    nconf.get('base_url') + assetBaseUrl;
-}
 
 export async function init(params: any): Promise<void> {
   controllers(params);
@@ -27,7 +19,6 @@ export async function init(params: any): Promise<void> {
     parseNative: boolean;
   };
 
-  // get assetBaseUrl from core config
   const baseUrl = await getBaseUrl();
 
   // initialize parser flags

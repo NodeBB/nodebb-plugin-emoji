@@ -1,8 +1,11 @@
 import { basename } from 'path';
 
 const buster = require.main.require('./src/meta').config['cache-buster'];
-const nconf = require.main.require('nconf');
-const url = nconf.get('url');
+let baseUrl = '';
+
+export function setBaseUrl(url:string):void {
+  baseUrl = url;
+}
 
 export function images(pack: EmojiDefinition): string {
   return `.emoji-${pack.id} {` +
@@ -18,7 +21,7 @@ export function sprite(pack: EmojiDefinition): string {
       `background-position: ${pack.dictionary[name].backgroundPosition};` +
     '}');
 
-  const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
+  const route = `${baseUrl}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
   return `.emoji-${pack.id} {
     background-image: url(${route}/${basename(pack.sprite.file)}?${buster});
     background-size: ${pack.sprite.backgroundSize};
@@ -48,7 +51,7 @@ export function sprite(pack: EmojiDefinition): string {
 }
 
 export function font(pack: EmojiDefinition): string {
-  const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
+  const route = `${baseUrl}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
 
   return `@font-face {
     font-family: '${pack.font.family}';
