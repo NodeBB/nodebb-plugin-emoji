@@ -21,6 +21,7 @@ module 'textcomplete' {
 module 'config' {
   const config: {
     relative_path: string;
+    assetBaseUrl: string;
     'cache-buster': string;
     emojiCustomFirst: boolean;
     csrf_token: string;
