@@ -1,6 +1,6 @@
 /// <amd-module name="emoji"/>
 
-const base = `${config.relative_path}/plugins/nodebb-plugin-emoji`;
+const base = `${config.assetBaseUrl}/plugins/nodebb-plugin-emoji`;
 const buster = config['cache-buster'];
 
 export { base, buster };

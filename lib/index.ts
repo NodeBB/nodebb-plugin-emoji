@@ -10,6 +10,15 @@ const nconf = require.main.require('nconf');
 const buster = require.main.require('./src/meta').config['cache-buster'];
 const apiControllers = require.main.require('./src/controllers/api');
 
+async function getBaseUrl(): Promise<string> {
+  const { assetBaseUrl } = await apiControllers.loadConfig({ uid: 0, query: { } });
+
+  const baseUrl = assetBaseUrl.startsWith('http') ?
+    assetBaseUrl :
+    nconf.get('base_url') + assetBaseUrl;
+  return baseUrl;
+}
+
 export async function init(params: any): Promise<void> {
   controllers(params);
 
@@ -20,11 +29,7 @@ export async function init(params: any): Promise<void> {
   };
 
   // get assetBaseUrl from core config
-  const { assetBaseUrl } = await apiControllers.loadConfig({ uid: 0, query: { } });
-
-  const baseUrl = assetBaseUrl.startsWith('http') ?
-    assetBaseUrl :
-    nconf.get('base_url') + assetBaseUrl;
+  const baseUrl = await getBaseUrl();
 
   // initialize parser flags
   parse.setOptions({
@@ -75,11 +80,10 @@ export async function addStylesheet<Payload extends {
     rel: string; type?: string; href: string;
   }[];
 }>(data: Payload): Promise<Payload> {
-  const rel = nconf.get('relative_path');
-
+  const baseUrl = await getBaseUrl();
   data.links.push({
     rel: 'stylesheet',
-    href: `${rel}/plugins/nodebb-plugin-emoji/emoji/styles.css?${buster}`,
+    href: `${baseUrl}/plugins/nodebb-plugin-emoji/emoji/styles.css?${buster}`,
   });
 
   return data;
