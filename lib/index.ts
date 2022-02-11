@@ -1,5 +1,3 @@
-import { access } from 'fs-extra';
-
 import * as settings from './settings';
 import * as parse from './parse';
 import { tableFile } from './build';
@@ -9,6 +7,7 @@ import { getBaseUrl } from './base-url';
 
 const nconf = require.main.require('nconf');
 const buster = require.main.require('./src/meta').config['cache-buster'];
+const file = require.main.require('./src/file');
 
 export async function init(params: any): Promise<void> {
   controllers(params);
@@ -30,13 +29,8 @@ export async function init(params: any): Promise<void> {
 
   // always build on startup if in dev mode
   const shouldBuild = nconf.any('build_emoji', 'BUILD_EMOJI') ||
-  // otherwise, build if never built before
-  access(tableFile).catch((err) => {
-    if (err && err.code !== 'ENOENT') {
-      throw err;
-    }
-    return false;
-  });
+    // otherwise, build if never built before
+    !(await file.exists(tableFile));
 
   if (shouldBuild) {
     await build();
