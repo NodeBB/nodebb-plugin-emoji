@@ -1,12 +1,9 @@
-import { readFile } from 'fs';
-import { parallel } from 'async';
+import { readFile } from 'fs-extra';
 
 import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
 const buster = require.main.require('./src/meta').config['cache-buster'];
-const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
-const url = nconf.get('url');
 
 let metaCache: {
   table: MetaData.Table;
@@ -16,75 +13,83 @@ let metaCache: {
   characters: MetaData.Characters;
   charPattern: RegExp;
 } = null;
-export function clearCache() {
+export function clearCache(): void {
   metaCache = null;
 }
 
 const escapeRegExpChars = (text: string) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 
-const getTable = (callback: NodeBack<typeof metaCache>) => {
+const getTable = async (): Promise<typeof metaCache> => {
   if (metaCache) {
-    callback(null, metaCache);
-    return;
+    return metaCache;
   }
 
-  parallel({
-    table: (next) => readFile(tableFile, 'utf8', next),
-    aliases: (next) => readFile(aliasesFile, 'utf8', next),
-    ascii: (next) => readFile(asciiFile, 'utf8', next),
-    characters: (next) => readFile(charactersFile, 'utf8', next),
-  }, (err: Error, results: {
-    table: string;
-    aliases: string;
-    ascii: string;
-    characters: string;
-  }) => {
-    if (err) {
-      callback(err);
-      return;
-    }
+  const [
+    tableText,
+    aliasesText,
+    asciiText,
+    charactersText,
+  ]: [string, string, string, string] = await Promise.all([
+    readFile(tableFile, 'utf8'),
+    readFile(aliasesFile, 'utf8'),
+    readFile(asciiFile, 'utf8'),
+    readFile(charactersFile, 'utf8'),
+  ]);
 
-    try {
-      const ascii = JSON.parse(results.ascii);
-      const asciiPattern = Object.keys(ascii)
-        .sort((a, b) => b.length - a.length)
-        .map(escapeRegExpChars)
-        .join('|');
+  const table = JSON.parse(tableText);
+  const aliases = JSON.parse(aliasesText);
+  const ascii = JSON.parse(asciiText);
+  const characters = JSON.parse(charactersText);
 
-      const characters = JSON.parse(results.characters);
-      const charPattern = Object.keys(characters)
-        .sort((a, b) => b.length - a.length)
-        .map(escapeRegExpChars)
-        .join('|');
+  const asciiPattern = Object.keys(ascii)
+    .sort((a, b) => b.length - a.length)
+    .map(escapeRegExpChars)
+    .join('|');
+  const charPattern = Object.keys(characters)
+    .sort((a, b) => b.length - a.length)
+    .map(escapeRegExpChars)
+    .join('|');
 
-      metaCache = {
-        ascii,
-        characters,
-        table: JSON.parse(results.table),
-        aliases: JSON.parse(results.aliases),
-        asciiPattern: asciiPattern ?
-          new RegExp(`(^|\\s|\\n)(${asciiPattern})(?=\\n|\\s|$)`, 'g') :
-          /(?!)/,
-        charPattern: charPattern ?
-          new RegExp(charPattern, 'g') :
-          /(?!)/,
-      };
-    } catch (e) {
-      callback(e);
-      return;
-    }
+  metaCache = {
+    table,
+    aliases,
+    ascii,
+    characters,
+    asciiPattern: asciiPattern ?
+      new RegExp(`(^|\\s|\\n)(${asciiPattern})(?=\\n|\\s|$)`, 'g') :
+      /(?!)/,
+    charPattern: charPattern ?
+      new RegExp(charPattern, 'g') :
+      /(?!)/,
+  };
 
-    callback(null, metaCache);
-  });
+  return metaCache;
 };
 
 const outsideCode = /(^|<\/code>)([^<]*|<(?!code[^>]*>))*(<code[^>]*>|$)/g;
 const outsideElements = /(<[^>]*>)?([^<>]*)/g;
 const emojiPattern = /:([a-z\-.+0-9_]+):/g;
 
-export const buildEmoji = (emoji: StoredEmoji, whole: string) => {
+interface ParseOptions {
+  /** whether to parse ascii emoji representations into emoji */
+  ascii?: boolean;
+  native?: boolean;
+  baseUrl: string;
+}
+
+const options: ParseOptions = {
+  ascii: false,
+  native: false,
+  baseUrl: '',
+};
+
+export function setOptions(newOptions: ParseOptions): void {
+  Object.assign(options, newOptions);
+}
+
+export const buildEmoji = (emoji: StoredEmoji, whole: string): string => {
   if (emoji.image) {
-    const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
+    const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
       src="${route}/${emoji.image}?${buster}"
       class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name}"
@@ -123,95 +128,77 @@ const replaceNative = (
   return char;
 });
 
-interface ParseOptions {
-  /** whether to parse ascii emoji representations into emoji */
-  ascii?: boolean;
-  native?: boolean;
-}
+const parse = async (content: string): Promise<string> => {
+  if (!content) {
+    return content;
+  }
+  let store: typeof metaCache;
+  try {
+    store = await getTable();
+  } catch (err) {
+    winston.error('[emoji] Failed to retrieve data for parse', err);
+    return content;
+  }
+  const { table, aliases } = store;
 
-const options: ParseOptions = {
-  ascii: false,
-  native: false,
-};
+  const parsed = content.replace(
+    outsideCode,
+    outsideCodeStr => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
+      let output = outside;
 
-export function setOptions(newOptions: ParseOptions) {
-  Object.assign(options, newOptions);
-}
-
-const parse = (content: string, callback: NodeBack<string>) => {
-  getTable((err, store) => {
-    if (err) {
-      winston.error(err);
-      callback(null, content);
-      return;
-    }
-    const { table, aliases } = store;
-
-    const parsed = content.replace(
-      outsideCode,
-      (outsideCodeStr) => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
-        let output = outside;
-
-        if (options.native) {
-          // avoid parsing native inside HTML tags
-          // also avoid converting ascii characters
-          output = output.replace(
-            /(<[^>]+>)|([^0-9a-zA-Z`~!@#$%^&*()\-=_+{}|[\]\\:";'<>?,./\s\n]+)/g,
-            (full: string, tag: string, text: string) => {
-              if (text) {
-                return replaceNative(text, store);
-              }
-
-              return full;
+      if (options.native) {
+        // avoid parsing native inside HTML tags
+        // also avoid converting ascii characters
+        output = output.replace(
+          /(<[^>]+>)|([^0-9a-zA-Z`~!@#$%^&*()\-=_+{}|[\]\\:";'<>?,./\s\n]+)/g,
+          (full: string, tag: string, text: string) => {
+            if (text) {
+              return replaceNative(text, store);
             }
-          );
-        }
 
-        output = output.replace(emojiPattern, (whole: string, text: string) => {
-          const name = text.toLowerCase();
-          const emoji = table[name] || table[aliases[name]];
-
-          if (emoji) {
-            return buildEmoji(emoji, whole);
+            return full;
           }
+        );
+      }
 
-          return whole;
-        });
+      output = output.replace(emojiPattern, (whole: string, text: string) => {
+        const name = text.toLowerCase();
+        const emoji = table[name] || table[aliases[name]];
 
-        if (options.ascii) {
-          // avoid parsing native inside HTML tags
-          output = output.replace(
-            /(<[^>]+>)|([^<]+)/g,
-            (full: string, tag: string, text: string) => {
-              if (text) {
-                return replaceAscii(text, store);
-              }
-
-              return full;
-            }
-          );
+        if (emoji) {
+          return buildEmoji(emoji, whole);
         }
 
-        return (inside || '') + (output || '');
-      })
-    );
+        return whole;
+      });
 
-    callback(null, parsed);
-  });
+      if (options.ascii) {
+        // avoid parsing native inside HTML tags
+        output = output.replace(
+          /(<[^>]+>)|([^<]+)/g,
+          (full: string, tag: string, text: string) => {
+            if (text) {
+              return replaceAscii(text, store);
+            }
+
+            return full;
+          }
+        );
+      }
+
+      return (inside || '') + (output || '');
+    })
+  );
+
+  return parsed;
 };
 
-export function raw(content: string, callback: NodeBack<string>) {
-  parse(content, callback);
+export function raw(content: string): Promise<string> {
+  return parse(content);
 }
 
-export function post(data: { postData: { content: string } }, callback: NodeBack) {
-  parse(data.postData.content, (err, content: string) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    data.postData.content = content;
-    callback(null, data);
-  });
+export async function post(data: { postData: { content: string } }): Promise<any> {
+  // eslint-disable-next-line no-param-reassign
+  data.postData.content = await parse(data.postData.content);
+  return data;
 }

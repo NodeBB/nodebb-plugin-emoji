@@ -1,30 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 declare type Callback<T = void> = (result: T) => void;
 
-interface Window {
-  config: {
-    relative_path: string;
-    'cache-buster': string;
-    emojiCustomFirst: boolean;
-  };
-  app: {
-    alertSuccess(message?: string): void;
-    alertError(message?: string): void;
-    alertError(error: Error): void;
-  };
-  templates: {
-    parse(template: string, data: any, callback: Callback<string>): void;
-  };
-  utils: {
-    generateUUID(): string;
-  };
-  Textcomplete: any;
-}
+declare const config: {
+  relative_path: string;
+  assetBaseUrl: string;
+  'cache-buster': string;
+  emojiCustomFirst: boolean;
+  csrf_token: string;
+};
+declare const app: {
+  alertSuccess(message?: string): void;
+  alertError(message?: string): void;
+  alertError(error?: Error): void;
+};
+declare const ajaxify: {
+  data: any;
+};
+declare const utils: {
+  generateUUID(): string;
+};
+declare const Textcomplete: any;
 
 interface String {
   startsWith(str: string): boolean;
 }
-
-declare const socket: SocketIO.Server;
 
 interface JQuery {
   ajaxSubmit: any;

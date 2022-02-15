@@ -8,7 +8,7 @@ const pubsub = require.main.require('./src/pubsub');
 
 const primary = nconf.get('isPrimary') === 'true' || nconf.get('isPrimary') === true;
 
-export function build(callback: NodeBack) {
+export async function build(): Promise<void> {
   if (pubsub.pubClient) {
     pubsub.publish('emoji:build', {
       hostname: hostname(),
@@ -16,9 +16,7 @@ export function build(callback: NodeBack) {
   }
 
   if (primary) {
-    buildAssets(callback);
-  } else {
-    callback();
+    await buildAssets();
   }
 }
 
@@ -31,7 +29,7 @@ const logErrors = (err: Error) => {
 if (primary) {
   pubsub.on('emoji:build', (data: { hostname: string }) => {
     if (data.hostname !== hostname()) {
-      buildAssets(logErrors);
+      buildAssets().catch(logErrors);
     }
   });
 }

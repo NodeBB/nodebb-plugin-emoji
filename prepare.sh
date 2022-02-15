@@ -1,0 +1,1 @@
+rm -r build; mkdir -p build/emoji && touch build/emoji/avoid_npm_ignore && npm run test

@@ -17,14 +17,15 @@ import {
 const $html = $('html');
 
 export const dialogActions = {
-  open(dialog: JQuery) {
+  open(dialog: JQuery): JQuery {
     $html.addClass('emoji-insert');
     dialog.addClass('open');
+    dialog.appendTo(document.fullscreenElement || 'body');
     dialog.find('.emoji-dialog-search').focus();
 
     return dialog;
   },
-  close(dialog: JQuery) {
+  close(dialog: JQuery): JQuery {
     $html.removeClass('emoji-insert');
     return dialog.removeClass('open');
   },
@@ -46,7 +47,7 @@ const priorities: {
   other: 0,
 };
 
-if (window.config.emojiCustomFirst) {
+if (config.emojiCustomFirst) {
   priorities.custom = 100;
 }
 
@@ -59,18 +60,18 @@ function stringCompare(a: string, b: string) {
 }
 
 // create modal
-export function init(callback: Callback<JQuery>) {
+export function init(callback: Callback<JQuery>): void {
   Promise.all([
     $.getJSON(`${base}/emoji/categories.json?${buster}`),
     $.getJSON(`${base}/emoji/packs.json?${buster}`),
-    new Promise((resolve) => initEmoji(resolve)),
+    new Promise(resolve => initEmoji(resolve)),
   ])
     .then(([categoriesInfo, packs]: [MetaData.Categories, MetaData.Packs, undefined]) => {
       const categories = Object.keys(categoriesInfo).map((category) => {
-        const emojis = categoriesInfo[category].map((name) => table[name]);
+        const emojis = categoriesInfo[category].map(name => table[name]);
         return {
           name: category,
-          emojis: emojis.map((emoji) => ({
+          emojis: emojis.map(emoji => ({
             name: emoji.name,
             html: buildEmoji(emoji, true),
           })).sort((a, b) => stringCompare(a.name, b.name)),
@@ -87,8 +88,8 @@ export function init(callback: Callback<JQuery>) {
         packs,
       });
     })
-    .then((result) => translator.translate(result)).then((html) => {
-      const dialog = $(html).appendTo('body');
+    .then(result => translator.translate(result)).then((html) => {
+      const dialog = $(html).appendTo(document.fullscreenElement || 'body');
 
       dialog.find('.emoji-dialog-search').on('input', (e) => {
         const value = (e.target as HTMLInputElement).value;
@@ -102,7 +103,7 @@ export function init(callback: Callback<JQuery>) {
         const results = search(value)
           .slice(0, 100)
           .map(
-            (emoji) => `<a class="emoji-link" name="${emoji.name}" href="#">${buildEmoji(emoji, false)}</a>`
+            emoji => `<a class="emoji-link" name="${emoji.name}" href="#">${buildEmoji(emoji, false)}</a>`
           )
           .join('\n');
 
@@ -161,7 +162,13 @@ export function init(callback: Callback<JQuery>) {
         'action:chat.minimize',
         'action:chat.closed',
       ].join(' '), close);
+
       dialog.find('.close').click(close);
+      $(document).on('click', (e) => {
+        if (!$(e.target).is('.emoji-dialog *')) {
+          close();
+        }
+      });
 
       if (dialog.draggable) {
         dialog.draggable({
@@ -179,7 +186,7 @@ export function init(callback: Callback<JQuery>) {
 export function toggle(
   opener: HTMLElement | null,
   onClick: (e: JQuery.Event, name: string, dialog: JQuery) => void
-) {
+): void {
   function after(dialog: JQuery) {
     if (dialog.hasClass('open')) {
       dialogActions.close(dialog);
@@ -233,7 +240,7 @@ export function toggleForInsert(
   selectStart: number,
   selectEnd: number,
   event: JQuery.ClickEvent
-) {
+): void {
   // handle new and old API case
   let button;
   if (event && event.target) {

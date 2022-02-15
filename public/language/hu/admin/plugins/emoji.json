@@ -1,0 +1,8 @@
+{
+  "settings": "Beállítások",
+  "settings.parseAscii": "ASCII karaktersorozatok, mint <code>:)</code>, <code>-_-</code>, stb helyettesítése",
+  "settings.parseNative": "Natív unicode hangulatjelek helyettesítése hangulatjel csomagok által biztosított hangulatjelekre",
+  "settings.customFirst": "Az egyedi hangulatjelek kerüljenek a választóban legelőre",
+  "build": "Hangulatjelek újraépítése",
+  "build_description": "A szükséges meta információk és statikus asset-ek fordítása az összes hangulatjel csomagból. <br> Egy hangulatjel csomag telepítése és aktiválása után indítsd újra a NodeBB-t, építsd újra a hangulatjeleket, majd építsd újra és indítsd újra a NodeBB-t."
+}

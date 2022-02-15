@@ -1,116 +1,85 @@
-import { waterfall } from 'async';
-import { access } from 'fs';
-
 import * as settings from './settings';
-import * as plugins from './plugins';
 import * as parse from './parse';
 import { tableFile } from './build';
 import { build } from './pubsub';
 import controllers from './controllers';
-import './customizations';
+import { getBaseUrl } from './base-url';
 
 const nconf = require.main.require('nconf');
 const buster = require.main.require('./src/meta').config['cache-buster'];
+const file = require.main.require('./src/file');
 
-const init = (
-  params: any,
-  callback: NodeBack<void>
-) => {
+export async function init(params: any): Promise<void> {
   controllers(params);
 
-  waterfall([
-    settings.get,
-    ({ parseAscii, parseNative }: {
-      parseAscii: boolean;
-      parseNative: boolean;
-    }, next: NodeBack) => {
-      // initialise ascii flag
-      parse.setOptions({
-        ascii: parseAscii,
-        native: parseNative,
-      });
+  const sets = await settings.get();
+  const { parseAscii, parseNative } = sets as {
+    parseAscii: boolean;
+    parseNative: boolean;
+  };
 
-      // always build on startup if in dev mode
-      if (nconf.any('build_emoji', 'BUILD_EMOJI')) {
-        next(null, true);
-        return;
-      }
+  const baseUrl = await getBaseUrl();
 
-      // otherwise, build if never built before
-      access(tableFile, (err) => {
-        if (err && err.code !== 'ENOENT') {
-          next(err);
-          return;
-        }
+  // initialize parser flags
+  parse.setOptions({
+    ascii: parseAscii,
+    native: parseNative,
+    baseUrl,
+  });
 
-        next(null, !!err);
-      });
-    },
-    (shouldBuild: boolean, next: NodeBack) => {
-      if (shouldBuild) {
-        build(next);
-      } else {
-        next();
-      }
-    },
-  ], callback);
-};
+  // always build on startup if in dev mode
+  const shouldBuild = nconf.any('build_emoji', 'BUILD_EMOJI') ||
+    // otherwise, build if never built before
+    !(await file.exists(tableFile));
 
-const adminMenu = (header: {
+  if (shouldBuild) {
+    await build();
+  }
+}
+
+export async function adminMenu<Payload extends {
   plugins: { route: string; icon: string; name: string }[];
-}, callback: NodeBack) => {
+}>(header: Payload): Promise<Payload> {
   header.plugins.push({
     route: '/plugins/emoji',
     icon: 'fa-smile-o',
     name: 'Emoji',
   });
-  callback(null, header);
-};
+  return header;
+}
 
-const composerFormatting = (data: {
+export async function composerFormatting<Payload extends {
   options: { name: string; className: string; title: string }[];
-}, callback: NodeBack) => {
+}>(data: Payload): Promise<Payload> {
   data.options.push({
     name: 'emoji-add-emoji',
     className: 'fa fa-smile-o emoji-add-emoji',
     title: '[[emoji:composer.title]]',
   });
-  callback(null, data);
-};
+  return data;
+}
 
-const addStylesheet = (data: {
+export async function addStylesheet<Payload extends {
   links: {
     rel: string; type?: string; href: string;
   }[];
-}, callback: NodeBack) => {
-  const rel = nconf.get('relative_path');
-
+}>(data: Payload): Promise<Payload> {
+  const baseUrl = await getBaseUrl();
   data.links.push({
     rel: 'stylesheet',
-    href: `${rel}/plugins/nodebb-plugin-emoji/emoji/styles.css?${buster}`,
+    href: `${baseUrl}/plugins/nodebb-plugin-emoji/emoji/styles.css?${buster}`,
   });
 
-  callback(null, data);
-};
+  return data;
+}
 
-const configGet = (config: any, next: NodeBack<any>) => {
-  settings.getOne('customFirst', (err, customFirst) => {
-    if (err) {
-      next(err);
-      return;
-    }
-
-    config.emojiCustomFirst = customFirst;
-    next(null, config);
-  });
-};
+export async function configGet(config: any): Promise<any> {
+  const customFirst = await settings.getOne('customFirst');
+  // eslint-disable-next-line no-param-reassign
+  config.emojiCustomFirst = customFirst;
+  return config;
+}
 
 export {
-  init,
-  adminMenu,
-  composerFormatting,
-  plugins,
   parse,
-  addStylesheet,
-  configGet,
 };

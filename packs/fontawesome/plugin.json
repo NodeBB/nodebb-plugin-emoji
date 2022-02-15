@@ -1,0 +1,11 @@
+{
+  "library": "emoji.js",
+  "languages": "public/language",
+  "defaultLang": "en-US",
+  "less": [
+    "public/style.less"
+  ],
+  "hooks": [
+    { "hook": "filter:emoji.packs", "method": "defineEmoji" }
+  ]
+}

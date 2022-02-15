@@ -1,7 +1,7 @@
 /**
  * Schema for defining an emoji
  */
-declare interface Emoji {
+interface Emoji {
   /** alternative names for this emoji */
   aliases?: string[];
   /** keywords to match when searching for emoji */
@@ -40,7 +40,7 @@ declare interface Emoji {
   categories?: string[];
 }
 
-declare interface EmojiDefinition {
+interface EmojiDefinition {
   /**
    * human-friendly name of this emoji pack
    */
@@ -122,7 +122,7 @@ declare interface EmojiDefinition {
 
 declare type NodeBack<T = any> = (err?: Error, ...args: T[]) => void;
 
-declare interface StoredEmoji {
+interface StoredEmoji {
   name: string;
   character: string;
   image: string;
@@ -191,11 +191,16 @@ interface CustomAdjunct {
 }
 
 interface Customizations {
-  emojis: CustomEmoji[];
-  adjuncts: CustomAdjunct[];
+  emojis: {
+    [id: number]: CustomEmoji
+  };
+  adjuncts: {
+    [id: number]: CustomAdjunct
+  }
 }
 
-declare module 'string-hash' {
-  const hash: (str: string) => number;
-  export = hash;
+interface Settings {
+  parseNative: boolean;
+  parseAscii: boolean;
+  customFirst: boolean;
 }

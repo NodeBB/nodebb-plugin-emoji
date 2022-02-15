@@ -1,10 +1,13 @@
 import { basename } from 'path';
 
 const buster = require.main.require('./src/meta').config['cache-buster'];
-const nconf = require.main.require('nconf');
-const url = nconf.get('url');
+let baseUrl = '';
 
-export function images(pack: EmojiDefinition) {
+export function setBaseUrl(url:string):void {
+  baseUrl = url;
+}
+
+export function images(pack: EmojiDefinition): string {
   return `.emoji-${pack.id} {` +
     'display: inline-block;' +
     'height: 23px;' +
@@ -14,11 +17,11 @@ export function images(pack: EmojiDefinition) {
 }
 
 export function sprite(pack: EmojiDefinition): string {
-  const classes = Object.keys(pack.dictionary).map((name) => `.emoji-${pack.id}.emoji--${name} {` +
+  const classes = Object.keys(pack.dictionary).map(name => `.emoji-${pack.id}.emoji--${name} {` +
       `background-position: ${pack.dictionary[name].backgroundPosition};` +
     '}');
 
-  const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
+  const route = `${baseUrl}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
   return `.emoji-${pack.id} {
     background-image: url(${route}/${basename(pack.sprite.file)}?${buster});
     background-size: ${pack.sprite.backgroundSize};
@@ -44,11 +47,11 @@ export function sprite(pack: EmojiDefinition): string {
     font-size: 23px;
     line-height: 23px;
   }
-  ${classes.join('')}`.split('\n').map((x) => x.trim()).join('');
+  ${classes.join('')}`.split('\n').map(x => x.trim()).join('');
 }
 
 export function font(pack: EmojiDefinition): string {
-  const route = `${url}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
+  const route = `${baseUrl}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
 
   return `@font-face {
     font-family: '${pack.font.family}';
@@ -79,5 +82,5 @@ export function font(pack: EmojiDefinition): string {
     vertical-align: bottom;
     margin-top: -1px;
     margin-bottom: -1px;
-  }`.split('\n').map((x) => x.trim()).join('');
+  }`.split('\n').map(x => x.trim()).join('');
 }

@@ -1,12 +1,17 @@
-import { writeFile, symlink } from 'fs';
 import { join, resolve, basename } from 'path';
-import { mkdirp, copy, remove } from 'fs-extra';
+import {
+  mkdirp,
+  copy,
+  remove,
+  writeFile,
+  symlink,
+} from 'fs-extra';
 import { uniq } from 'lodash';
-import * as async from 'async';
 
 import * as cssBuilders from './css-builders';
+import { getBaseUrl } from './base-url';
 import { clearCache } from './parse';
-import { getCustomizations } from './customizations';
+import { getAll as getCustomizations } from './customizations';
 
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
@@ -14,9 +19,9 @@ const plugins = require.main.require('./src/plugins');
 
 export const assetsDir = join(__dirname, '../emoji');
 
-const linkDirs = (sourceDir: string, destDir: string, callback: NodeBack) => {
+const linkDirs = (sourceDir: string, destDir: string) => {
   const type = (process.platform === 'win32') ? 'junction' : 'dir';
-  symlink(sourceDir, destDir, type, callback);
+  return symlink(sourceDir, destDir, type);
 };
 
 export const tableFile = join(assetsDir, 'table.json');
@@ -26,203 +31,187 @@ export const charactersFile = join(assetsDir, 'characters.json');
 export const categoriesFile = join(assetsDir, 'categories.json');
 export const packsFile = join(assetsDir, 'packs.json');
 
-export default function build(callback: NodeBack) {
+export default async function build(): Promise<void> {
   winston.verbose('[emoji] Building emoji assets');
 
-  async.waterfall([
-    // fetch the emoji definitions
-    (next: NodeBack) => plugins.fireHook('filter:emoji.packs', { packs: [] }, next),
-    // filter out invalid ones
-    ({ packs }: { packs: EmojiDefinition[] }, next: NodeBack) => {
-      const filtered = packs.filter((pack) => {
-        if (pack && pack.id && pack.name && pack.mode && pack.dictionary && pack.path) {
-          return true;
-        }
+  // fetch the emoji definitions
+  const { packs }: { packs: EmojiDefinition[] } = await plugins.hooks.fire('filter:emoji.packs', { packs: [] });
+  // filter out invalid ones
+  const filtered = packs.filter((pack) => {
+    if (pack && pack.id && pack.name && pack.mode && pack.dictionary && pack.path) {
+      return true;
+    }
 
-        winston.warn('[emoji] pack invalid', pack.path || pack.id);
-        return false;
-      });
+    winston.warn('[emoji] pack invalid: ', pack.path || pack.id);
+    return false;
+  });
 
-      winston.verbose('[emoji] Loaded packs', filtered.map((pack) => pack.id).join(', '));
+  winston.verbose(`[emoji] Loaded packs: ${filtered.map(pack => pack.id).join(', ')}`);
 
-      async.series([
-        (cb) => remove(assetsDir, cb),
-        (cb) => mkdirp(assetsDir, cb),
-      ], (err: Error) => next(err, filtered));
-    },
-    (packs: EmojiDefinition[], next: NodeBack) => {
-      getCustomizations((err, custs) => next(err, packs, custs));
-    },
-    (packs: EmojiDefinition[], customizations: Customizations, next: NodeBack) => {
-      const table: MetaData.Table = {};
-      const aliases: MetaData.Aliases = {};
-      const ascii: MetaData.Ascii = {};
-      const characters: MetaData.Characters = {};
+  await remove(assetsDir);
+  await mkdirp(assetsDir);
 
-      const categoriesInfo: MetaData.Categories = {};
-      const packsInfo: MetaData.Packs = [];
+  const customizations = await getCustomizations();
 
-      packs.forEach((pack) => {
-        packsInfo.push({
-          name: pack.name,
-          id: pack.id,
-          attribution: pack.attribution,
-          license: pack.license,
-        });
+  const table: MetaData.Table = {};
+  const aliases: MetaData.Aliases = {};
+  const ascii: MetaData.Ascii = {};
+  const characters: MetaData.Characters = {};
 
-        Object.keys(pack.dictionary).forEach((key) => {
-          const name = key.toLowerCase();
-          const emoji = pack.dictionary[key];
+  const categoriesInfo: MetaData.Categories = {};
+  const packsInfo: MetaData.Packs = [];
 
-          if (!table[name]) {
-            table[name] = {
-              name,
-              character: emoji.character || `:${name}:`,
-              image: emoji.image || '',
-              pack: pack.id,
-              aliases: emoji.aliases || [],
-              keywords: emoji.keywords || [],
-            };
-          }
+  packs.forEach((pack) => {
+    packsInfo.push({
+      name: pack.name,
+      id: pack.id,
+      attribution: pack.attribution,
+      license: pack.license,
+    });
 
-          if (!characters[emoji.character]) {
-            characters[emoji.character] = name;
-          }
+    Object.keys(pack.dictionary).forEach((key) => {
+      const name = key.toLowerCase();
+      const emoji = pack.dictionary[key];
 
-          if (emoji.aliases) {
-            emoji.aliases.forEach((alias) => {
-              const a = alias.toLowerCase();
-              if (!aliases[a]) {
-                aliases[a] = name;
-              }
-            });
-          }
-
-          if (emoji.ascii) {
-            emoji.ascii.forEach((str) => {
-              if (!ascii[str]) {
-                ascii[str] = name;
-              }
-            });
-          }
-
-          const categories = emoji.categories || ['other'];
-          categories.forEach((category) => {
-            categoriesInfo[category] = categoriesInfo[category] || [];
-            categoriesInfo[category].push(name);
-          });
-        });
-      });
-
-      Object.keys(categoriesInfo).forEach((category) => {
-        categoriesInfo[category] = uniq(categoriesInfo[category]);
-      });
-
-      customizations.emojis.forEach((emoji) => {
-        const name = emoji.name.toLowerCase();
-
+      if (!table[name]) {
         table[name] = {
           name,
-          character: `:${name}:`,
-          pack: 'customizations',
-          keywords: [],
-          image: emoji.image,
-          aliases: emoji.aliases,
+          character: emoji.character || `:${name}:`,
+          image: emoji.image || '',
+          pack: pack.id,
+          aliases: emoji.aliases || [],
+          keywords: emoji.keywords || [],
         };
+      }
 
+      if (!characters[emoji.character]) {
+        characters[emoji.character] = name;
+      }
+
+      if (emoji.aliases) {
         emoji.aliases.forEach((alias) => {
           const a = alias.toLowerCase();
           if (!aliases[a]) {
             aliases[a] = name;
           }
         });
+      }
 
+      if (emoji.ascii) {
         emoji.ascii.forEach((str) => {
           if (!ascii[str]) {
             ascii[str] = name;
           }
         });
+      }
 
-        categoriesInfo.custom = categoriesInfo.custom || [];
-        categoriesInfo.custom.push(name);
+      const categories = emoji.categories || ['other'];
+      categories.forEach((category) => {
+        categoriesInfo[category] = categoriesInfo[category] || [];
+        categoriesInfo[category].push(name);
       });
-      customizations.adjuncts.forEach((adjunct) => {
-        const name = adjunct.name;
-        if (!table[name]) { return; }
+    });
+  });
 
-        table[name] = {
-          ...table[name],
-          aliases: table[name].aliases.concat(adjunct.aliases),
-        };
+  Object.keys(categoriesInfo).forEach((category) => {
+    categoriesInfo[category] = uniq(categoriesInfo[category]);
+  });
 
-        adjunct.aliases.forEach((alias) => { aliases[alias] = name; });
-        adjunct.ascii.forEach((str) => { ascii[str] = name; });
-      });
+  Object.values(customizations.emojis).forEach((emoji) => {
+    const name = emoji.name.toLowerCase();
 
-      async.parallel([
-        // generate CSS styles and store them
-        (cb) => {
-          const css = packs.map((pack) => cssBuilders[pack.mode](pack)).join('\n');
-          writeFile(
-            join(assetsDir, 'styles.css'),
-            `${css}\n.emoji-customizations {
-              display: inline-block;
-              height: 23px;
-              margin-top: -1px;
-              margin-bottom: -1px;
-            }`.split('\n').map((x) => x.trim()).join(''),
-            { encoding: 'utf8' },
-            cb
-          );
-        },
-        // persist metadata to disk
-        (cb) => writeFile(tableFile, JSON.stringify(table), cb),
-        (cb) => writeFile(aliasesFile, JSON.stringify(aliases), cb),
-        (cb) => writeFile(asciiFile, JSON.stringify(ascii), cb),
-        (cb) => writeFile(charactersFile, JSON.stringify(characters), cb),
-        (cb) => writeFile(categoriesFile, JSON.stringify(categoriesInfo), cb),
-        (cb) => writeFile(packsFile, JSON.stringify(packsInfo), cb),
-        // handle copying or linking necessary assets
-        (cb) => async.each(packs, (pack, next2) => {
-          const dir = join(assetsDir, pack.id);
+    table[name] = {
+      name,
+      character: `:${name}:`,
+      pack: 'customizations',
+      keywords: [],
+      image: emoji.image,
+      aliases: emoji.aliases,
+    };
 
-          if (pack.mode === 'images') {
-            linkDirs(resolve(pack.path, pack.images.directory), dir, next2);
-          } else if (pack.mode === 'sprite') {
-            const filename = basename(pack.sprite.file);
-            async.series([
-              (cb2) => mkdirp(dir, cb2),
-              (cb2) => copy(resolve(pack.path, pack.sprite.file), join(dir, filename), cb2),
-            ], next2);
-          } else { // pack.mode === 'font'
-            const fontFiles = [
-              pack.font.eot,
-              pack.font.svg,
-              pack.font.woff,
-              pack.font.ttf,
-              pack.font.woff2,
-            ].filter(Boolean);
+    emoji.aliases.forEach((alias) => {
+      const a = alias.toLowerCase();
+      if (!aliases[a]) {
+        aliases[a] = name;
+      }
+    });
 
-            async.series([
-              (cb2) => mkdirp(dir, cb2),
-              (cb2) => async.each(fontFiles, (file, next3) => {
-                const filename = basename(file);
-                copy(resolve(pack.path, file), join(dir, filename), next3);
-              }, cb2),
-            ], next2);
-          }
-        }, cb),
-        // link customizations to public/uploads/emoji
-        (cb) => linkDirs(
-          join(nconf.get('upload_path'), 'emoji'),
-          join(assetsDir, 'customizations'),
-          cb
-        ),
-      ], next);
-    },
-    (_: void, next: NodeBack) => {
-      clearCache();
-      next();
-    },
-  ], callback);
+    emoji.ascii.forEach((str) => {
+      if (!ascii[str]) {
+        ascii[str] = name;
+      }
+    });
+
+    categoriesInfo.custom = categoriesInfo.custom || [];
+    categoriesInfo.custom.push(name);
+  });
+  Object.values(customizations.adjuncts).forEach((adjunct) => {
+    const name = adjunct.name;
+    if (!table[name]) { return; }
+
+    table[name] = {
+      ...table[name],
+      aliases: table[name].aliases.concat(adjunct.aliases),
+    };
+
+    adjunct.aliases.forEach((alias) => { aliases[alias] = name; });
+    adjunct.ascii.forEach((str) => { ascii[str] = name; });
+  });
+
+  // generate CSS styles
+  cssBuilders.setBaseUrl(await getBaseUrl());
+  const css = packs.map(pack => cssBuilders[pack.mode](pack)).join('\n');
+  const cssFile = `${css}\n.emoji-customizations {
+    display: inline-block;
+    height: 23px;
+    margin-top: -1px;
+    margin-bottom: -1px;
+  }`.split('\n').map(x => x.trim()).join('');
+
+  // handling copying or linking necessary assets
+  const assetOperations = packs.map(async (pack) => {
+    const dir = join(assetsDir, pack.id);
+
+    if (pack.mode === 'images') {
+      await linkDirs(resolve(pack.path, pack.images.directory), dir);
+    } else if (pack.mode === 'sprite') {
+      const filename = basename(pack.sprite.file);
+      await mkdirp(dir);
+      await copy(resolve(pack.path, pack.sprite.file), join(dir, filename));
+    } else { // pack.mode === 'font'
+      const fontFiles = [
+        pack.font.eot,
+        pack.font.svg,
+        pack.font.woff,
+        pack.font.ttf,
+        pack.font.woff2,
+      ].filter(Boolean);
+
+      await mkdirp(dir);
+      await Promise.all(fontFiles.map(async (file) => {
+        const filename = basename(file);
+        copy(resolve(pack.path, file), join(dir, filename));
+      }));
+    }
+  });
+
+  await Promise.all([
+    ...assetOperations,
+    // store CSS styles
+    writeFile(join(assetsDir, 'styles.css'), cssFile, { encoding: 'utf8' }),
+    // persist metadata to disk
+    writeFile(tableFile, JSON.stringify(table)),
+    writeFile(aliasesFile, JSON.stringify(aliases)),
+    writeFile(asciiFile, JSON.stringify(ascii)),
+    writeFile(charactersFile, JSON.stringify(characters)),
+    writeFile(categoriesFile, JSON.stringify(categoriesInfo)),
+    writeFile(packsFile, JSON.stringify(packsInfo)),
+    // link customizations to public/uploads/emoji
+    linkDirs(
+      join(nconf.get('upload_path'), 'emoji'),
+      join(assetsDir, 'customizations')
+    ),
+  ]);
+
+  clearCache();
 }

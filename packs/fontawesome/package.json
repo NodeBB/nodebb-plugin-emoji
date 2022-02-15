@@ -1,0 +1,34 @@
+{
+  "name": "nodebb-plugin-emoji-fontawesome",
+  "version": "2.0.5",
+  "description": "Use the included fontawesome icons as emoji",
+  "main": "emoji.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "mkdir -p public/language/en-US && node -e \"require('./emoji.js').buildLanguageFile()\""
+  },
+  "homepage": "https://github.com/NodeBB/nodebb-plugin-emoji/tree/master/packs/fontawesome",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NodeBB/nodebb-plugin-emoji.git"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "emoji",
+    "font",
+    "awesome",
+    "extended"
+  ],
+  "nbbpm": {
+    "compatibility": "^1.7.0"
+  },
+  "peerDependencies": {
+    "nodebb-plugin-emoji": "^3.4.2 || ^3.5.0"
+  },
+  "author": "Peter Jaszkowiak",
+  "license": "MIT",
+  "dependencies": {
+    "yaml": "^1.0.1"
+  }
+}

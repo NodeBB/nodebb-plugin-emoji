@@ -1,11 +1,10 @@
-// eslint-disable-next-line spaced-comment
 /// <amd-module name="emoji"/>
 
-const base = `${window.config.relative_path}/plugins/nodebb-plugin-emoji`;
-const buster = window.config['cache-buster'];
+const base = `${config.assetBaseUrl}/plugins/nodebb-plugin-emoji`;
+const buster = config['cache-buster'];
 
 export { base, buster };
-export function buildEmoji(emoji: StoredEmoji, defer?: boolean) {
+export function buildEmoji(emoji: StoredEmoji, defer?: boolean): string {
   const whole = `:${emoji.name}:`;
   const deferClass = defer ? ' defer' : '';
 
@@ -30,25 +29,19 @@ export let search: (term: string) => StoredEmoji[];
 
 export const strategy = {
   match: /\B:([^\s\n:]+)$/,
-  search: (term: string, callback: Callback<StoredEmoji[]>) => {
+  search: (term: string, callback: Callback<StoredEmoji[]>): void => {
     callback(search(term.toLowerCase().replace(/[_-]/g, '')).slice(0, 10));
   },
   index: 1,
-  replace: (emoji: StoredEmoji) => `:${emoji.name}: `,
-  template: (emoji: StoredEmoji) => `${buildEmoji(emoji)} ${emoji.name}`,
+  replace: (emoji: StoredEmoji): string => `:${emoji.name}: `,
+  template: (emoji: StoredEmoji): string => `${buildEmoji(emoji)} ${emoji.name}`,
   cache: true,
 };
 
-let initialized = false;
+let initialized: Promise<void>;
 
-export function init(callback?: Callback<undefined>) {
-  if (initialized) {
-    if (callback) { setTimeout(callback, 0); }
-    return;
-  }
-  initialized = true;
-
-  Promise.all([
+export function init(callback?: Callback<void>): Promise<void> {
+  initialized = initialized || Promise.all([
     import('fuzzysearch'),
     import('leven'),
     import('composer/formatting'),
@@ -126,12 +119,16 @@ export function init(callback?: Callback<undefined>) {
           .then(({ toggleForInsert }) => toggleForInsert(textarea, start, end, event));
       }
     );
-
-    if (callback) { setTimeout(callback, 0); }
   }).catch((err) => {
     const e = Error('[[emoji:meta-load-failed]]');
     console.error(e);
-    window.app.alertError(e);
+    app.alertError(e);
     throw err;
   });
+
+  if (callback) {
+    initialized.then(() => setTimeout(callback, 0));
+  }
+
+  return initialized;
 }

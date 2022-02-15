@@ -1,11 +1,7 @@
 {
   "include": [
     "lib/**/*.ts",
-    "lib/**/*.tsx",
     "../lib/types.d.ts"
-  ],
-  "exclude": [
-    "lib/admin/extension.tsx"
   ],
   "compilerOptions": {
     "outDir": "../build/public/lib",
@@ -16,13 +12,8 @@
     "sourceMap": true,
     "types": [
       "jquery",
-      "bootstrap",
-      "preact",
-      "socket.io"
+      "bootstrap"
     ],
-
-    "jsx": "react",
-    "jsxFactory": "h",
 
     "moduleResolution": "node",
     "baseUrl": ".",

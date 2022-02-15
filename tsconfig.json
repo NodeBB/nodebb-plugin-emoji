@@ -3,17 +3,16 @@
     "lib/**/*.ts"
   ],
   "compilerOptions": {
+    "types": [],
     "outDir": "build/lib",
-    "lib": ["es2015"],
-    "target": "es2015",
+    "lib": ["es2019"],
+    "target": "es2019",
     "module": "commonjs",
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "noImplicitAny": true,
     "alwaysStrict": true,
-    "sourceMap": true,
-    "types": [
-      "socket.io"
-    ]
+    "sourceMap": true
   },
   "typeAcquisition": {
     "enable": false

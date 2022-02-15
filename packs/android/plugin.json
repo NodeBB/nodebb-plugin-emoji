@@ -1,0 +1,6 @@
+{
+  "library": "emoji.js",
+  "hooks": [
+    { "hook": "filter:emoji.packs", "method": "defineEmoji" }
+  ]
+}

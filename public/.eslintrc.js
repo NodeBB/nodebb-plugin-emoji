@@ -6,8 +6,10 @@ module.exports = {
   },
   globals: {
     socket: true,
-  },
-  rules: {
-    'max-classes-per-file': 'off',
+    utils: true,
+    app: true,
+    config: true,
+    Textcomplete: true,
+    ajaxify: true,
   },
 };
