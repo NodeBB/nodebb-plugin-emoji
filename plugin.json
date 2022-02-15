@@ -30,6 +30,7 @@
     { "hook": "filter:parse.raw", "method": "parse.raw", "priority": 9 },
     { "hook": "filter:parse.post", "method": "parse.post", "priority": 9 },
     { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
-    { "hook": "filter:config.get", "method": "configGet" }
+    { "hook": "filter:config.get", "method": "configGet" },
+    { "hook": "action:nodebb.ready", "method": "actionNodeBBReady"}
   ]
 }
