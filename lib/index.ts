@@ -73,7 +73,6 @@ export async function actionNodeBBReady(): Promise<any> {
   };
 
   const baseUrl = await getBaseUrl();
-  console.log('bam ready', sets, baseUrl);
   // initialize parser flags
   parse.setOptions({
     ascii: parseAscii,
