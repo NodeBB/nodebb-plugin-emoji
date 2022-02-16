@@ -12,6 +12,20 @@ const file = require.main.require('./src/file');
 export async function init(params: any): Promise<void> {
   controllers(params);
 
+  const sets = await settings.get();
+  const { parseAscii, parseNative } = sets as {
+    parseAscii: boolean;
+    parseNative: boolean;
+  };
+
+  const baseUrl = getBaseUrl();
+  // initialize parser flags
+  parse.setOptions({
+    ascii: parseAscii,
+    native: parseNative,
+    baseUrl,
+  });
+
   // always build on startup if in dev mode
   const shouldBuild = nconf.any('build_emoji', 'BUILD_EMOJI') ||
     // otherwise, build if never built before
@@ -49,7 +63,7 @@ export async function addStylesheet<Payload extends {
     rel: string; type?: string; href: string;
   }[];
 }>(data: Payload): Promise<Payload> {
-  const baseUrl = await getBaseUrl();
+  const baseUrl = getBaseUrl();
   data.links.push({
     rel: 'stylesheet',
     href: `${baseUrl}/plugins/nodebb-plugin-emoji/emoji/styles.css?${buster}`,
@@ -63,22 +77,6 @@ export async function configGet(config: any): Promise<any> {
   // eslint-disable-next-line no-param-reassign
   config.emojiCustomFirst = customFirst;
   return config;
-}
-
-export async function actionNodeBBReady(): Promise<any> {
-  const sets = await settings.get();
-  const { parseAscii, parseNative } = sets as {
-    parseAscii: boolean;
-    parseNative: boolean;
-  };
-
-  const baseUrl = await getBaseUrl();
-  // initialize parser flags
-  parse.setOptions({
-    ascii: parseAscii,
-    native: parseNative,
-    baseUrl,
-  });
 }
 
 export {

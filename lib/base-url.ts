@@ -1,9 +1,7 @@
 const nconf = require.main.require('nconf');
 
-const apiControllers = require.main.require('./src/controllers/api');
-
-export async function getBaseUrl(): Promise<string> {
-  const { assetBaseUrl } = await apiControllers.loadConfig({ uid: 0, query: { } });
+export function getBaseUrl(): string {
+  const assetBaseUrl = nconf.get('asset_base_url');
 
   return assetBaseUrl.startsWith('http') ?
     assetBaseUrl :

@@ -159,7 +159,7 @@ export default async function build(): Promise<void> {
   });
 
   // generate CSS styles
-  cssBuilders.setBaseUrl(await getBaseUrl());
+  cssBuilders.setBaseUrl(getBaseUrl());
   const css = packs.map(pack => cssBuilders[pack.mode](pack)).join('\n');
   const cssFile = `${css}\n.emoji-customizations {
     display: inline-block;
