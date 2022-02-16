@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji",
-  "version": "3.5.14",
+  "version": "3.5.15",
   "description": "Adds extensible emoji functionality to NodeBB",
   "main": "build/lib",
   "author": "Peter Jaszkowiak <p.jaszkow@gmail.com> (https://github.com/pitaj)",
