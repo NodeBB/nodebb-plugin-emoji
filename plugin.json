@@ -9,6 +9,8 @@
   "modules": {
     "emoji.js": "build/public/lib/emoji.js",
     "emoji-dialog.js": "build/public/lib/emoji-dialog.js",
+    "leven.js": "public/lib/leven.js",
+    "fuzzysearch.js": "public/lib/fuzzysearch.js",
     "../admin/plugins/emoji.js": "build/acp/admin.js"
   },
   "staticDirs": {
