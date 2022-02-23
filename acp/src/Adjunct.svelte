@@ -104,10 +104,8 @@ $: canSave = editing && !failures.any;
 
 let nameInput: HTMLInputElement;
 onMount(() => {
-  const { Textarea } = Textcomplete.editors;
-
-  const editor = new Textarea(nameInput);
-  const completer = new Textcomplete(editor, {
+  const editor = new Textcomplete.Textarea(nameInput);
+  const completer = new Textcomplete.Textcomplete(editor, {
     dropdown: {
       style: { zIndex: 20000 },
     },
