@@ -22,7 +22,6 @@ export default {
       ajaxify: 'export default ajaxify',
       app: 'export default app',
       config: 'export default config',
-      textcomplete: 'export default Textcomplete',
       utils: 'export default utils',
     }),
     svelte({
