@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji-fontawesome",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "description": "Use the included fontawesome icons as emoji",
   "main": "emoji.js",
   "scripts": {
@@ -21,10 +21,10 @@
     "extended"
   ],
   "nbbpm": {
-    "compatibility": "^1.7.0"
+    "compatibility": "^2.0.0"
   },
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^3.4.2 || ^3.5.0"
+    "nodebb-plugin-emoji": "^4.0.1"
   },
   "author": "Peter Jaszkowiak",
   "license": "MIT",
