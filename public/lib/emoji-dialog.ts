@@ -22,7 +22,12 @@ export const dialogActions = {
     dialog.addClass('open');
     dialog.appendTo(document.fullscreenElement || 'body');
     dialog.find('.emoji-dialog-search').focus();
-
+    // need this setTimeout or onDocumentClick gets triggered too early
+    // and causes https://github.com/NodeBB/NodeBB/issues/10589
+    setTimeout(() => {
+      // eslint-disable-next-line no-use-before-define
+      $(document).off('click', onDocumentClick).on('click', onDocumentClick);
+    }, 0);
     return dialog;
   },
   close(dialog: JQuery): JQuery {
@@ -173,7 +178,6 @@ export function init(callback: Callback<JQuery>): void {
       ].join(' '), close);
 
       dialog.find('.close').on('click', close);
-      $(document).off('click', onDocumentClick).on('click', onDocumentClick);
 
       if (dialog.draggable) {
         dialog.draggable({
@@ -198,7 +202,6 @@ export function toggle(
       return;
     }
 
-    $(document).off('click', onDocumentClick).on('click', onDocumentClick);
     dialog.off('click').on('click', '.emoji-link', (e) => {
       e.preventDefault();
       const name = (e.currentTarget as HTMLAnchorElement).name;
