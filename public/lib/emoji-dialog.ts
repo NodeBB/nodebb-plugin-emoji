@@ -26,10 +26,19 @@ export const dialogActions = {
     return dialog;
   },
   close(dialog: JQuery): JQuery {
+    // eslint-disable-next-line no-use-before-define
+    $(document).off('click', onDocumentClick);
     $html.removeClass('emoji-insert');
     return dialog.removeClass('open');
   },
 };
+
+function onDocumentClick(e:JQuery.TriggeredEvent) {
+  const dialog = $('#emoji-dialog');
+  if (!$(e.target).is('.emoji-dialog *') && dialog.length) {
+    dialogActions.close(dialog);
+  }
+}
 
 const priorities: {
   [name: string]: number;
@@ -163,12 +172,8 @@ export function init(callback: Callback<JQuery>): void {
         'action:chat.closed',
       ].join(' '), close);
 
-      dialog.find('.close').click(close);
-      $(document).on('click', (e) => {
-        if (!$(e.target).is('.emoji-dialog *')) {
-          close();
-        }
-      });
+      dialog.find('.close').on('click', close);
+      $(document).off('click', onDocumentClick).on('click', onDocumentClick);
 
       if (dialog.draggable) {
         dialog.draggable({
@@ -193,6 +198,7 @@ export function toggle(
       return;
     }
 
+    $(document).off('click', onDocumentClick).on('click', onDocumentClick);
     dialog.off('click').on('click', '.emoji-link', (e) => {
       e.preventDefault();
       const name = (e.currentTarget as HTMLAnchorElement).name;
