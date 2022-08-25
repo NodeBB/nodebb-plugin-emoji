@@ -21,6 +21,7 @@ declare const utils: {
   generateUUID(): string;
 };
 declare const Textcomplete: any;
+declare const TextareaEditor: any;
 
 interface String {
   startsWith(str: string): boolean;

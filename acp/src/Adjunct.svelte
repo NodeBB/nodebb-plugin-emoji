@@ -1,6 +1,7 @@
 <script lang="ts">
 import { createEventDispatcher, onMount } from 'svelte';
-import Textcomplete from 'textcomplete';
+import { Textcomplete } from '@textcomplete/core';
+import { TextareaEditor } from '@textcomplete/textarea';
 import { buildEmoji, strategy, table } from 'emoji';
 
 export let item: CustomAdjunct;
@@ -104,18 +105,16 @@ $: canSave = editing && !failures.any;
 
 let nameInput: HTMLInputElement;
 onMount(() => {
-  const editor = new Textcomplete.Textarea(nameInput);
-  const completer = new Textcomplete.Textcomplete(editor, {
+  const editor = new TextareaEditor(nameInput);
+  const completer = new Textcomplete(editor, [{
+    ...strategy,
+    replace: (data: StoredEmoji) => data.name,
+    match: /^(.+)$/,
+  }], {
     dropdown: {
       style: { zIndex: 20000 },
     },
   });
-
-  completer.register([{
-    ...strategy,
-    replace: (data: StoredEmoji) => data.name,
-    match: /^(.+)$/,
-  }]);
 
   completer.on('selected', () => {
     name = nameInput.value;
