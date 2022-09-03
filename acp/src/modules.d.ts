@@ -14,13 +14,11 @@ module 'ajaxify' {
 }
 
 module '@textcomplete/core' {
-  const Textcomplete: any;
-  export default Textcomplete;
+  export const Textcomplete: any;
 }
 
 module '@textcomplete/textarea' {
-  const TextareaEditor: any;
-  export default TextareaEditor;
+  export const TextareaEditor: any;
 }
 
 module 'config' {
