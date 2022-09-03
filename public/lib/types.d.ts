@@ -20,7 +20,6 @@ declare const ajaxify: {
 declare const utils: {
   generateUUID(): string;
 };
-declare const Textcomplete: any;
 
 interface String {
   startsWith(str: string): boolean;
