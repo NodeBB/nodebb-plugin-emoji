@@ -28,7 +28,7 @@
       {{{ end }}}
 
       <li role="presentation" class="nav-item">
-        <button href="#emoji-tab-legal" class="nav-link" class="btn btn-info" aria-controls="legal" role="tab" data-bs-toggle="tab" data-ajaxify="false">
+        <button href="#emoji-tab-legal" class="nav-link text-bg-info" aria-controls="legal" role="tab" data-bs-toggle="tab" data-ajaxify="false">
           [[emoji:modal.legal]]
         </button>
       </li>
