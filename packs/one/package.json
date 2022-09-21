@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji-one",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "The emoji-one set for NodeBB (requires nodebb-plugin-emoji)",
   "main": "emoji.js",
   "author": "Ole Reglitzki <frissdiegurke@protonmail.com> (https://github.com/frissdiegurke)",
