@@ -15,7 +15,7 @@
   },
   "nbbpm": {
     "name": "Emoji Android",
-    "compatibility": "^2.0.0"
+    "compatibility": "^3.0.0"
   },
   "keywords": [
     "nodebb",
@@ -25,7 +25,7 @@
     "google"
   ],
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^4.0.1"
+    "nodebb-plugin-emoji": "^5.0.0"
   },
   "dependencies": {
     "emoji-datasource-google": "^3.0.0",

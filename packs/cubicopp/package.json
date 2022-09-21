@@ -16,7 +16,7 @@
   },
   "nbbpm": {
     "name": "Emoji Cubicopp",
-    "compatibility": "^2.0.0"
+    "compatibility": "^3.0.0"
   },
   "keywords": [
     "nodebb",
@@ -25,6 +25,6 @@
     "cubicopp"
   ],
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^4.0.1"
+    "nodebb-plugin-emoji": "^5.0.0"
   }
 }

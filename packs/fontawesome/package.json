@@ -21,10 +21,10 @@
     "extended"
   ],
   "nbbpm": {
-    "compatibility": "^2.0.0"
+    "compatibility": "^3.0.0"
   },
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^4.0.1"
+    "nodebb-plugin-emoji": "^5.0.0"
   },
   "author": "Peter Jaszkowiak",
   "license": "MIT",

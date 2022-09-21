@@ -16,7 +16,7 @@
   },
   "nbbpm": {
     "name": "Emoji Apple",
-    "compatibility": "^2.0.0"
+    "compatibility": "^3.0.0"
   },
   "keywords": [
     "nodebb",
@@ -25,7 +25,7 @@
     "apple"
   ],
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^4.0.1"
+    "nodebb-plugin-emoji": "^5.0.0"
   },
   "dependencies": {
     "emoji-datasource-apple": "^3.0.0",
