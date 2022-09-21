@@ -18,9 +18,9 @@
   flex-direction: column;
   justify-content: flex-start;
 
-  border: 1px solid @modal-content-border-color;
+  border: 1px solid $modal-content-border-color;
   border-radius: 11px;
-  background: @modal-content-bg;
+  background: $modal-content-bg;
   overflow: auto;
 
   .top-bar {
@@ -30,10 +30,9 @@
   }
 }
 
-
-@media (max-width: @screen-sm-max) {
+@include media-breakpoint-down(sm) {
   html.composing.emoji-insert .composer {
-    bottom: calc(~"40% - 36px");
+    bottom: calc(#{"40% - 36px"});
     height: auto;
   }
 
@@ -74,14 +73,6 @@
     .emoji-dialog-search {
       flex-grow: 2;
     }
-
-    button.close {
-      opacity: 1;
-      width: 30px;
-
-      color: @input-color;
-      border: 1px solid @input-border;
-    }
   }
 
   .nav-tabs {
@@ -89,6 +80,7 @@
     overflow-x: auto;
     white-space: nowrap;
     flex-shrink: 0;
+    flex-wrap: nowrap;
 
     > li, html[data-dir="rtl"] & > li {
       display: inline-block;

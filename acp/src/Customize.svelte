@@ -17,8 +17,8 @@ export function show(): void {
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="editModalLabel">Customize Emoji</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
       </div>
       <div class="modal-body">
         <p>
@@ -27,17 +27,21 @@ export function show(): void {
           edited live, you must still <strong>Build Emoji Assets </strong>
           to actually use these customizations.
         </p>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Custom Emoji</h3>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Custom Emoji</h3>
           </div>
-          <EmojiList emojis={data.emojis} />
+          <div class="card-body">
+            <EmojiList emojis={data.emojis} />
+          </div>
         </div>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Custom Extensions</h3>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Custom Extensions</h3>
           </div>
-          <ItemList record={data.adjuncts} />
+          <div class="card-body">
+            <ItemList record={data.adjuncts} />
+          </div>
         </div>
       </div>
     </div>

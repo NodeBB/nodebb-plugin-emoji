@@ -26,7 +26,7 @@ export default function controllers({ router, middleware }: {
       });
     }), err => setImmediate(next, err));
   };
-  setupAdminPageRoute(router, '/admin/plugins/emoji', middleware, [], renderAdmin);
+  setupAdminPageRoute(router, '/admin/plugins/emoji', renderAdmin);
 
   const updateSettings: RequestHandler = async (req, res) => {
     const data = req.body;

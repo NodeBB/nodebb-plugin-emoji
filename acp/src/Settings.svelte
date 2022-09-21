@@ -47,34 +47,34 @@ function showCustomize() {
 </script>
 
 <form id="emoji-settings">
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class="form-group">
-        <label for="emoji-parseAscii">
-          <input id="emoji-parseAscii" type="checkbox" bind:checked={settings.parseAscii} />
-          <Translate src="[[admin/plugins/emoji:settings.parseAscii]]"/>
-        </label>
+  <div class="card">
+    <div class="card-body">
+      <div class="mb-3">
+        <div class="form-check">
+          <input id="emoji-parseAscii" type="checkbox" bind:checked={settings.parseAscii} class="form-check-input"/>
+          <label class="form-check-label" for="emoji-parseAscii"><Translate src="[[admin/plugins/emoji:settings.parseAscii]]"/></label>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="emoji-parseNative">
-          <input id="emoji-parseNative" type="checkbox" bind:checked={settings.parseNative} />
-          <Translate src="[[admin/plugins/emoji:settings.parseNative]]"/>
-        </label>
+      <div class="mb-3">
+        <div class="form-check">
+          <input id="emoji-parseNative" type="checkbox" bind:checked={settings.parseNative} class="form-check-input" />
+          <label class="form-check-label" for="emoji-parseNative"><Translate src="[[admin/plugins/emoji:settings.parseNative]]"/></label>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="emoji-customFirst">
-          <input id="emoji-customFirst" type="checkbox" bind:checked={settings.customFirst} />
-          <Translate src="[[admin/plugins/emoji:settings.customFirst]]"/>
-        </label>
+      <div class="mb-3">
+        <div class="form-check">
+          <input id="emoji-customFirst" type="checkbox" bind:checked={settings.customFirst} class="form-check-input"/>
+          <label class="form-check-label" for="emoji-customFirst"><Translate src="[[admin/plugins/emoji:settings.customFirst]]"/></label>
+        </div>
       </div>
     </div>
 
-    <div class="panel-footer">
-      <div class="form-group">
+    <div class="card-footer">
+      <div class="mb-3">
         <button type="button" on:click={buildAssets} class="btn btn-primary" aria-describedby="emoji-build_description"><Translate src="[[admin/plugins/emoji:build]]"/></button>
-        <p id="emoji-build_description" class="help-block">
+        <p id="emoji-build_description" class="form-text">
         <Translate src="[[admin/plugins/emoji:build_description]]"/>
         </p>
       </div>

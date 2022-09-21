@@ -124,6 +124,7 @@ export function init(callback: Callback<JQuery>): void {
         dialog.find('.tab-pane.emoji-dialog-search-results').html(results);
         dialog.find('.emoji-dialog-search-results').removeClass('hidden');
         dialog.find('.nav-tabs .emoji-dialog-search-results a').tab('show');
+        dialog.find('.emoji-dialog-search').focus();
       });
 
       const tabContent = dialog.find('.emoji-tabs .tab-content');
