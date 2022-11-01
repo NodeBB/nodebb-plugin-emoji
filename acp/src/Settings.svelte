@@ -88,16 +88,16 @@ function showCustomize() {
 {/await}
 {/if}
 
-<button on:click={updateSettings} class="floating-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-  <i class="material-icons">save</i>
+<button on:click={updateSettings} id="save" class="btn btn-primary position-fixed bottom-0 end-0 px-3 py-2 mb-4 me-4 rounded-circle fs-4" type="button" style="width: 64px; height: 64px;">
+	<i class="fa fa-fw fas fa-floppy-disk"></i>
 </button>
 
-<button on:click={showCustomize} class="edit floating-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-  <i class="material-icons">edit</i>
+<button on:click={showCustomize} class="edit btn btn-primary position-fixed bottom-0 end-0 px-3 py-2 mb-4 me-4 rounded-circle fs-4" type="button" style="width: 64px; height: 64px;">
+	<i class="fa fa-fw fas fa-pencil"></i>
 </button>
 
 <style>
-button.floating-button.edit {
+button.edit {
   left: 30px;
   margin-left: 0;
   background: #ff4081 !important;
