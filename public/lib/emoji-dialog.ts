@@ -180,12 +180,6 @@ export function init(callback: Callback<JQuery>): void {
 
       dialog.find('.close').on('click', close);
 
-      if (dialog.draggable) {
-        dialog.draggable({
-          handle: '.top-bar',
-        });
-      }
-
       callback(dialog);
     })
     .catch((err) => {

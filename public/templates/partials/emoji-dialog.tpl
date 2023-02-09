@@ -1,8 +1,6 @@
 <div class="emoji-dialog" id="emoji-dialog">
-  <div class="emoji-tabs">
-    <div class="top-bar"></div>
-
-    <div class="emoji-dialog-search-container">
+  <div class="emoji-tabs p-1">
+    <div class="emoji-dialog-search-container p-1">
       <div class="input-group">
         <input type="text" class="form-control emoji-dialog-search" placeholder="[[emoji:search.placeholder]]">
 

@@ -22,12 +22,6 @@
   border-radius: 11px;
   background: $modal-content-bg;
   overflow: auto;
-
-  .top-bar {
-    height: 15px;
-    background: #eee;
-    flex-shrink: 0;
-  }
 }
 
 @include media-breakpoint-down(sm) {
@@ -48,10 +42,6 @@
     height: auto;
     border: none;
     border-radius: 0;
-
-    .top-bar {
-      display: none;
-    }
   }
 
   @media (max-height: 600px) {
