@@ -1,6 +1,6 @@
 <script lang="ts">
 import api from 'api';
-import app from 'app';
+import * as alerts from 'alerts';
 import Emoji from './Emoji.svelte';
 
 export let emojis: {
@@ -19,14 +19,14 @@ function onEdit(event: CustomEvent<{ id: number, emoji: CustomEmoji }>) {
       ...emojis,
       [id]: emoji,
     };
-  }, () => app.alertError());
+  }, () => alerts.error());
 }
 function onDelete(event: CustomEvent<{ id: number }>) {
   const { id } = event.detail;
   api.del(`/admin/plugins/emoji/customizations/emoji/${id}`, {}).then(() => {
     delete emojis[id];
     emojis = { ...emojis };
-  }, () => app.alertError());
+  }, () => alerts.error());
 }
 
 const blank = {
@@ -49,7 +49,7 @@ function onAdd(event: CustomEvent<{ id: -1, emoji: CustomEmoji }>) {
 
     newEmoji = { ...blank };
     resetNew();
-  }, () => app.alertError());
+  }, () => alerts.error());
 }
 </script>
 

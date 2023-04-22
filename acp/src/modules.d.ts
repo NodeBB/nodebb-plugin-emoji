@@ -32,13 +32,10 @@ module 'config' {
   export default config;
 }
 
-declare module 'app' {
-  const app: {
-    alertSuccess(message?: string): void;
-    alertError(message?: string): void;
-    alertError(error?: Error): void;
-  };
-  export default app;
+declare module 'alerts' {
+  export function success(message?: string): void;
+  export function error(message?: string): void;
+  export function error(err?: Error): void;
 }
 
 declare module 'api' {

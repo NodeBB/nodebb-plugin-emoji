@@ -1,5 +1,5 @@
 <script lang="ts">
-import app from 'app';
+import * as alerts from 'alerts';
 import config from 'config';
 import utils from 'utils';
 import { createEventDispatcher } from 'svelte';
@@ -135,7 +135,7 @@ function editImage() {
       error: () => {
         const err = Error('Failed to upload file');
         console.error(err);
-        app.alertError(err);
+        alerts.error(err);
         imageInput.value = '';
       },
     });

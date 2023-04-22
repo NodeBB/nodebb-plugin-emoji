@@ -1,6 +1,6 @@
 <script lang="ts">
 import api from 'api';
-import app from 'app';
+import * as alerts from 'alerts';
 import { init as initEmoji } from 'emoji';
 
 import Customize from './Customize.svelte';
@@ -10,15 +10,15 @@ export let settings: Settings;
 
 function updateSettings() {
   api.put('/admin/plugins/emoji/settings', settings).then(
-    () => app.alertSuccess(),
-    err => app.alertError(err)
+    () => alerts.success(),
+    err => alerts.error(err)
   );
 }
 
 function buildAssets() {
   api.put('/admin/plugins/emoji/build', {}).then(
-    () => app.alertSuccess(),
-    err => app.alertError(err)
+    () => alerts.success(),
+    err => alerts.error(err)
   );
 }
 

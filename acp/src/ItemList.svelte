@@ -1,6 +1,6 @@
 <script lang="ts">
 import api from 'api';
-import app from 'app';
+import * as alerts from 'alerts';
 import Adjunct from './Adjunct.svelte';
 
 type ItemType = CustomAdjunct;
@@ -21,14 +21,14 @@ function onEdit(event: CustomEvent<{ id: number, item: CustomAdjunct }>) {
       ...record,
       [id]: item,
     };
-  }, () => app.alertError());
+  }, () => alerts.error());
 }
 function onDelete(event: CustomEvent<{ id: number }>) {
   const { id } = event.detail;
   api.del(`/admin/plugins/emoji/customizations/${type}/${id}`, {}).then(() => {
     delete record[id];
     record = { ...record };
-  }, () => app.alertError());
+  }, () => alerts.error());
 }
 
 const blank = {
@@ -50,7 +50,7 @@ function onAdd(event: CustomEvent<{ id: -1, item: CustomAdjunct }>) {
 
     newItem = { ...blank };
     resetNew();
-  }, () => app.alertError());
+  }, () => alerts.error());
 }
 </script>
 
