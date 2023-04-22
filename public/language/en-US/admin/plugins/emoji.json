@@ -3,6 +3,7 @@
   "settings.parseAscii": "Replace common ASCII characters like <code>:)</code>, <code>-_-</code>, etc",
   "settings.parseNative": "Replace native unicode emoji characters with emoji provided by emoji packs",
   "settings.customFirst": "Place your custom emoji first in the dialog",
+  "settings.parseTitles": "Parse emojis in topic tiles",
   "build": "Build Emoji Assets",
   "build_description": "Compile the necessary metadata and static assets from all emoji packs. <br> After installing and activating an emoji pack, restart NodeBB, Build Emoji Assets, then Restart and Rebuild NodeBB."
 }

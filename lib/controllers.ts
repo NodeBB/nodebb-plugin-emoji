@@ -34,6 +34,7 @@ export default function controllers({ router, middleware }: {
       parseAscii: !!data.parseAscii,
       parseNative: !!data.parseNative,
       customFirst: !!data.customFirst,
+      parseTitles: !!data.parseTitles,
     });
     formatApiResponse(200, res);
   };

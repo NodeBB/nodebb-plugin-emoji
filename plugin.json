@@ -31,6 +31,8 @@
     { "hook": "filter:composer.formatting", "method": "composerFormatting", "priority": 19 },
     { "hook": "filter:parse.raw", "method": "parse.raw", "priority": 9 },
     { "hook": "filter:parse.post", "method": "parse.post", "priority": 9 },
+    { "hook": "filter:topic.get", "method": "parse.topic" },
+    { "hook": "filter:topics.get", "method": "parse.topics" },
     { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
     { "hook": "filter:config.get", "method": "configGet" }
   ]

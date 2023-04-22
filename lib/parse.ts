@@ -202,3 +202,17 @@ export async function post(data: { postData: { content: string } }): Promise<any
   data.postData.content = await parse(data.postData.content);
   return data;
 }
+
+export async function topic(data: { topic: { title: string } }): Promise<any> {
+  // eslint-disable-next-line no-param-reassign
+  data.topic.title = await parse(data.topic.title);
+  return data;
+}
+
+export async function topics(data: { topics: [{ title: string }] }): Promise<any> {
+  await Promise.all(data.topics.map(async (t) => {
+    // eslint-disable-next-line no-param-reassign
+    t.title = await parse(t.title);
+  }));
+  return data;
+}
