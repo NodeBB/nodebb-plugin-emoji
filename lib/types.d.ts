@@ -203,4 +203,5 @@ interface Settings {
   parseNative: boolean;
   parseAscii: boolean;
   customFirst: boolean;
+  parseTitles: boolean;
 }

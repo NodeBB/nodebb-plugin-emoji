@@ -12,17 +12,14 @@ const file = require.main.require('./src/file');
 export async function init(params: any): Promise<void> {
   controllers(params);
 
-  const sets = await settings.get();
-  const { parseAscii, parseNative } = sets as {
-    parseAscii: boolean;
-    parseNative: boolean;
-  };
+  const { parseAscii, parseNative, parseTitles } = await settings.get();
 
   const baseUrl = getBaseUrl();
   // initialize parser flags
   parse.setOptions({
     ascii: parseAscii,
     native: parseNative,
+    titles: parseTitles,
     baseUrl,
   });
 

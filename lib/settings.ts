@@ -9,6 +9,7 @@ const defaults: Settings = {
   parseNative: true,
   parseAscii: true,
   customFirst: false,
+  parseTitles: false,
 };
 
 function fromStore<
@@ -34,6 +35,7 @@ export async function get(): Promise<Settings> {
     parseNative: fromStore('parseNative', data?.parseNative),
     parseAscii: fromStore('parseAscii', data?.parseAscii),
     customFirst: fromStore('customFirst', data?.customFirst),
+    parseTitles: fromStore('parseTitles', data?.parseTitles),
   };
 }
 export async function set(data: Settings): Promise<void> {
@@ -41,6 +43,7 @@ export async function set(data: Settings): Promise<void> {
     parseNative: JSON.stringify(data.parseNative),
     parseAscii: JSON.stringify(data.parseAscii),
     customFirst: JSON.stringify(data.customFirst),
+    parseTitles: JSON.stringify(data.parseTitles),
   });
 }
 export async function getOne<K extends keyof Settings>(field: K): Promise<Settings[K]> {

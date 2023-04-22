@@ -69,6 +69,13 @@ function showCustomize() {
           <label class="form-check-label" for="emoji-customFirst"><Translate src="[[admin/plugins/emoji:settings.customFirst]]"/></label>
         </div>
       </div>
+
+      <div class="mb-3">
+        <div class="form-check">
+          <input id="emoji-parseTitles" type="checkbox" bind:checked={settings.parseTitles} class="form-check-input"/>
+          <label class="form-check-label" for="emoji-parseTitles"><Translate src="[[admin/plugins/emoji:settings.parseTitles]]"/></label>
+        </div>
+      </div>
     </div>
 
     <div class="card-footer">

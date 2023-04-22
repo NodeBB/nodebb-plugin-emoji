@@ -72,14 +72,18 @@ const emojiPattern = /:([a-z\-.+0-9_]+):/g;
 
 interface ParseOptions {
   /** whether to parse ascii emoji representations into emoji */
-  ascii?: boolean;
-  native?: boolean;
+  ascii: boolean;
+  /** whether to parse native emoji */
+  native: boolean;
+  /** whether to parse topic titles */
+  titles: boolean;
   baseUrl: string;
 }
 
 const options: ParseOptions = {
   ascii: false,
   native: false,
+  titles: false,
   baseUrl: '',
 };
 
@@ -200,5 +204,23 @@ export function raw(content: string): Promise<string> {
 export async function post(data: { postData: { content: string } }): Promise<any> {
   // eslint-disable-next-line no-param-reassign
   data.postData.content = await parse(data.postData.content);
+  return data;
+}
+
+export async function topic(data: { topic: { title: string } }): Promise<any> {
+  if (options.titles) {
+    // eslint-disable-next-line no-param-reassign
+    data.topic.title = await parse(data.topic.title);
+  }
+  return data;
+}
+
+export async function topics(data: { topics: [{ title: string }] }): Promise<any> {
+  if (options.titles) {
+    await Promise.all(data.topics.map(async (t) => {
+      // eslint-disable-next-line no-param-reassign
+      t.title = await parse(t.title);
+    }));
+  }
   return data;
 }
