@@ -1,0 +1,25 @@
+{
+  "composer.title": "אימוג'י",
+  "meta-load-failed": "טעינת מטא נתונים של אמוג'י נכשלה",
+  "modal.title": "אימוטיקונים זמינים",
+  "modal.legal": "מידע משפטי",
+  "modal.legal.header": "האימוג'ים המוצגים שייכים לערכות אימוג'י שונות. <br>לאיזו ערכה שייך אמוג'י מצוין בתכונת ה-HTML <code>class</code> שלו (<code>class=\"emoji-[pack ID]\"</code>).",
+  "modal.legal.set.header": "<strong>%1</strong> ערכת אמוג'י <small>ID: <code>%2</code></small>",
+  "modal.legal.set.attribution": "ייחוס",
+  "modal.legal.set.license": "רישיון",
+
+  "categories.symbols": "סמלים",
+  "categories.objects": "חפצים",
+  "categories.nature": "טבע",
+  "categories.people": "אנשים",
+  "categories.food": "אוכל",
+  "categories.travel": "נסיעה",
+  "categories.activity": "פעילות",
+  "categories.flags": "דגלים",
+  "categories.regional": "Regional",
+  "categories.modifier": "Modifier",
+  "categories.other": "אחר",
+  "categories.custom": "מותאם אישית",
+  "search.results": "תוצאות חיפוש",
+  "search.placeholder": "חיפוש"
+}
