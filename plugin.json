@@ -33,6 +33,7 @@
     { "hook": "filter:parse.post", "method": "parse.post", "priority": 9 },
     { "hook": "filter:topic.get", "method": "parse.topic" },
     { "hook": "filter:topics.get", "method": "parse.topics" },
+    { "hook": "filter:post.getPostSummaryByPids", "method": "parse.postSummaries" },
     { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
     { "hook": "filter:config.get", "method": "configGet" }
   ]

@@ -224,3 +224,14 @@ export async function topics(data: { topics: [{ title: string }] }): Promise<any
   }
   return data;
 }
+
+export async function postSummaries(data: { posts: [{ topic: { title: string } }]}) : Promise<any> {
+  if (options.titles) {
+    await Promise.all(data.posts.map(async (p) => {
+      if (p && p.topic && p.topic.title) {
+        // eslint-disable-next-line no-param-reassign
+        p.topic.title = await parse(p.topic.title);
+      }
+    }));
+  }
+}
