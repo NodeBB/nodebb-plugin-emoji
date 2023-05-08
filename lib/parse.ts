@@ -234,4 +234,5 @@ export async function postSummaries(data: { posts: [{ topic: { title: string } }
       }
     }));
   }
+  return data;
 }
