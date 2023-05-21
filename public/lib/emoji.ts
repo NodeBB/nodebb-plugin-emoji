@@ -119,10 +119,11 @@ export function init(callback?: Callback<void>): Promise<void> {
           .then(({ toggleForInsert }) => toggleForInsert(textarea, start, end, event));
       }
     );
-  }).catch((err) => {
+  }).catch(async (err) => {
     const e = Error('[[emoji:meta-load-failed]]');
     console.error(e);
-    app.alertError(e);
+    const alerts = await app.require('alerts');
+    alerts.error(e);
     throw err;
   });
 

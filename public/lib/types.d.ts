@@ -10,9 +10,7 @@ declare const config: {
   csrf_token: string;
 };
 declare const app: {
-  alertSuccess(message?: string): void;
-  alertError(message?: string): void;
-  alertError(error?: Error): void;
+  require(module: string):any
 };
 declare const ajaxify: {
   data: any;
