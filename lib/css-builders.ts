@@ -13,7 +13,6 @@ export function images(pack: EmojiDefinition): string {
     'height: 23px;' +
     'margin-top: -1px;' +
     'margin-bottom: -1px;' +
-    'vertical-align: bottom;' +
   '}';
 }
 
