@@ -34,6 +34,7 @@
     { "hook": "filter:topic.get", "method": "parse.topic" },
     { "hook": "filter:topics.get", "method": "parse.topics" },
     { "hook": "filter:post.getPostSummaryByPids", "method": "parse.postSummaries" },
+    { "hook": "filter:user.notifications.getNotifications", "method": "parse.notifications" },
     { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
     { "hook": "filter:config.get", "method": "configGet" }
   ]

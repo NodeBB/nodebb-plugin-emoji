@@ -236,3 +236,17 @@ export async function postSummaries(data: { posts: [{ topic: { title: string } }
   }
   return data;
 }
+
+export async function notifications(
+  data: { notifications: [{ bodyShort: string } ] }
+) : Promise<any> {
+  if (options.titles) {
+    await Promise.all(data.notifications.map(async (n) => {
+      if (n && n.bodyShort) {
+        // eslint-disable-next-line no-param-reassign
+        n.bodyShort = await parse(n.bodyShort);
+      }
+    }));
+  }
+  return data;
+}
