@@ -91,7 +91,10 @@ export function setOptions(newOptions: ParseOptions): void {
   Object.assign(options, newOptions);
 }
 
-export const buildEmoji = (emoji: StoredEmoji, whole: string): string => {
+export const buildEmoji = (emoji: StoredEmoji, whole: string, returnCharacter = false): string => {
+  if (returnCharacter && emoji.character) {
+    return emoji.character;
+  }
   if (emoji.image) {
     const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
@@ -110,11 +113,12 @@ export const buildEmoji = (emoji: StoredEmoji, whole: string): string => {
 
 const replaceAscii = (
   str: string,
-  { ascii, asciiPattern, table }: (typeof metaCache)
+  { ascii, asciiPattern, table }: (typeof metaCache),
+  returnCharacter = false
 ) => str.replace(asciiPattern, (full: string, before: string, text: string) => {
   const emoji = ascii[text] && table[ascii[text]];
   if (emoji) {
-    return `${before}${buildEmoji(emoji, text)}`;
+    return `${before}${buildEmoji(emoji, text, returnCharacter)}`;
   }
 
   return full;
@@ -132,7 +136,7 @@ const replaceNative = (
   return char;
 });
 
-const parse = async (content: string): Promise<string> => {
+const parse = async (content: string, returnCharacter = false): Promise<string> => {
   if (!content) {
     return content;
   }
@@ -170,7 +174,7 @@ const parse = async (content: string): Promise<string> => {
         const emoji = table[name] || table[aliases[name]];
 
         if (emoji) {
-          return buildEmoji(emoji, whole);
+          return buildEmoji(emoji, whole, returnCharacter);
         }
 
         return whole;
@@ -182,7 +186,7 @@ const parse = async (content: string): Promise<string> => {
           /(<[^>]+>)|([^<]+)/g,
           (full: string, tag: string, text: string) => {
             if (text) {
-              return replaceAscii(text, store);
+              return replaceAscii(text, store, returnCharacter);
             }
 
             return full;
@@ -248,5 +252,20 @@ export async function notifications(
       }
     }));
   }
+  return data;
+}
+
+export async function header(
+  data: { templateData: { metaTags: [{ name: string, property: string, content: string }]}}
+) : Promise<any> {
+  if (!data || !data.templateData || !Array.isArray(data.templateData.metaTags)) {
+    return data;
+  }
+  data.templateData.metaTags.forEach(async (t) => {
+    if (t && (t.property === 'og:title' || t.name === 'title')) {
+      // eslint-disable-next-line no-param-reassign
+      t.content = await parse(t.content, true);
+    }
+  });
   return data;
 }
