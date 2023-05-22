@@ -269,3 +269,13 @@ export async function header(
   });
   return data;
 }
+
+export async function email(
+  data: { template: string, params: any}
+) : Promise<any> {
+  if (data.template === 'notification' && data.params.intro) {
+    // eslint-disable-next-line no-param-reassign
+    data.params.intro = await parse(data.params.intro, true);
+  }
+  return data;
+}
