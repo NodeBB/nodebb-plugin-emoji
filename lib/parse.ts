@@ -100,8 +100,7 @@ export const buildEmoji = (emoji: StoredEmoji, whole: string, returnCharacter = 
     return `<img
       src="${route}/${emoji.image}?${buster}"
       class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name}"
-      height="23px"
-      style="width: auto;"
+      style="height: 23px; width: auto; vertical-align: middle;"
       title="${whole}"
       alt="${emoji.character}"
     />`;
