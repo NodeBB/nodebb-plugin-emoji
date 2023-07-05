@@ -46,54 +46,100 @@ function showCustomize() {
 }
 </script>
 
+<!-- eslint-disable max-len -->
 <div class="acp-page-container">
-  <div component="settings/main/header" class="row border-bottom py-2 m-0 sticky-top acp-page-main-header align-items-center">
+  <!-- @ts-ignore -->
+  <div
+    component="settings/main/header"
+    class="row border-bottom py-2 m-0 sticky-top acp-page-main-header align-items-center"
+  >
     <div class="col-12 col-md-8 px-0 mb-1 mb-md-0">
       <h4 class="fw-bold tracking-tight mb-0">Emoji</h4>
     </div>
     <div class="col-12 col-md-4 px-0 px-md-3 text-end">
-      <button on:click={showCustomize} class="edit btn btn-light btn-sm fw-semibold ff-secondary text-center text-nowrap" type="button">Customize</button>
-
-      <button on:click="{updateSettings}" id="save" class="btn btn-primary btn-sm fw-semibold ff-secondary text-center text-nowrap" type="button">Save Changes</button>
+      <button
+        on:click={showCustomize}
+        class="edit btn btn-light btn-sm fw-semibold ff-secondary text-center text-nowrap"
+        type="button"
+      >Customize</button>
+      <button
+        on:click={updateSettings}
+        class="btn btn-primary btn-sm fw-semibold ff-secondary text-center text-nowrap"
+        type="button"
+      >Save Changes</button>
     </div>
   </div>
-
 
   <form id="emoji-settings">
     <div class="card">
       <div class="card-body">
         <div class="mb-3">
           <div class="form-check">
-            <input id="emoji-parseAscii" type="checkbox" bind:checked={settings.parseAscii} class="form-check-input"/>
-            <label class="form-check-label" for="emoji-parseAscii"><Translate src="[[admin/plugins/emoji:settings.parseAscii]]"/></label>
+            <input
+              id="emoji-parseAscii"
+              type="checkbox"
+              bind:checked={settings.parseAscii}
+              class="form-check-input"
+            />
+            <label class="form-check-label" for="emoji-parseAscii">
+              <Translate src="[[admin/plugins/emoji:settings.parseAscii]]"/>
+            </label>
           </div>
         </div>
 
         <div class="mb-3">
           <div class="form-check">
-            <input id="emoji-parseNative" type="checkbox" bind:checked={settings.parseNative} class="form-check-input" />
-            <label class="form-check-label" for="emoji-parseNative"><Translate src="[[admin/plugins/emoji:settings.parseNative]]"/></label>
+            <input
+              id="emoji-parseNative"
+              type="checkbox"
+              bind:checked={settings.parseNative}
+              class="form-check-input"
+            />
+            <label class="form-check-label" for="emoji-parseNative">
+              <Translate src="[[admin/plugins/emoji:settings.parseNative]]"/>
+            </label>
           </div>
         </div>
 
         <div class="mb-3">
           <div class="form-check">
-            <input id="emoji-customFirst" type="checkbox" bind:checked={settings.customFirst} class="form-check-input"/>
-            <label class="form-check-label" for="emoji-customFirst"><Translate src="[[admin/plugins/emoji:settings.customFirst]]"/></label>
+            <input
+              id="emoji-customFirst"
+              type="checkbox"
+              bind:checked={settings.customFirst}
+              class="form-check-input"
+            />
+            <label class="form-check-label" for="emoji-customFirst">
+              <Translate src="[[admin/plugins/emoji:settings.customFirst]]"/>
+            </label>
           </div>
         </div>
 
         <div class="mb-3">
           <div class="form-check">
-            <input id="emoji-parseTitles" type="checkbox" bind:checked={settings.parseTitles} class="form-check-input"/>
-            <label class="form-check-label" for="emoji-parseTitles"><Translate src="[[admin/plugins/emoji:settings.parseTitles]]"/></label>
+            <input
+              id="emoji-parseTitles"
+              type="checkbox"
+              bind:checked={settings.parseTitles}
+              class="form-check-input"
+            />
+            <label class="form-check-label" for="emoji-parseTitles">
+              <Translate src="[[admin/plugins/emoji:settings.parseTitles]]"/>
+            </label>
           </div>
         </div>
       </div>
 
       <div class="card-footer">
         <div class="mb-3">
-          <button type="button" on:click={buildAssets} class="btn btn-primary" aria-describedby="emoji-build_description"><Translate src="[[admin/plugins/emoji:build]]"/></button>
+          <button
+            type="button"
+            on:click={buildAssets}
+            class="btn btn-primary"
+            aria-describedby="emoji-build_description"
+          >
+            <Translate src="[[admin/plugins/emoji:build]]"/>
+          </button>
           <p id="emoji-build_description" class="form-text">
           <Translate src="[[admin/plugins/emoji:build_description]]"/>
           </p>

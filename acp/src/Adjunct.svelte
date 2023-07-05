@@ -165,6 +165,7 @@ function cancelDelete() {
   </td>
   <td>
     {#if emoji}
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     {@html buildEmoji(emoji)}
     {/if}
   </td>
@@ -175,7 +176,9 @@ function cancelDelete() {
         class="form-control"
         bind:value={newAlias}
       />
-      <div class="input-group-addon"><button class="btn btn-outline-secondary" on:click={addAlias}>+</button></div>
+      <div class="input-group-addon">
+        <button class="btn btn-outline-secondary" on:click={addAlias}>+</button>
+      </div>
     </div>
     <span>
       {#each aliases as a}
@@ -190,7 +193,9 @@ function cancelDelete() {
         class="form-control"
         bind:value={newAscii}
       />
-      <div class="input-group-addon"><button class="btn btn-outline-secondary" on:click={addAscii}>+</button></div>
+      <div class="input-group-addon">
+        <button class="btn btn-outline-secondary" on:click={addAscii}>+</button>
+      </div>
     </div>
     <span>
       {#each ascii as a}
@@ -224,13 +229,23 @@ function cancelDelete() {
 {#if deleting || deleted}
 <tr class:fadeout={deleted}>
   <td>
-    <button class="btn btn-outline-secondary" type="button" disabled={deleted} on:click={cancelDelete}>Cancel</button>
+    <button
+      class="btn btn-outline-secondary"
+      type="button"
+      disabled={deleted}
+      on:click={cancelDelete}
+    >Cancel</button>
   </td>
   <td colSpan={3}>
     <span class="help-block">Are you sure you want to delete this extension?</span>
   </td>
   <td>
-    <button class="btn btn-danger" type="button" disabled={deleted} on:click={confirmDelete}>Yes</button>
+    <button
+      class="btn btn-danger"
+      type="button"
+      disabled={deleted}
+      on:click={confirmDelete}
+    >Yes</button>
   </td>
 </tr>
 {/if}

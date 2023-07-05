@@ -13,7 +13,14 @@ export function show(): void {
 }
 </script>
 
-<div class="modal fade" bind:this={modal} tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  bind:this={modal}
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">

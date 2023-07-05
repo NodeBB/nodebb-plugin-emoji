@@ -1,16 +1,24 @@
-/* eslint-disable @typescript-eslint/no-var-requires, import/no-extraneous-dependencies */
-const typescript = require('typescript');
-
 module.exports = {
+  extends: [
+    'airbnb-base',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:svelte/recommended',
+  ],
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    extraFileExtensions: ['.svelte'], // This is a required setting in `@typescript-eslint/parser` v4.24.0
+  },
   plugins: [
-    'svelte3',
     '@typescript-eslint',
   ],
   overrides: [
     {
       files: ['*.svelte'],
-      processor: 'svelte3/svelte3',
+      parser: 'svelte-eslint-parser',
+      // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+      },
       rules: {
         '@typescript-eslint/indent': 'off',
         'no-label-var': 'off',
@@ -20,10 +28,6 @@ module.exports = {
       },
     },
   ],
-  settings: {
-    'svelte3/typescript': typescript,
-  },
-  extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended'],
   rules: {
     camelcase: 'off',
     'no-undef': 'off',

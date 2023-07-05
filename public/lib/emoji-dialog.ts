@@ -78,7 +78,7 @@ export function init(callback: Callback<JQuery>): void {
   Promise.all([
     $.getJSON(`${base}/emoji/categories.json?${buster}`),
     $.getJSON(`${base}/emoji/packs.json?${buster}`),
-    new Promise(resolve => initEmoji(resolve)),
+    new Promise((resolve) => { initEmoji(resolve); }),
   ])
     .then(([categoriesInfo, packs]: [MetaData.Categories, MetaData.Packs, undefined]) => {
       const categories = Object.keys(categoriesInfo).map((category) => {

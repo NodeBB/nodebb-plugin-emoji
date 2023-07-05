@@ -1,3 +1,5 @@
+/// <reference types="svelte" />
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface JQuery {

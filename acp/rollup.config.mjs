@@ -11,7 +11,7 @@ const production = !process.env.ROLLUP_WATCH;
 
 export default {
   input: 'src/admin.ts',
-  external: ['translator', 'jquery', 'api', 'emoji'],
+  external: ['translator', 'jquery', 'api', 'emoji', 'alerts'],
   output: {
     sourcemap: !production,
     format: 'amd',
