@@ -4,7 +4,7 @@
       <div class="input-group">
         <input type="text" class="form-control emoji-dialog-search" placeholder="[[emoji:search.placeholder]]">
 
-        <button type="button" class="close btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="[[global:close]]">
+        <button type="button" class="close btn btn-outline-secondary" aria-label="[[global:close]]">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
