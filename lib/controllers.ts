@@ -1,6 +1,6 @@
-import { Router, RequestHandler } from 'express';
 import { join, basename } from 'path';
 import { rename } from 'fs';
+import { Router, RequestHandler } from 'express';
 import multer from 'multer';
 
 import * as settings from './settings';
