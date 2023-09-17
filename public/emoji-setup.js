@@ -9,7 +9,7 @@ require(['emoji'], function (emoji) {
   $(window).on('action:chat.loaded', (ev, container) => {
     const containerEl = $(container);
     const textarea = containerEl.find('[component="chat/input"]')[0];
-    const addEmojiBtn = $(container).find('[data-action="emoji"]');
+    const addEmojiBtn = containerEl.find('[data-action="emoji"]');
 
     addEmojiBtn.on('click', (ev) => {
       require([
