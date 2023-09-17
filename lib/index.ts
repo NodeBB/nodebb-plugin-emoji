@@ -79,12 +79,14 @@ export async function filterMessagingLoadRoom<Payload extends {
     }[];
   };
 }>(data: Payload): Promise<Payload> {
-  data.room.composerActions.push({
-    action: 'emoji',
-    class: 'd-none d-md-flex',
-    icon: 'fa-smile',
-    title: '[[emoji:composer.title]]',
-  });
+  if (data && data.room && Array.isArray(data.room.composerActions)) {
+    data.room.composerActions.push({
+      action: 'emoji',
+      class: 'd-none d-md-flex',
+      icon: 'fa-smile',
+      title: '[[emoji:composer.title]]',
+    });
+  }
   return data;
 }
 
