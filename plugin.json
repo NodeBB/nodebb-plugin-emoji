@@ -38,6 +38,7 @@
     { "hook": "filter:email.prepare", "method": "parse.email" },
     { "hook": "filter:middleware.renderHeader", "method": "parse.header" },
     { "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
-    { "hook": "filter:config.get", "method": "configGet" }
+    { "hook": "filter:config.get", "method": "configGet" },
+    { "hook": "filter:messaging.loadRoom", "method": "filterMessagingLoadRoom" }
   ]
 }

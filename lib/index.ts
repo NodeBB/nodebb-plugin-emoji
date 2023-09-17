@@ -69,6 +69,25 @@ export async function addStylesheet<Payload extends {
   return data;
 }
 
+export async function filterMessagingLoadRoom<Payload extends {
+  room: {
+    composerActions: {
+      action: string;
+      class: string;
+      icon: string;
+      title: string;
+    }[];
+  };
+}>(data: Payload): Promise<Payload> {
+  data.room.composerActions.push({
+    action: 'emoji',
+    class: 'd-none d-md-flex',
+    icon: 'fa-smile',
+    title: '[[emoji:composer.title]]',
+  });
+  return data;
+}
+
 export async function configGet(config: any): Promise<any> {
   const customFirst = await settings.getOne('customFirst');
   // eslint-disable-next-line no-param-reassign
