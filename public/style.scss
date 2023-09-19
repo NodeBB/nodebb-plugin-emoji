@@ -66,12 +66,6 @@
   }
 
   .nav-tabs {
-    overflow: hidden;
-    overflow-x: auto;
-    white-space: nowrap;
-    flex-shrink: 0;
-    flex-wrap: nowrap;
-
     > li, html[data-dir="rtl"] & > li {
       display: inline-block;
       float: none;
@@ -84,10 +78,7 @@
     flex-grow: 1;
   }
   .tab-pane {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: $spacer * 0.5 0;
     flex-wrap: wrap;
 
     margin: auto;
