@@ -66,6 +66,9 @@
   }
 
   .nav-tabs {
+    .nav-link {
+      padding: 8px;
+    }
     > li, html[data-dir="rtl"] & > li {
       display: inline-block;
       float: none;

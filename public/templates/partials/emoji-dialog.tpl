@@ -11,16 +11,16 @@
     </div>
 
     <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="emoji-dialog-search-results hidden nav-item">
-        <a href="#emoji-tab-search" class="nav-link px-2" aria-controls="search" role="tab" data-bs-toggle="tab" data-ajaxify="false">
+      <li role="presentation" class="emoji-dialog-search-results hidden nav-item m-0">
+        <a href="#emoji-tab-search" class="nav-link" aria-controls="search" role="tab" data-bs-toggle="tab" data-ajaxify="false">
           <i class="fa fa-fw fa-search text-muted pe-none"></i>
         </a>
       </li>
 
       {{{ each categories }}}
-      <li role="presentation" class="nav-item">
+      <li role="presentation" class="nav-item m-0">
         {{{ if (./name != "modifier")}}}
-        <a href="#emoji-tab-{./name}" class="nav-link px-2 {{{ if @first }}}active{{{ end }}}" aria-controls="{./name}" role="tab" data-ajaxify="false" title="[[emoji:categories.{./name}]]">
+        <a href="#emoji-tab-{./name}" class="nav-link {{{ if @first }}}active{{{ end }}}" aria-controls="{./name}" role="tab" data-ajaxify="false" title="[[emoji:categories.{./name}]]">
           <!-- [[emoji:categories.{./name}]] -->
           {{{ if (./name == "people" )}}}<i class="fa fa-fw fa-smile text-muted pe-none"></i>{{{ end }}}
           {{{ if (./name == "nature" )}}}<i class="fa fa-fw fa-leaf text-muted pe-none"></i>{{{ end }}}
