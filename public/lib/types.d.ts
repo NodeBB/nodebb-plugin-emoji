@@ -17,6 +17,7 @@ declare const ajaxify: {
 };
 declare const utils: {
   generateUUID(): string;
+  isTouchDevice(): boolean;
 };
 
 interface String {

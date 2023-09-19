@@ -21,7 +21,10 @@ export const dialogActions = {
     $html.addClass('emoji-insert');
     dialog.addClass('open');
     dialog.appendTo(document.fullscreenElement || 'body');
-    dialog.find('.emoji-dialog-search').focus();
+    if (!utils.isTouchDevice()) {
+      dialog.find('.emoji-dialog-search').focus();
+    }
+
     // need this setTimeout or onDocumentClick gets triggered too early
     // and causes https://github.com/NodeBB/NodeBB/issues/10589
     setTimeout(() => {
