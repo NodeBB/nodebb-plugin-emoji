@@ -20,7 +20,7 @@
       {{{ each categories }}}
       <li role="presentation" class="nav-item">
         {{{ if (./name != "modifier")}}}
-        <a href="#emoji-tab-{./name}" class="nav-link px-2 {{{ if @first }}}active{{{ end }}}" aria-controls="{./name}" role="tab" data-ajaxify="false">
+        <a href="#emoji-tab-{./name}" class="nav-link px-2 {{{ if @first }}}active{{{ end }}}" aria-controls="{./name}" role="tab" data-ajaxify="false" title="[[emoji:categories.{./name}]]">
           <!-- [[emoji:categories.{./name}]] -->
           {{{ if (./name == "people" )}}}<i class="fa fa-fw fa-smile text-muted pe-none"></i>{{{ end }}}
           {{{ if (./name == "nature" )}}}<i class="fa fa-fw fa-leaf text-muted pe-none"></i>{{{ end }}}
