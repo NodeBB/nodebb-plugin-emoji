@@ -1,0 +1,9 @@
+{
+	"settings": "Ustawienia",
+	"settings.parseAscii": "Zamieniaj dobrze znane buźki ASCII jak <code>:)</code>, <code>-_-</code>, itp.",
+	"settings.parseNative": "Zamieniaj emoji w formie unicode na emoji z paczki emoji",
+	"settings.customFirst": "Własne emoji wyświetlaj jako pierwsze",
+	"settings.parseTitles": "Uwzględnij emoji w tytułach wątków",
+	"build": "Przygotuj zestaw emoji",
+	"build_description": "Ruszy kompilacja niezbędnych metadanych i plików statych, które dadzą paczkę emoji. <br> Po instalacji i aktywacji paczki z emoji pamiętaj zrobić restart NodeBB a po kompilacji elementów ponownie skorzystaj z opcji przebudowy i restartu NodeBB."
+  }
