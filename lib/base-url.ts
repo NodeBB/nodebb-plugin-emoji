@@ -1,4 +1,4 @@
-const nconf = require.main.require('nconf');
+const nconf = require.main?.require('nconf');
 
 export function getBaseUrl(): string {
   const relative_path = nconf.get('relative_path') || '';

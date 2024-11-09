@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "alwaysStrict": true,
+    "strictNullChecks": true,
     "sourceMap": true
   },
   "typeAcquisition": {

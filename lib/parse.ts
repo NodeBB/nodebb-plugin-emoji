@@ -2,24 +2,26 @@ import { readFile } from 'fs-extra';
 
 import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
-const buster = require.main.require('./src/meta').config['cache-buster'];
-const winston = require.main.require('winston');
+const buster = require.main?.require('./src/meta').config['cache-buster'];
+const winston = require.main?.require('winston');
 
-let metaCache: {
+interface MetaCache {
   table: MetaData.Table;
   aliases: MetaData.Aliases;
   ascii: MetaData.Ascii;
   asciiPattern: RegExp;
   characters: MetaData.Characters;
   charPattern: RegExp;
-} = null;
+}
+
+let metaCache: MetaCache | null = null;
 export function clearCache(): void {
   metaCache = null;
 }
 
 const escapeRegExpChars = (text: string) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 
-const getTable = async (): Promise<typeof metaCache> => {
+async function getTable(): Promise<MetaCache> {
   if (metaCache) {
     return metaCache;
   }
@@ -64,7 +66,7 @@ const getTable = async (): Promise<typeof metaCache> => {
   };
 
   return metaCache;
-};
+}
 
 const outsideCode = /(^|<\/code>)([^<]*|<(?!code[^>]*>))*(<code[^>]*>|$)/g;
 const outsideElements = /(<[^>]*>)?([^<>]*)/g;
@@ -91,10 +93,18 @@ export function setOptions(newOptions: ParseOptions): void {
   Object.assign(options, newOptions);
 }
 
-export const buildEmoji = (emoji: StoredEmoji, whole: string, returnCharacter = false): string => {
+export const buildEmoji = (
+  emoji: StoredEmoji,
+  whole: string,
+  returnCharacter: boolean,
+  onReplace: (e: StoredEmoji, w: string) => void
+): string => {
   if (returnCharacter && emoji.character) {
-    return emoji.character;
+    return emoji.character || whole;
   }
+
+  onReplace(emoji, whole);
+
   if (emoji.image) {
     const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
     return `<img
@@ -114,12 +124,13 @@ export const buildEmoji = (emoji: StoredEmoji, whole: string, returnCharacter = 
 
 const replaceAscii = (
   str: string,
-  { ascii, asciiPattern, table }: (typeof metaCache),
-  returnCharacter = false
+  { ascii, asciiPattern, table }: MetaCache,
+  returnCharacter: boolean,
+  onReplace: (e: StoredEmoji, w: string) => void
 ) => str.replace(asciiPattern, (full: string, before: string, text: string) => {
   const emoji = ascii[text] && table[ascii[text]];
   if (emoji) {
-    return `${before}${buildEmoji(emoji, text, returnCharacter)}`;
+    return `${before}${buildEmoji(emoji, text, returnCharacter, onReplace)}`;
   }
 
   return full;
@@ -127,17 +138,23 @@ const replaceAscii = (
 
 const replaceNative = (
   str: string,
-  { characters, charPattern, table }: (typeof metaCache)
+  { characters, charPattern, table }: MetaCache,
+  onReplace: (e: StoredEmoji, w: string) => void
 ) => str.replace(charPattern, (char: string) => {
   const name = characters[char];
-  if (table[name]) {
-    return `:${name}:`;
+  const emoji = table[name];
+  if (emoji) {
+    return buildEmoji(emoji, char, false, onReplace);
   }
 
   return char;
 });
 
-const parse = async (content: string, returnCharacter = false): Promise<string> => {
+async function parse(
+  content: string,
+  returnCharacter = false,
+  onReplace: (e: StoredEmoji, w: string) => void = () => {}
+): Promise<string> {
   if (!content) {
     return content;
   }
@@ -155,14 +172,14 @@ const parse = async (content: string, returnCharacter = false): Promise<string> 
     outsideCodeStr => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
       let output = outside;
 
-      if (options.native) {
+      if (options.native && !returnCharacter) {
         // avoid parsing native inside HTML tags
         // also avoid converting ascii characters
         output = output.replace(
           /(<[^>]+>)|([^0-9a-zA-Z`~!@#$%^&*()\-=_+{}|[\]\\:";'<>?,./\s\n]+)/g,
           (full: string, tag: string, text: string) => {
             if (text) {
-              return replaceNative(text, store);
+              return replaceNative(text, store, onReplace);
             }
 
             return full;
@@ -175,19 +192,19 @@ const parse = async (content: string, returnCharacter = false): Promise<string> 
         const emoji = table[name] || table[aliases[name]];
 
         if (emoji) {
-          return buildEmoji(emoji, whole, returnCharacter);
+          return buildEmoji(emoji, whole, returnCharacter, onReplace);
         }
 
         return whole;
       });
 
       if (options.ascii) {
-        // avoid parsing native inside HTML tags
+        // avoid parsing ascii inside HTML tags
         output = output.replace(
           /(<[^>]+>)|([^<]+)/g,
           (full: string, tag: string, text: string) => {
             if (text) {
-              return replaceAscii(text, store, returnCharacter);
+              return replaceAscii(text, store, returnCharacter, onReplace);
             }
 
             return full;
@@ -200,13 +217,17 @@ const parse = async (content: string, returnCharacter = false): Promise<string> 
   );
 
   return parsed;
-};
+}
 
 export function raw(content: string): Promise<string> {
   return parse(content);
 }
 
-export async function post(data: { postData: { content: string } }): Promise<any> {
+export async function post(data: { postData: { content: string } }, type: string): Promise<any> {
+  if (type === 'activitypub.note') {
+    return data;
+  }
+
   // eslint-disable-next-line no-param-reassign
   data.postData.content = await parse(data.postData.content);
   return data;
@@ -278,5 +299,59 @@ export async function email(
     // eslint-disable-next-line no-param-reassign
     data.params.intro = await parse(data.params.intro, true);
   }
+  return data;
+}
+
+let mimeModule: typeof import('mime') | null = null;
+async function importMime(): Promise<typeof import('mime').default> {
+  if (!mimeModule) {
+    mimeModule = await import('mime');
+  }
+  return mimeModule.default;
+}
+
+export async function activitypubNote(data: {
+  object: {
+    source: { content: string },
+    '@context'?: { 'Emoji'?: string },
+    tag: {
+      id: string;
+      type: 'Emoji';
+      name: string;
+      icon: {
+        type: 'Image';
+        mediaType: string;
+        url: string;
+      }
+    }[]
+  },
+  post: unknown
+}): Promise<any> {
+  const mime = await importMime();
+
+  /* eslint-disable no-param-reassign */
+  data.object['@context'] = data.object['@context'] || {};
+  data.object['@context'].Emoji = 'http://joinmastodon.org/ns#Emoji';
+
+  data.object.tag = data.object.tag || [];
+
+  await parse(data.object.source.content, false, (emoji, whole) => {
+    if (!emoji.image) {
+      return;
+    }
+
+    const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
+    data.object.tag.push({
+      id: emoji.name,
+      type: 'Emoji',
+      name: whole,
+      icon: {
+        type: 'Image',
+        mediaType: mime.getType(emoji.image) || '',
+        url: `${route}/${emoji.image}?${buster}`,
+      },
+    });
+  });
+
   return data;
 }

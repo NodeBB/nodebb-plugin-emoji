@@ -40,7 +40,7 @@ interface Emoji {
   categories?: string[];
 }
 
-interface EmojiDefinition {
+type EmojiDefinition = {
   /**
    * human-friendly name of this emoji pack
    */
@@ -69,33 +69,58 @@ interface EmojiDefinition {
   license?: string;
 
   /**
+   * A map of emoji names to `Emoji`
+   */
+  dictionary: {
+    [name: string]: Emoji;
+  };
+} & ({
+  /**
    * The mode of this emoji pack.
    * `images` for individual image files.
    * `sprite` for a single image sprite file.
    * `font` for an emoji font.
    */
-  mode: 'images' | 'sprite' | 'font';
+  mode: 'images';
 
   /**
    * **`images` mode** options
    */
-  images?: {
+  images: {
     /** Path to the directory where the image files are located */
     directory: string;
   };
+} | {
+  /**
+   * The mode of this emoji pack.
+   * `images` for individual image files.
+   * `sprite` for a single image sprite file.
+   * `font` for an emoji font.
+   */
+  mode: 'sprite';
+
   /**
    * **`sprite` mode** options
    */
-  sprite?: {
+  sprite: {
     /** Path to the sprite image file */
     file: string;
     /** CSS `background-size` */
     backgroundSize: string;
   };
+} | {
+  /**
+   * The mode of this emoji pack.
+   * `images` for individual image files.
+   * `sprite` for a single image sprite file.
+   * `font` for an emoji font.
+   */
+  mode: 'font';
+
   /**
    * **`font` mode** options
    */
-  font?: {
+  font: {
     /** Path to the emoji font `.eot` file (for old IE support) */
     eot?: string;
     /** Path to the emoji font `.ttf` file */
@@ -111,20 +136,13 @@ interface EmojiDefinition {
     /** CSS `font-family` name */
     family: string;
   };
-
-  /**
-   * A map of emoji names to one of the following
-   */
-  dictionary: {
-    [name: string]: Emoji;
-  };
-}
+});
 
 declare type NodeBack<T = any> = (err?: Error, ...args: T[]) => void;
 
 interface StoredEmoji {
   name: string;
-  character: string;
+  character?: string;
   image: string;
   pack: string;
   aliases: string[];
