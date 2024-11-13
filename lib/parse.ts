@@ -223,8 +223,8 @@ export function raw(content: string): Promise<string> {
   return parse(content);
 }
 
-export async function post(data: { postData: { content: string } }, type: string): Promise<any> {
-  if (type === 'activitypub.note') {
+export async function post(data: { postData: { content: string }, type: string }): Promise<any> {
+  if (data.type === 'activitypub.note') {
     return data;
   }
 
