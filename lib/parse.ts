@@ -313,7 +313,7 @@ async function importMime(): Promise<typeof import('mime').default> {
 export async function activitypubNote(data: {
   object: {
     source: { content: string },
-    '@context'?: { 'Emoji'?: string },
+    '@context'?: unknown,
     tag: {
       id: string;
       type: 'Emoji';
@@ -330,8 +330,16 @@ export async function activitypubNote(data: {
   const mime = await importMime();
 
   /* eslint-disable no-param-reassign */
-  data.object['@context'] = data.object['@context'] || {};
-  data.object['@context'].Emoji = 'http://joinmastodon.org/ns#Emoji';
+  data.object['@context'] = data.object['@context'] || [];
+  if (typeof data.object['@context'] === 'string') {
+    data.object['@context'] = [data.object['@context']];
+  }
+  if (Array.isArray(data.object['@context'])) {
+    data.object['@context'].push({
+      toot: 'http://joinmastodon.org/ns#',
+      Emoji: 'toot:Emoji',
+    });
+  }
 
   data.object.tag = data.object.tag || [];
 
