@@ -96,8 +96,8 @@ export function setOptions(newOptions: ParseOptions): void {
 export const buildEmoji = (
   emoji: StoredEmoji,
   whole: string,
-  returnCharacter: boolean,
-  onReplace: (e: StoredEmoji, w: string) => void
+  returnCharacter = false,
+  onReplace: (e: StoredEmoji, w: string) => void = () => {}
 ): string => {
   if (returnCharacter && emoji.character) {
     return emoji.character || whole;
@@ -313,7 +313,7 @@ async function importMime(): Promise<typeof import('mime').default> {
 export async function activitypubNote(data: {
   object: {
     source: { content: string },
-    '@context'?: { 'Emoji'?: string },
+    '@context'?: unknown,
     tag: {
       id: string;
       type: 'Emoji';
@@ -329,9 +329,22 @@ export async function activitypubNote(data: {
 }): Promise<any> {
   const mime = await importMime();
 
+  const emojiContext = {
+    toot: 'http://joinmastodon.org/ns#',
+    Emoji: 'toot:Emoji',
+  };
+
   /* eslint-disable no-param-reassign */
-  data.object['@context'] = data.object['@context'] || {};
-  data.object['@context'].Emoji = 'http://joinmastodon.org/ns#Emoji';
+  if (typeof data.object['@context'] === 'string') {
+    data.object['@context'] = [
+      data.object['@context'],
+      emojiContext,
+    ];
+  } else if (Array.isArray(data.object['@context'])) {
+    data.object['@context'].push(emojiContext);
+  } else {
+    data.object['@context'] = emojiContext;
+  }
 
   data.object.tag = data.object.tag || [];
 
