@@ -2,6 +2,8 @@ import { readFile } from 'fs-extra';
 
 import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
+const mime = import('mime');
+
 const buster = require.main?.require('./src/meta').config['cache-buster'];
 const winston = require.main?.require('winston');
 
@@ -302,14 +304,6 @@ export async function email(
   return data;
 }
 
-let mimeModule: typeof import('mime') | null = null;
-async function importMime(): Promise<typeof import('mime').default> {
-  if (!mimeModule) {
-    mimeModule = await import('mime');
-  }
-  return mimeModule.default;
-}
-
 export async function activitypubNote(data: {
   object: {
     source: { content: string },
@@ -327,7 +321,7 @@ export async function activitypubNote(data: {
   },
   post: unknown
 }): Promise<any> {
-  const mime = await importMime();
+  const getType = (await mime).default.getType;
 
   const emojiContext = {
     toot: 'http://joinmastodon.org/ns#',
@@ -353,15 +347,15 @@ export async function activitypubNote(data: {
       return;
     }
 
-    const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
+    const url = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}/${emoji.image}?${buster}`;
     data.object.tag.push({
-      id: emoji.name,
+      id: url,
       type: 'Emoji',
       name: whole,
       icon: {
         type: 'Image',
-        mediaType: mime.getType(emoji.image) || '',
-        url: `${route}/${emoji.image}?${buster}`,
+        mediaType: getType(emoji.image) || '',
+        url,
       },
     });
   });
