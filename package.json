@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Adds extensible emoji functionality to NodeBB",
   "main": "build/lib",
   "type": "commonjs",
@@ -68,6 +68,7 @@
     "build": "npm run compile && cd acp && rollup -c",
     "pretest": "npm run lint && npm run build",
     "test": "node build/lib/tests.js",
-    "prepare": "bash prepare.sh"
+    "prepare": "bash -c 'rm -r build; mkdir -p build/emoji && touch build/emoji/avoid_npm_ignore && npm run test'",
+    "publish-all-packs": "bash -c 'for pack in packs/*; do cd $pack; npm publish; cd -; done'"
   }
 }
