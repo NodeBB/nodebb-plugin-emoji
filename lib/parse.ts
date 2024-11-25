@@ -2,7 +2,7 @@ import { readFile } from 'fs-extra';
 
 import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
-const mime = import('mime');
+const mimeImport = import('mime');
 
 const buster = require.main?.require('./src/meta').config['cache-buster'];
 const winston = require.main?.require('winston');
@@ -321,7 +321,7 @@ export async function activitypubNote(data: {
   },
   post: unknown
 }): Promise<any> {
-  const getType = (await mime).default.getType;
+  const mime = (await mimeImport).default;
 
   const emojiContext = {
     toot: 'http://joinmastodon.org/ns#',
@@ -329,15 +329,11 @@ export async function activitypubNote(data: {
   };
 
   /* eslint-disable no-param-reassign */
-  if (typeof data.object['@context'] === 'string') {
-    data.object['@context'] = [
-      data.object['@context'],
-      emojiContext,
-    ];
-  } else if (Array.isArray(data.object['@context'])) {
+  data.object['@context'] = data.object['@context'] || [];
+  if (Array.isArray(data.object['@context'])) {
     data.object['@context'].push(emojiContext);
   } else {
-    data.object['@context'] = emojiContext;
+    data.object['@context'] = [data.object['@context'], emojiContext];
   }
 
   data.object.tag = data.object.tag || [];
@@ -354,7 +350,7 @@ export async function activitypubNote(data: {
       name: whole,
       icon: {
         type: 'Image',
-        mediaType: getType(emoji.image) || '',
+        mediaType: mime.getType(emoji.image) || '',
         url,
       },
     });
