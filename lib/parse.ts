@@ -98,14 +98,17 @@ export function setOptions(newOptions: ParseOptions): void {
 export const buildEmoji = (
   emoji: StoredEmoji,
   whole: string,
-  returnCharacter = false,
+  mode: 'returnChar' | 'returnWhole' | null = null,
   onReplace: (e: StoredEmoji, w: string) => void = () => {}
 ): string => {
-  if (returnCharacter && emoji.character) {
+  onReplace(emoji, whole);
+
+  if (mode === 'returnChar') {
     return emoji.character || whole;
   }
-
-  onReplace(emoji, whole);
+  if (mode === 'returnWhole') {
+    return whole;
+  }
 
   if (emoji.image) {
     const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
@@ -127,12 +130,13 @@ export const buildEmoji = (
 const replaceAscii = (
   str: string,
   { ascii, asciiPattern, table }: MetaCache,
-  returnCharacter: boolean,
+  mode: 'returnChar' | 'returnWhole' | null,
   onReplace: (e: StoredEmoji, w: string) => void
 ) => str.replace(asciiPattern, (full: string, before: string, text: string) => {
   const emoji = ascii[text] && table[ascii[text]];
   if (emoji) {
-    return `${before}${buildEmoji(emoji, text, returnCharacter, onReplace)}`;
+    const whole = (mode === 'returnWhole') ? `:${emoji.name}:` : text;
+    return `${before}${buildEmoji(emoji, whole, mode, onReplace)}`;
   }
 
   return full;
@@ -146,7 +150,7 @@ const replaceNative = (
   const name = characters[char];
   const emoji = table[name];
   if (emoji) {
-    return buildEmoji(emoji, char, false, onReplace);
+    return buildEmoji(emoji, char, null, onReplace);
   }
 
   return char;
@@ -154,7 +158,7 @@ const replaceNative = (
 
 async function parse(
   content: string,
-  returnCharacter = false,
+  mode: 'returnChar' | 'returnWhole' | null = null,
   onReplace: (e: StoredEmoji, w: string) => void = () => {}
 ): Promise<string> {
   if (!content) {
@@ -174,7 +178,7 @@ async function parse(
     outsideCodeStr => outsideCodeStr.replace(outsideElements, (_, inside, outside) => {
       let output = outside;
 
-      if (options.native && !returnCharacter) {
+      if (options.native && mode === null) {
         // avoid parsing native inside HTML tags
         // also avoid converting ascii characters
         output = output.replace(
@@ -194,7 +198,7 @@ async function parse(
         const emoji = table[name] || table[aliases[name]];
 
         if (emoji) {
-          return buildEmoji(emoji, whole, returnCharacter, onReplace);
+          return buildEmoji(emoji, whole, mode, onReplace);
         }
 
         return whole;
@@ -206,7 +210,7 @@ async function parse(
           /(<[^>]+>)|([^<]+)/g,
           (full: string, tag: string, text: string) => {
             if (text) {
-              return replaceAscii(text, store, returnCharacter, onReplace);
+              return replaceAscii(text, store, mode, onReplace);
             }
 
             return full;
@@ -288,7 +292,7 @@ export async function header(
   data.templateData.metaTags.forEach(async (t) => {
     if (t && (t.property === 'og:title' || t.name === 'title')) {
       // eslint-disable-next-line no-param-reassign
-      t.content = await parse(t.content, true);
+      t.content = await parse(t.content, 'returnChar');
     }
   });
   return data;
@@ -299,7 +303,7 @@ export async function email(
 ) : Promise<any> {
   if (data.template === 'notification' && data.params.intro) {
     // eslint-disable-next-line no-param-reassign
-    data.params.intro = await parse(data.params.intro, true);
+    data.params.intro = await parse(data.params.intro, 'returnChar');
   }
   return data;
 }
@@ -317,7 +321,8 @@ export async function activitypubNote(data: {
         mediaType: string;
         url: string;
       }
-    }[]
+    }[],
+    content: string,
   },
   post: unknown
 }): Promise<any> {
@@ -338,7 +343,7 @@ export async function activitypubNote(data: {
 
   data.object.tag = data.object.tag || [];
 
-  await parse(data.object.source.content, false, (emoji, whole) => {
+  data.object.content = await parse(data.object.content, 'returnWhole', (emoji, whole) => {
     if (!emoji.image) {
       return;
     }
