@@ -230,7 +230,7 @@ export function raw(content: string): Promise<string> {
 }
 
 export async function post(data: { postData: { content: string }, type: string }): Promise<any> {
-  if (data.type === 'activitypub.note') {
+  if (data.type === 'activitypub.note' || data.type === 'markdown') {
     return data;
   }
 
