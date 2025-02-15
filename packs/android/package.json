@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji-android",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "The Android blob emoji-set for NodeBB (requires nodebb-plugin-emoji)",
   "main": "emoji.js",
   "author": "Peter Jaszkowiak <p.jaszkow@gmail.com> (https://github.com/pitaj)",
@@ -15,7 +15,7 @@
   },
   "nbbpm": {
     "name": "Emoji Android",
-    "compatibility": "^3.0.0"
+    "compatibility": "^4.0.0"
   },
   "keywords": [
     "nodebb",
@@ -25,7 +25,7 @@
     "google"
   ],
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^5.0.0"
+    "nodebb-plugin-emoji": "^6.0.0"
   },
   "dependencies": {
     "emoji-datasource-google": "^3.0.0",

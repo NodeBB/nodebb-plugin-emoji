@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji-vital",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Vital non-standard unlicensed emoji",
   "main": "emoji.js",
   "scripts": {
@@ -20,10 +20,10 @@
   ],
   "nbbpm": {
     "name": "Emoji One",
-    "compatibility": "^3.0.0"
+    "compatibility": "^4.0.0"
   },
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^5.0.0"
+    "nodebb-plugin-emoji": "^6.0.0"
   },
   "author": "Peter Jaszkowiak",
   "license": "MIT"
