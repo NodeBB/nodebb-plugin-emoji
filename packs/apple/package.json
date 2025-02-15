@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji-apple",
-  "version": "5.0.0",
+  "version": "4.1.1",
   "description": "The apple emoji-set for NodeBB (requires nodebb-plugin-emoji)",
   "main": "emoji.js",
   "author": "Ole Reglitzki <frissdiegurke@protonmail.com> (https://github.com/frissdiegurke)",
@@ -25,7 +25,7 @@
     "apple"
   ],
   "peerDependencies": {
-    "nodebb-plugin-emoji": "^6.0.0"
+    "nodebb-plugin-emoji": "^5.0.0 || ^6.0.1"
   },
   "dependencies": {
     "emoji-datasource-apple": "^3.0.0",

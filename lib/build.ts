@@ -13,9 +13,9 @@ import { getBaseUrl } from './base-url';
 import { clearCache } from './parse';
 import { getAll as getCustomizations } from './customizations';
 
-const nconf = require.main.require('nconf');
-const winston = require.main.require('winston');
-const plugins = require.main.require('./src/plugins');
+const nconf = require.main?.require('nconf');
+const winston = require.main?.require('winston');
+const plugins = require.main?.require('./src/plugins');
 
 export const assetsDir = join(__dirname, '../emoji');
 
@@ -65,8 +65,8 @@ export default async function build(): Promise<void> {
     packsInfo.push({
       name: pack.name,
       id: pack.id,
-      attribution: pack.attribution,
-      license: pack.license,
+      attribution: pack.attribution || '',
+      license: pack.license || '',
     });
 
     Object.keys(pack.dictionary).forEach((key) => {
@@ -76,7 +76,7 @@ export default async function build(): Promise<void> {
       if (!table[name]) {
         table[name] = {
           name,
-          character: emoji.character || `:${name}:`,
+          character: emoji.character,
           image: emoji.image || '',
           pack: pack.id,
           aliases: emoji.aliases || [],
@@ -122,7 +122,7 @@ export default async function build(): Promise<void> {
 
     table[name] = {
       name,
-      character: `:${name}:`,
+      character: undefined,
       pack: 'customizations',
       keywords: [],
       image: emoji.image,
@@ -160,7 +160,7 @@ export default async function build(): Promise<void> {
 
   // generate CSS styles
   cssBuilders.setBaseUrl(getBaseUrl());
-  const css = packs.map(pack => cssBuilders[pack.mode](pack)).join('\n');
+  const css = packs.map(pack => (cssBuilders as any)[pack.mode](pack)).join('\n');
   const cssFile = `${css}\n.emoji-customizations {
     display: inline-block;
     height: 23px;
@@ -185,7 +185,7 @@ export default async function build(): Promise<void> {
         pack.font.woff,
         pack.font.ttf,
         pack.font.woff2,
-      ].filter(Boolean);
+      ].filter(Boolean) as [string];
 
       await mkdirp(dir);
       await Promise.all(fontFiles.map(async (file) => {

@@ -7,12 +7,14 @@
     "outDir": "build/lib",
     "lib": ["es2019"],
     "target": "es2019",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
     "esModuleInterop": true,
     "noImplicitAny": true,
     "alwaysStrict": true,
-    "sourceMap": true
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "skipLibCheck": true
   },
   "typeAcquisition": {
     "enable": false

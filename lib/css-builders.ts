@@ -1,6 +1,6 @@
 import { basename } from 'path';
 
-const buster = require.main.require('./src/meta').config['cache-buster'];
+const buster = require.main?.require('./src/meta').config['cache-buster'];
 let baseUrl = '';
 
 export function setBaseUrl(url:string):void {
@@ -16,7 +16,7 @@ export function images(pack: EmojiDefinition): string {
   '}';
 }
 
-export function sprite(pack: EmojiDefinition): string {
+export function sprite(pack: EmojiDefinition & { mode: 'sprite' }): string {
   const classes = Object.keys(pack.dictionary).map(name => `.emoji-${pack.id}.emoji--${name} {` +
       `background-position: ${pack.dictionary[name].backgroundPosition};` +
     '}');
@@ -50,7 +50,7 @@ export function sprite(pack: EmojiDefinition): string {
   ${classes.join('')}`.split('\n').map(x => x.trim()).join('');
 }
 
-export function font(pack: EmojiDefinition): string {
+export function font(pack: EmojiDefinition & { mode: 'font' }): string {
   const route = `${baseUrl}/plugins/nodebb-plugin-emoji/emoji/${pack.id}`;
 
   return `@font-face {

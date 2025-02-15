@@ -7,7 +7,7 @@ jQuery(window).on('action:ajaxify.end', () => {
   if (ajaxify.data.template['admin/plugins/emoji']) {
     // eslint-disable-next-line no-new
     new Settings({
-      target: document.getElementById('content'),
+      target: document.getElementById('content') as HTMLElement,
       props: {
         settings: ajaxify.data.settings,
       },

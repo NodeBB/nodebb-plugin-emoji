@@ -7,9 +7,9 @@ import * as settings from './settings';
 import { build } from './pubsub';
 import * as customizations from './customizations';
 
-const nconf = require.main.require('nconf');
-const { setupApiRoute, setupAdminPageRoute } = require.main.require('./src/routes/helpers');
-const { formatApiResponse } = require.main.require('./src/controllers/helpers');
+const nconf = require.main?.require('nconf');
+const { setupApiRoute, setupAdminPageRoute } = require.main?.require('./src/routes/helpers');
+const { formatApiResponse } = require.main?.require('./src/controllers/helpers');
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
 const version: string = require(join(__dirname, '../../package.json')).version;

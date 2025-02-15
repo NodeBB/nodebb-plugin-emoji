@@ -5,9 +5,9 @@ import { build } from './pubsub';
 import controllers from './controllers';
 import { getBaseUrl } from './base-url';
 
-const nconf = require.main.require('nconf');
-const buster = require.main.require('./src/meta').config['cache-buster'];
-const file = require.main.require('./src/file');
+const nconf = require.main?.require('nconf');
+const buster = require.main?.require('./src/meta').config['cache-buster'];
+const file = require.main?.require('./src/file');
 
 export async function init(params: any): Promise<void> {
   controllers(params);

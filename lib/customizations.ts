@@ -1,4 +1,4 @@
-const db = require.main.require('./src/database');
+const db = require.main?.require('./src/database');
 
 const emojisKey = 'emoji:customizations:emojis';
 const adjunctsKey = 'emoji:customizations:adjuncts';

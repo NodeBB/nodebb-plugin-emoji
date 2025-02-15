@@ -3,7 +3,7 @@ const settings: {
   set(key: string, value: unknown): Promise<void>;
   getOne(key: string, field: string): Promise<unknown>;
   setOne(key: string, field: string, value: unknown): Promise<void>;
-} = require.main.require('./src/meta').settings;
+} = require.main?.require('./src/meta').settings;
 
 const defaults: Settings = {
   parseNative: true,

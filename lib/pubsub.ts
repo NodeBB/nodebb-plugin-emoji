@@ -2,9 +2,9 @@ import * as os from 'os';
 
 import buildAssets from './build';
 
-const nconf = require.main.require('nconf');
-const winston = require.main.require('winston');
-const pubsub = require.main.require('./src/pubsub');
+const nconf = require.main?.require('nconf');
+const winston = require.main?.require('winston');
+const pubsub = require.main?.require('./src/pubsub');
 
 const primary = nconf.get('isPrimary') === 'true' || nconf.get('isPrimary') === true;
 const hostname = os.hostname();
