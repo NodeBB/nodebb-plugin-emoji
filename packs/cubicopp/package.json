@@ -16,7 +16,7 @@
   },
   "nbbpm": {
     "name": "Emoji Cubicopp",
-    "compatibility": "^3.0.0"
+    "compatibility": "^4.0.0"
   },
   "keywords": [
     "nodebb",

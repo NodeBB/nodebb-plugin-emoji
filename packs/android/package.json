@@ -15,7 +15,7 @@
   },
   "nbbpm": {
     "name": "Emoji Android",
-    "compatibility": "^3.0.0"
+    "compatibility": "^4.0.0"
   },
   "keywords": [
     "nodebb",

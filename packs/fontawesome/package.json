@@ -21,7 +21,7 @@
     "extended"
   ],
   "nbbpm": {
-    "compatibility": "^3.0.0"
+    "compatibility": "^4.0.0"
   },
   "peerDependencies": {
     "nodebb-plugin-emoji": "^5.0.0 || ^6.0.1"
