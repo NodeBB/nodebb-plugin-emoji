@@ -1,0 +1,25 @@
+{
+  "composer.title": "Emoji",
+  "meta-load-failed": "加载emoji元数据失败",
+  "modal.title": "可用表情符号",
+  "modal.legal": "法律信息",
+  "modal.legal.header": "显示的表情符号属于不同的 <em>Emoji 集</em>。<br>一个表情符号属于哪一组，可在 <code>class</code> HTML 属性中说明 (<code>class=\"emoji-[pack ID]\"</code>).",
+  "modal.legal.set.header": "<strong>%1</strong> Emoji 集 <small>ID: <code>%2</code></small>",
+  "modal.legal.set.attribution": "署名",
+  "modal.legal.set.license": "许可证",
+
+  "categories.symbols": "标志",
+  "categories.objects": "物体",
+  "categories.nature": "自然",
+  "categories.people": "人物",
+  "categories.food": "食物",
+  "categories.travel": "旅行",
+  "categories.activity": "运动",
+  "categories.flags": "旗帜",
+  "categories.regional": "区域",
+  "categories.modifier": "修饰",
+  "categories.other": "其他",
+  "categories.custom": "定制",
+  "search.results": "搜索结果",
+  "search.placeholder": "搜索"
+}

@@ -1,0 +1,9 @@
+{
+  "settings": "设置",
+  "settings.parseAscii": "替换常见的ASCII字符，例如 <code>:)</code>, <code>-_-</code> 等",
+  "settings.parseNative": "用表情包提供的 Emoji 替换本地 Unicode Emoji 字符",
+  "settings.customFirst": "将自定义 Emoji 放在对话框的首位",
+  "settings.parseTitles": "解析主题磁贴中的 Emoji",
+  "build": "构建 Emoji 资产",
+  "build_description": "从所有表情包中编译必要的元数据和静态资产。<br>安装并激活表情包后，重启 NodeBB，构建表情包资产，然后重建和重启 NodeBB。"
+}
