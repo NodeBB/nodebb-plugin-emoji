@@ -42,7 +42,7 @@ exports.defineEmoji = (data, callback) => {
     data.packs.push({
       name: 'Font Awesome Emoji',
       id: 'fontawesome',
-      attribution: 'Font Awesome by Dave Gandy - https://fontawesome.com/v4.7.0',
+      attribution: 'Font Awesome by Dave Gandy - https://fontawesome.com/v5.15.4',
       path: __dirname,
       license,
       mode: 'font',
