@@ -129,32 +129,40 @@ export const buildEmoji = (
 
 const replaceAscii = (
   str: string,
-  { ascii, asciiPattern, table }: MetaCache,
+  cache: MetaCache | null,
   mode: 'returnChar' | 'returnWhole' | null,
   onReplace: (e: StoredEmoji, w: string) => void
-) => str.replace(asciiPattern, (full: string, before: string, text: string) => {
-  const emoji = ascii[text] && table[ascii[text]];
-  if (emoji) {
-    const whole = (mode === 'returnWhole') ? `:${emoji.name}:` : text;
-    return `${before}${buildEmoji(emoji, whole, mode, onReplace)}`;
-  }
+) => {
+  if (!cache) return str;
+  const { ascii, asciiPattern, table } = cache;
+  return str.replace(asciiPattern, (full: string, before: string, text: string) => {
+    const emoji = ascii[text] && table[ascii[text]];
+    if (emoji) {
+      const whole = (mode === 'returnWhole') ? `:${emoji.name}:` : text;
+      return `${before}${buildEmoji(emoji, whole, mode, onReplace)}`;
+    }
 
-  return full;
-});
+    return full;
+  });
+};
 
 const replaceNative = (
   str: string,
-  { characters, charPattern, table }: MetaCache,
+  cache: MetaCache | null,
   onReplace: (e: StoredEmoji, w: string) => void
-) => str.replace(charPattern, (char: string) => {
-  const name = characters[char];
-  const emoji = table[name];
-  if (emoji) {
-    return buildEmoji(emoji, char, null, onReplace);
-  }
+) => {
+  if (!cache) return str;
+  const { characters, charPattern, table } = cache;
+  return str.replace(charPattern, (char: string) => {
+    const name = characters[char];
+    const emoji = table[name];
+    if (emoji) {
+      return buildEmoji(emoji, char, null, onReplace);
+    }
 
-  return char;
-});
+    return char;
+  });
+};
 
 async function parse(
   content: string,
