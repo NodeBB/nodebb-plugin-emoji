@@ -343,8 +343,9 @@ export async function activitypubNote(data: {
 
   data.object.tag = data.object.tag || [];
 
+  const added = new Set<string>();
   data.object.content = await parse(data.object.content, 'returnWhole', (emoji, whole) => {
-    if (!emoji.image) {
+    if (!emoji.image || added.has(whole)) {
       return;
     }
 
@@ -359,6 +360,8 @@ export async function activitypubNote(data: {
         url,
       },
     });
+
+    added.add(whole);
   });
 
   return data;
