@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-emoji",
-  "version": "6.0.5",
+  "version": "6.0.6",
   "description": "Adds extensible emoji functionality to NodeBB",
   "main": "build/lib",
   "type": "commonjs",
