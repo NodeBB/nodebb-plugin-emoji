@@ -8,12 +8,10 @@ const pubsub = require.main?.require('./src/pubsub');
 
 const primary = nconf.get('isPrimary') === 'true' || nconf.get('isPrimary') === true;
 const hostname = os.hostname();
-const port = nconf.get('port');
-const id = `${hostname}:${port}`;
 
 if (primary) {
-  pubsub.on('emoji:build', (data: { id: string }) => {
-    if (data.id !== id) {
+  pubsub.on('emoji:build', (data: { hostname: string }) => {
+    if (data.hostname !== hostname) {
       buildAssets().catch((err) => {
         if (err) {
           winston.error(err);
@@ -24,13 +22,9 @@ if (primary) {
 }
 
 export async function build(): Promise<void> {
-  if (pubsub.pubClient) {
-    pubsub.publish('emoji:build', {
-      id,
-    });
-  }
+  await buildAssets();
 
-  if (primary) {
-    await buildAssets();
-  }
+  pubsub.publish('emoji:build', {
+    hostname,
+  });
 }

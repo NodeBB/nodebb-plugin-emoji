@@ -32,7 +32,7 @@ export const categoriesFile = join(assetsDir, 'categories.json');
 export const packsFile = join(assetsDir, 'packs.json');
 
 export default async function build(): Promise<void> {
-  winston.verbose('[emoji] Building emoji assets');
+  winston.info('[emoji] Building emoji assets');
 
   // fetch the emoji definitions
   const { packs }: { packs: EmojiDefinition[] } = await plugins.hooks.fire('filter:emoji.packs', { packs: [] });
@@ -46,7 +46,7 @@ export default async function build(): Promise<void> {
     return false;
   });
 
-  winston.verbose(`[emoji] Loaded packs: ${filtered.map(pack => pack.id).join(', ')}`);
+  winston.info(`[emoji] Loaded packs: ${filtered.map(pack => pack.id).join(', ')}`);
 
   await remove(assetsDir);
   await mkdirp(assetsDir);
