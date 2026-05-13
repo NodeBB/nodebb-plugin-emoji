@@ -1,13 +1,14 @@
 import * as settings from './settings';
 import * as parse from './parse';
-import { tableFile } from './build';
-import { build } from './pubsub';
+import build, { tableFile } from './build';
 import controllers from './controllers';
 import { getBaseUrl } from './base-url';
 
 const nconf = require.main?.require('nconf');
 const buster = require.main?.require('./src/meta').config['cache-buster'];
 const file = require.main?.require('./src/file');
+
+const primary = nconf.get('isPrimary') === 'true' || nconf.get('isPrimary') === true;
 
 export async function init(params: any): Promise<void> {
   controllers(params);
@@ -28,7 +29,7 @@ export async function init(params: any): Promise<void> {
     // otherwise, build if never built before
     !(await file.exists(tableFile));
 
-  if (shouldBuild) {
+  if (primary && shouldBuild) {
     await build();
   }
 }
