@@ -223,3 +223,7 @@ interface Settings {
   customFirst: boolean;
   parseTitles: boolean;
 }
+
+interface NodeBB {
+  require(module: string): any;
+}

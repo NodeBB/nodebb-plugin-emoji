@@ -4,8 +4,8 @@ import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 
 const mimeImport = import('mime');
 
-const buster = require.main?.require('./src/meta').config['cache-buster'];
-const winston = require.main?.require('winston');
+const buster = nodebb.require('./src/meta').config['cache-buster'];
+const winston = nodebb.require('winston');
 
 interface MetaCache {
   table: MetaData.Table;

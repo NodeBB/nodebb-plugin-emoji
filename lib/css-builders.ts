@@ -1,6 +1,6 @@
 import { basename } from 'path';
 
-const buster = require.main?.require('./src/meta').config['cache-buster'];
+const buster = nodebb.require('./src/meta').config['cache-buster'];
 let baseUrl = '';
 
 export function setBaseUrl(url:string):void {

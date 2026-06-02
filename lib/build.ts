@@ -13,9 +13,9 @@ import { getBaseUrl } from './base-url';
 import { clearCache } from './parse';
 import { getAll as getCustomizations } from './customizations';
 
-const nconf = require.main?.require('nconf');
-const winston = require.main?.require('winston');
-const plugins = require.main?.require('./src/plugins');
+const nconf = nodebb.require('nconf');
+const winston = nodebb.require('winston');
+const plugins = nodebb.require('./src/plugins');
 
 export const assetsDir = join(__dirname, '../emoji');
 

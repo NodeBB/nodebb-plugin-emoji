@@ -4,9 +4,9 @@ import build, { tableFile } from './build';
 import controllers from './controllers';
 import { getBaseUrl } from './base-url';
 
-const nconf = require.main?.require('nconf');
-const buster = require.main?.require('./src/meta').config['cache-buster'];
-const file = require.main?.require('./src/file');
+const nconf = nodebb.require('nconf');
+const buster = nodebb.require('./src/meta').config['cache-buster'];
+const file = nodebb.require('./src/file');
 
 const primary = nconf.get('isPrimary') === 'true' || nconf.get('isPrimary') === true;
 
