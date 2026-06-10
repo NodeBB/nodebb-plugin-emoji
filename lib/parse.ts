@@ -242,7 +242,7 @@ export async function post(data: { postData: { content: string }, type: string }
 export async function topic(data: { topic: { title: string } }): Promise<any> {
   if (options.titles) {
     // eslint-disable-next-line no-param-reassign
-    data.topic.title = await parse(data.topic.title);
+    data.topic.title = await parse(data.topic.title, 'returnChar');
   }
   return data;
 }
@@ -251,7 +251,7 @@ export async function topics(data: { topics: [{ title: string }] }): Promise<any
   if (options.titles) {
     await Promise.all(data.topics.map(async (t) => {
       // eslint-disable-next-line no-param-reassign
-      t.title = await parse(t.title);
+      t.title = await parse(t.title, 'returnChar');
     }));
   }
   return data;
@@ -262,7 +262,7 @@ export async function postSummaries(data: { posts: [{ topic: { title: string } }
     await Promise.all(data.posts.map(async (p) => {
       if (p && p.topic && p.topic.title) {
         // eslint-disable-next-line no-param-reassign
-        p.topic.title = await parse(p.topic.title);
+        p.topic.title = await parse(p.topic.title, 'returnChar');
       }
     }));
   }
@@ -276,7 +276,7 @@ export async function notifications(
     await Promise.all(data.notifications.map(async (n) => {
       if (n && n.bodyShort) {
         // eslint-disable-next-line no-param-reassign
-        n.bodyShort = await parse(n.bodyShort);
+        n.bodyShort = await parse(n.bodyShort, 'returnChar');
       }
     }));
   }
