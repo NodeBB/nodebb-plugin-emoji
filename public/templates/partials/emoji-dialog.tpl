@@ -52,7 +52,7 @@
       {{{ each categories }}}
       <div role="tabpanel" class="tab-pane {{{ if @first }}}active{{{ end }}}" id="emoji-tab-{./name}">
         {{{ each ./emojis }}}
-        <a class="emoji-link" name="{./name}" href="#">{./html}</a>
+        <a class="emoji-link" name="{./name}" href="#">{{./html}}</a>
         {{{ end }}}
       </div>
       {{{ end }}}
