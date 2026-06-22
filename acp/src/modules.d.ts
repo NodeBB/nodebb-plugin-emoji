@@ -26,7 +26,7 @@ module '@textcomplete/textarea' {
 module 'config' {
   const config: {
     relative_path: string;
-    assetBaseUrl: string;
+    asset_base_url: string;
     'cache-buster': string;
     emojiCustomFirst: boolean;
     csrf_token: string;

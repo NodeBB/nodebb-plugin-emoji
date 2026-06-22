@@ -2,9 +2,9 @@ const nconf = nodebb.require('nconf');
 
 export function getBaseUrl(): string {
   const relative_path = nconf.get('relative_path') || '';
-  const assetBaseUrl = nconf.get('asset_base_url') || `${relative_path}/assets`;
+  const asset_base_url = nconf.get('asset_base_url') || `${relative_path}/assets`;
 
-  return assetBaseUrl.startsWith('http') ?
-    assetBaseUrl :
-    nconf.get('base_url') + assetBaseUrl;
+  return asset_base_url.startsWith('http') ?
+    asset_base_url :
+    nconf.get('base_url') + asset_base_url;
 }
