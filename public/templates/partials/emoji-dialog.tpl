@@ -20,8 +20,7 @@
       {{{ each categories }}}
       <li role="presentation" class="nav-item m-0">
         {{{ if (./name != "modifier")}}}
-        <a href="#emoji-tab-{./name}" class="nav-link {{{ if @first }}}active{{{ end }}}" aria-controls="{./name}" role="tab" data-ajaxify="false" title="[[emoji:categories.{./name}]]">
-          <!-- [[emoji:categories.{./name}]] -->
+        <a href="#emoji-tab-{./name}" class="nav-link {{{ if @first }}}active{{{ end }}}" aria-controls="{./name}" role="tab" data-ajaxify="false" title="{{tx(concat("emoji:categories.", ./name))}}">
           {{{ if (./name == "people" )}}}<i class="fa fa-fw fa-smile text-muted pe-none"></i>{{{ end }}}
           {{{ if (./name == "nature" )}}}<i class="fa fa-fw fa-leaf text-muted pe-none"></i>{{{ end }}}
           {{{ if (./name == "food" )}}}<i class="fa fa-fw fa-burger text-muted pe-none"></i>{{{ end }}}
@@ -38,7 +37,7 @@
 
       <li role="presentation" class="nav-item hidden">
         <button href="#emoji-tab-legal" class="nav-link text-bg-info" aria-controls="legal" role="tab" data-bs-toggle="tab" data-ajaxify="false">
-          [[emoji:modal.legal]]
+          {{tx("emoji:modal.legal")}}
         </button>
       </li>
     </ul>
@@ -61,16 +60,16 @@
         <div class="row">
           <div class="col-12 mb-3">
             <p class="lead">
-              [[emoji:modal.legal.header]]
+              {{tx("emoji:modal.legal.header")}}
             </p>
           </div>
           {{{ each packs }}}
           <div class="col-12 mb-3">
-            <h3>[[emoji:modal.legal.set.header, {../name}, {../id}]]</h3>
+            <h3>{{tx("emoji:modal.legal.set.header", {../name}, {../id})}}</h3>
 
             {{{ if ./attribution }}}
             <div class="mb-3">
-              <h4>[[emoji:modal.legal.set.attribution]]</h4>
+              <h4>{{tx("emoji:modal.legal.set.attribution")}}</h4>
               <div class="card card-body text-bg-light">
                 {./attribution}
               </div>
@@ -79,7 +78,7 @@
 
             {{{ if ./license }}}
             <div class="mb-3">
-              <h4>[[emoji:modal.legal.set.license]]</h4>
+              <h4>{{tx("emoji:modal.legal.set.license")}}</h4>
               <div class="card card-body text-bg-light">
                 {./license}
               </div>
