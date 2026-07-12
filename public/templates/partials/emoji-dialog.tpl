@@ -65,7 +65,7 @@
           </div>
           {{{ each packs }}}
           <div class="col-12 mb-3">
-            <h3>{{tx("emoji:modal.legal.set.header", {../name}, {../id})}}</h3>
+            <h3>{{tx("emoji:modal.legal.set.header", ./name, ./id)}}</h3>
 
             {{{ if ./attribution }}}
             <div class="mb-3">
