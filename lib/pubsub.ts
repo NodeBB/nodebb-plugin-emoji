@@ -13,9 +13,7 @@ if (primary) {
   pubsub.on('emoji:build', (data: { hostname: string }) => {
     if (data.hostname !== hostname) {
       buildAssets().catch((err) => {
-        if (err) {
-          winston.error(err);
-        }
+        winston.error(err);
       });
     }
   });
