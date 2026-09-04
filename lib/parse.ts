@@ -5,6 +5,7 @@ import { tableFile, aliasesFile, asciiFile, charactersFile } from './build';
 const mimeImport = import('mime');
 
 const buster = nodebb.require('./src/meta').config['cache-buster'];
+const utils = nodebb.require('./src/utils');
 const winston = nodebb.require('winston');
 
 interface MetaCache {
@@ -109,22 +110,22 @@ export const buildEmoji = (
   if (mode === 'returnWhole') {
     return whole;
   }
-
+  const escape = utils.escapeHTML;
   if (emoji.image) {
-    const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${emoji.pack}`;
+    const route = `${options.baseUrl}/plugins/nodebb-plugin-emoji/emoji/${escape(emoji.pack)}`;
     return `<img
-      src="${route}/${emoji.image}?${buster}"
-      class="not-responsive emoji emoji-${emoji.pack} emoji--${emoji.name}"
+      src="${route}/${escape(emoji.image)}?${buster}"
+      class="not-responsive emoji emoji-${escape(emoji.pack)} emoji--${escape(emoji.name)}"
       style="height: 23px; width: auto; vertical-align: middle;"
-      title="${whole}"
-      alt="${emoji.character}"
+      title="${escape(whole)}"
+      alt="${escape(emoji.character)}"
     />`;
   }
 
   return `<span
-    class="emoji emoji-${emoji.pack} emoji--${emoji.name}"
-    title="${whole}"
-  ><span>${emoji.character}</span></span>`;
+    class="emoji emoji-${escape(emoji.pack)} emoji--${escape(emoji.name)}"
+    title="${escape(whole)}"
+  ><span>${escape(emoji.character)}</span></span>`;
 };
 
 const replaceAscii = (
