@@ -53,9 +53,9 @@ export function init(callback?: Callback<void>): Promise<void> {
       const emoji = table[name];
 
       return {
-        name,
-        aliases: emoji.aliases,
-        keywords: emoji.keywords,
+        name: name.toLowerCase(),
+        aliases: emoji.aliases.map(alias => alias.toLowerCase()),
+        keywords: emoji.keywords.map(keyword => keyword.toLowerCase()),
         character: emoji.character,
         image: emoji.image,
         pack: emoji.pack,
@@ -75,26 +75,28 @@ export function init(callback?: Callback<void>): Promise<void> {
     }
 
     function fuzzySearch(term: string) {
+      const q = term.toLowerCase();
+
       function score(match: string, weight: number) {
-        const weighted = weight * (1 + leven(term, match));
-        return match.startsWith(term) ? weighted - 2 : weighted;
+        const weighted = weight * (1 + leven(q, match));
+        return match.startsWith(q) ? weighted - 2 : weighted;
       }
 
       return all.filter((obj) => {
-        if (fuzzy(term, obj.name)) {
+        if (fuzzy(q, obj.name)) {
           obj.score = score(obj.name, 1);
 
           return true;
         }
 
-        const aliasMatch = fuzzyFind(term, obj.aliases);
+        const aliasMatch = fuzzyFind(q, obj.aliases);
         if (aliasMatch) {
           obj.score = score(aliasMatch, 3);
 
           return true;
         }
 
-        const keywordMatch = fuzzyFind(term, obj.keywords);
+        const keywordMatch = fuzzyFind(q, obj.keywords);
         if (keywordMatch) {
           obj.score = score(keywordMatch, 7);
 
@@ -103,8 +105,8 @@ export function init(callback?: Callback<void>): Promise<void> {
 
         return false;
       }).sort((a, b) => a.score - b.score).sort((a, b) => {
-        const aPrefixed = +a.name.startsWith(term);
-        const bPrefixed = +b.name.startsWith(term);
+        const aPrefixed = +a.name.startsWith(q);
+        const bPrefixed = +b.name.startsWith(q);
 
         return bPrefixed - aPrefixed;
       });
