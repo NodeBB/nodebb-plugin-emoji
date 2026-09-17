@@ -116,7 +116,7 @@ export const buildEmoji = (
     return `<img
       src="${route}/${escape(emoji.image)}?${buster}"
       class="not-responsive emoji emoji-${escape(emoji.pack)} emoji--${escape(emoji.name)}"
-      style="height: 23px; width: auto; vertical-align: middle;"
+      style="height: 1.4em; width: auto; vertical-align: middle;"
       title="${escape(whole)}"
       alt="${escape(emoji.character)}"
     />`;
