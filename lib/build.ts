@@ -60,6 +60,7 @@ export default async function build(): Promise<void> {
 
   const categoriesInfo: MetaData.Categories = {};
   const packsInfo: MetaData.Packs = [];
+  const sortOrders: { [name: string]: number } = {};
 
   packs.forEach((pack) => {
     packsInfo.push({
@@ -105,6 +106,10 @@ export default async function build(): Promise<void> {
         });
       }
 
+      if (typeof emoji.sort_order === 'number' && sortOrders[name] === undefined) {
+        sortOrders[name] = emoji.sort_order;
+      }
+
       const categories = emoji.categories || ['other'];
       categories.forEach((category) => {
         categoriesInfo[category] = categoriesInfo[category] || [];
@@ -114,7 +119,8 @@ export default async function build(): Promise<void> {
   });
 
   Object.keys(categoriesInfo).forEach((category) => {
-    categoriesInfo[category] = uniq(categoriesInfo[category]);
+    const order = (name: string) => sortOrders[name] ?? Infinity;
+    categoriesInfo[category] = uniq(categoriesInfo[category]).sort((a, b) => order(a) - order(b));
   });
 
   Object.values(customizations.emojis).forEach((emoji) => {

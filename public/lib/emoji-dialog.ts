@@ -70,12 +70,6 @@ if (config.emojiCustomFirst) {
 
 const translator = Translator.create();
 
-function stringCompare(a: string, b: string) {
-  if (a < b) { return -1; }
-  if (a > b) { return 1; }
-  return 0;
-}
-
 // create modal
 export function init(callback: Callback<JQuery>): void {
   Promise.all([
@@ -91,7 +85,7 @@ export function init(callback: Callback<JQuery>): void {
           emojis: emojis.map(emoji => ({
             name: emoji.name,
             html: buildEmoji(emoji, true),
-          })).sort((a, b) => stringCompare(a.name, b.name)),
+          })),
         };
       }).sort((a, b) => {
         const aPriority = priorities[a.name] || 0;

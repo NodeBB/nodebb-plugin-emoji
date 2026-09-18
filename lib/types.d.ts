@@ -18,6 +18,8 @@ interface Emoji {
   backgroundPosition?: string;
   /** unicode text character */
   character: string;
+  /** CLDR sort order within the emoji's category (from the Unicode emoji ordering index) */
+  sort_order?: number;
   /**
    * categories this emoji fits in (default: `['other']`)
    *
