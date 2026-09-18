@@ -21,6 +21,7 @@ function defineEmoji(data, callback) {
       categories: [category],
       keywords: e.keywords,
       image: e.image,
+      sort_order: e.sort_order,
     }];
   });
 
