@@ -2,6 +2,8 @@ import { join, resolve, basename } from 'path';
 import {
   mkdirp,
   copy,
+  pathExists,
+  readdir,
   remove,
   writeFile,
   symlink,
@@ -30,6 +32,10 @@ export const asciiFile = join(assetsDir, 'ascii.json');
 export const charactersFile = join(assetsDir, 'characters.json');
 export const categoriesFile = join(assetsDir, 'categories.json');
 export const packsFile = join(assetsDir, 'packs.json');
+
+// localized emoji names (public/emoji-names/<language>.json), copied to build/emoji/names/
+const namesSourceDir = join(__dirname, '../../public/emoji-names');
+export const namesDir = join(assetsDir, 'names');
 
 export default async function build(): Promise<void> {
   winston.info('[emoji] Building emoji assets');
@@ -201,8 +207,17 @@ export default async function build(): Promise<void> {
     }
   });
 
+  // localized names and search keywords, one file per language
+  const nameFiles = await pathExists(namesSourceDir) ? await readdir(namesSourceDir) : [];
+  const nameLanguages = nameFiles.filter(file => file.endsWith('.json')).map(file => basename(file, '.json'));
+  const nameOperations = nameLanguages.length ? [
+    copy(namesSourceDir, namesDir),
+    writeFile(join(assetsDir, 'names.json'), JSON.stringify(nameLanguages)),
+  ] : [];
+
   await Promise.all([
     ...assetOperations,
+    ...nameOperations,
     // store CSS styles
     writeFile(join(assetsDir, 'styles.css'), cssFile, { encoding: 'utf8' }),
     // persist metadata to disk

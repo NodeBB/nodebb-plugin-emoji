@@ -84,3 +84,16 @@ If `nodebb-plugin-emoji` is not available through the ACP, you can install it ma
 In the admin settings of nodebb-plugin-emoji, turn on "Parse emojis in topic titles" to see emojis as images in topic titles and notifications.
 
 ![](https://private-user-images.githubusercontent.com/2583394/586759879-5b4e6cc9-3568-48fa-a556-83bdb24bd8f2.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3Nzc3NDAwNzAsIm5iZiI6MTc3NzczOTc3MCwicGF0aCI6Ii8yNTgzMzk0LzU4Njc1OTg3OS01YjRlNmNjOS0zNTY4LTQ4ZmEtYTU1Ni04M2JkYjI0YmQ4ZjIucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDUwMiUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjA1MDJUMTYzNjEwWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NmJkY2ZhZDE0N2ZiMzRjODMyOGM2ODg1NTlkNWU1NDg5ZmEyNGI1MzlkYjg4ODZlNDFjZWUzNmU0Zjk0ZDUwMCZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmcmVzcG9uc2UtY29udGVudC10eXBlPWltYWdlJTJGcG5nIn0.PoBRMpH7ByDbA-uXoyHAoHFr3eiiN4IYy-Wvqy3p2pM)
+
+### Localized emoji names
+
+The emoji picker, the `:` autocomplete and the search show the name of an emoji in the user's language next to the English one (`😏 smirk · פרצוף זחוח`), and the search also finds an emoji by its localized name and keywords. English stays as it is: it is the language of the emoji names that are written in posts (`:smirk:`).
+
+The names come from the [Unicode CLDR](https://cldr.unicode.org/) annotations and are kept in `public/emoji-names/<language>.json`, one file per language (the build copies them to `build/emoji/names/`). A user gets the file of their language (for `pt-BR`: `pt-BR`, else `pt`). Users of a language that has no file, and English users, see no change. Hebrew (`he`) is included. To add a language:
+
+```
+npm i --no-save cldr-annotations-full cldr-annotations-derived-full
+node scripts/generate-names.js de fr   # CLDR language names
+```
+
+Other plugins can use the names too: the `emoji` client module exports `localizedName(emoji)`, which returns the name in the user's language, or an empty string.

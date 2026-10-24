@@ -7,6 +7,8 @@ declare const config: {
   asset_base_url: string;
   'cache-buster': string;
   emojiCustomFirst: boolean;
+  userLang: string;
+  defaultLang: string;
   csrf_token: string;
 };
 declare const app: {
